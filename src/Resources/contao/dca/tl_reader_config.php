@@ -8,6 +8,9 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
         'dataContainer'     => 'Table',
         'ctable'            => 'tl_reader_config_element',
         'enableVersioning'  => true,
+        'onload_callback' => [
+            ['HeimrichHannot\ReaderBundle\Backend\ReaderConfig', 'modifyPalette'],
+        ],
         'onsubmit_callback' => [
             ['huh.utils.dca', 'setDateAdded'],
         ],
@@ -71,11 +74,15 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
         ]
     ],
     'palettes'    => [
-        '__selector__' => [],
+        '__selector__' => [
+            'addShowConditions'
+        ],
         'default'      => '{general_legend},title;' . '{entity_legend},dataContainer,entityRetrievalMode;' . '{security_legend},addShowConditions;'
                           . '{jumpto_legend},addFieldDependendRedirect;' . '{misc_legend},setPageTitleByField;' . '{template_legend},itemTemplate;'
     ],
-    'subpalettes' => [],
+    'subpalettes' => [
+        'addShowConditions' => 'showConditions'
+    ],
     'fields'      => [
         'id'        => [
             'sql' => "int(10) unsigned NOT NULL auto_increment"
@@ -117,5 +124,19 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'exclude'          => true,
             'sql'              => "varchar(128) NOT NULL default ''",
         ],
+        // security
+        'addShowConditions' => [
+            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config']['addShowConditions'],
+            'exclude'                 => true,
+            'inputType'               => 'checkbox',
+            'eval'                    => ['tl_class' => 'w50', 'submitOnChange' => true],
+            'sql'                     => "char(1) NOT NULL default ''"
+        ],
     ]
 ];
+
+\HeimrichHannot\EntityFilter\Backend\EntityFilter::addFilterToDca(
+    'showConditions',
+    'tl_reader_config',
+    '' // is set in modifyPalette
+);
