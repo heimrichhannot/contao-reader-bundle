@@ -17,6 +17,21 @@ use Contao\System;
 
 class ReaderConfigElement extends Backend
 {
+    const TYPE_IMAGE = 'image';
+
+    const TYPES = [
+        self::TYPE_IMAGE,
+    ];
+
+    const PLACEHOLDER_IMAGE_MODE_NONE = 'none';
+    const PLACEHOLDER_IMAGE_MODE_GENDERED = 'gendered';
+    const PLACEHOLDER_IMAGE_MODE_SIMPLE = 'simple';
+
+    const PLACEHOLDER_IMAGE_MODES = [
+        self::PLACEHOLDER_IMAGE_MODE_GENDERED,
+        self::PLACEHOLDER_IMAGE_MODE_SIMPLE,
+    ];
+
     public function listChildren($arrRow)
     {
         return '<div class="tl_content_left">'.($arrRow['title'] ?: $arrRow['id']).' <span style="color:#b3b3b3; padding-left:3px">['
