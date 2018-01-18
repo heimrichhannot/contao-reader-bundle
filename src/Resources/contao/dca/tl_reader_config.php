@@ -135,8 +135,8 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
     ]
 ];
 
-\HeimrichHannot\EntityFilter\Backend\EntityFilter::addFilterToDca(
-    'showConditions',
-    'tl_reader_config',
-    '' // is set in modifyPalette
-);
+//\Contao\System::getContainer()->get('huh.entity_filter.manager')->addFilterToDca(
+//    'showConditions',
+//    'tl_reader_config',
+//    '' // is set in modifyPalette
+//);
