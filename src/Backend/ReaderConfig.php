@@ -10,6 +10,8 @@ namespace HeimrichHannot\ReaderBundle\Backend;
 
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\Image;
+use Contao\StringUtil;
 
 class ReaderConfig extends Backend
 {

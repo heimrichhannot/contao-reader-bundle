@@ -71,25 +71,20 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
         ]
     ],
     'palettes'    => [
-        '__selector__' => [
-        ],
-        'default'      => '{general_legend},title;' . '{filter_legend},filter;'
-                          . '{config_legend},numberOfItems,perPage,skipFirst,showItemCount,showNoItemsText,showInitialResults,limitFields,isTableReader;'
-                          . '{sorting_legend},sortingMode;' . '{jumpto_legend},useAlias,addDetails,addShare;'
-                          . '{action_legend},addHashToAction,removeAutoItemFromAction;' . '{misc_legend},addAjaxPagination,addMasonry;'
-                          . '{template_legend},itemTemplate;'
+        '__selector__' => [],
+        'default'      => '{general_legend},title;' . '{entity_legend},dataContainer,entityRetrievalMode;' . '{security_legend},addShowConditions;'
+                          . '{jumpto_legend},addFieldDependendRedirect;' . '{misc_legend},setPageTitleByField;' . '{template_legend},itemTemplate;'
     ],
-    'subpalettes' => [
-    ],
+    'subpalettes' => [],
     'fields'      => [
-        'id'                          => [
+        'id'        => [
             'sql' => "int(10) unsigned NOT NULL auto_increment"
         ],
-        'tstamp'                      => [
+        'tstamp'    => [
             'label' => &$GLOBALS['TL_LANG']['tl_reader_config']['tstamp'],
             'sql'   => "int(10) unsigned NOT NULL default '0'"
         ],
-        'dateAdded'                   => [
+        'dateAdded' => [
             'label'   => &$GLOBALS['TL_LANG']['MSC']['dateAdded'],
             'sorting' => true,
             'flag'    => 6,
@@ -97,7 +92,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'sql'     => "int(10) unsigned NOT NULL default '0'"
         ],
         // general
-        'title'                       => [
+        'title'     => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['title'],
             'exclude'   => true,
             'search'    => true,
@@ -106,6 +101,21 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'inputType' => 'text',
             'eval'      => ['mandatory' => true, 'tl_class' => 'w50'],
             'sql'       => "varchar(255) NOT NULL default ''"
-        ]
+        ],
+        // entity
+        'dataContainer' => [
+            'inputType'        => 'select',
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config']['dataContainer'],
+            'options_callback' => ['huh.utils.choice.data_container', 'getChoices'],
+            'eval'             => [
+                'chosen'             => true,
+                'submitOnChange'     => true,
+                'includeBlankOption' => true,
+                'tl_class'           => 'w50',
+                'mandatory'          => true,
+            ],
+            'exclude'          => true,
+            'sql'              => "varchar(128) NOT NULL default ''",
+        ],
     ]
 ];

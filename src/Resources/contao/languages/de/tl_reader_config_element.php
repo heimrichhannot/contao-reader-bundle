@@ -34,7 +34,7 @@ $lang['config_legend']     = 'Konfiguration';
 /**
  * Buttons
  */
-$lang['new']    = ['Neues Listenkonfigurations-Element', 'Leserkonfigurations-Element erstellen'];
+$lang['new']    = ['Neues Leserkonfigurations-Element', 'Leserkonfigurations-Element erstellen'];
 $lang['edit']   = ['Leserkonfigurations-Element bearbeiten', 'Leserkonfigurations-Element ID %s bearbeiten'];
 $lang['copy']   = ['Leserkonfigurations-Element duplizieren', 'Leserkonfigurations-Element ID %s duplizieren'];
 $lang['delete'] = ['Leserkonfigurations-Element löschen', 'Leserkonfigurations-Element ID %s löschen'];
