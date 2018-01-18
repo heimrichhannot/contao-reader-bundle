@@ -1,0 +1,5 @@
+huh:
+    reader:
+        templates:
+            item:
+                - { name: default, template: "@HeimrichHannotContaoReader/reader_item_default.html.twig" }
