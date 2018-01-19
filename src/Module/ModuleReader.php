@@ -104,7 +104,7 @@ class ModuleReader extends \Contao\Module
     public function checkPermission()
     {
         $readerConfig = $this->readerConfig;
-        $allowed = false;
+        $allowed = true;
 
         if ($readerConfig->addShowConditions) {
             $itemConditions = StringUtil::deserialize($readerConfig->showItemConditions, true);
@@ -119,8 +119,8 @@ class ModuleReader extends \Contao\Module
                     "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND id=".$this->item->id
                 )->execute($values);
 
-                if ($result->numRows > 0) {
-                    $allowed = true;
+                if ($result->numRows < 1) {
+                    $allowed = false;
                 }
             }
         }
