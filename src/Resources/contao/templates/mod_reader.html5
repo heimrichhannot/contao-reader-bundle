@@ -1,0 +1,10 @@
+<?php $this->extend('block_searchable'); ?>
+<?php $this->block('content'); ?>
+
+<?= \HeimrichHannot\StatusMessages\StatusMessage::generate($this->id); ?>
+
+<?php if (!$this->invalid): ?>
+    <?= $this->item ?>
+<?php endif; ?>
+
+<?php $this->endblock(); ?>

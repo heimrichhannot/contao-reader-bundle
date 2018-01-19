@@ -3,7 +3,7 @@
 /*
  * Copyright (c) 2018 Heimrich & Hannot GmbH
  *
- * @license LGPL-3.0+
+ * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ReaderBundle\Backend;
@@ -17,6 +17,12 @@ use Contao\System;
 
 class ReaderConfig extends Backend
 {
+    const ITEM_RETRIEVAL_MODE_AUTO_ITEM = 'auto_item';
+
+    const ITEM_RETRIEVAL_MODES = [
+        self::ITEM_RETRIEVAL_MODE_AUTO_ITEM,
+    ];
+
     /**
      * Return the edit header button.
      *
@@ -45,7 +51,7 @@ class ReaderConfig extends Backend
             $dca = &$GLOBALS['TL_DCA']['tl_reader_config'];
 
             if ($readerConfig->dataContainer) {
-                $dca['fields']['showConditions']['eval']['multiColumnEditor']['table'] = $readerConfig->dataContainer;
+                $dca['fields']['showItemConditions']['eval']['multiColumnEditor']['table'] = $readerConfig->dataContainer;
             }
         }
     }
