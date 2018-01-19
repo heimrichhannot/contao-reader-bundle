@@ -12,6 +12,7 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\Environment;
 use Contao\FilesModel;
@@ -23,8 +24,10 @@ use HeimrichHannot\ReaderBundle\Backend\ReaderConfig;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\Request\Request;
+use HeimrichHannot\StatusMessages\StatusMessage;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
 use Patchwork\Utf8;
+use Symfony\Component\Translation\Translator;
 
 class ModuleReader extends \Contao\Module
 {
@@ -32,6 +35,9 @@ class ModuleReader extends \Contao\Module
 
     /** @var ContaoFramework */
     protected $framework;
+
+    /** @var Translator */
+    protected $translator;
 
     /** @var ReaderConfigModel */
     protected $readerConfig;
@@ -51,6 +57,7 @@ class ModuleReader extends \Contao\Module
     public function __construct(ModuleModel $objModule, $strColumn = 'main')
     {
         $this->framework = System::getContainer()->get('contao.framework');
+        $this->translator = System::getContainer()->get('translator');
 
         parent::__construct($objModule, $strColumn);
 
@@ -94,12 +101,46 @@ class ModuleReader extends \Contao\Module
         return parent::generate();
     }
 
+    public function checkPermission()
+    {
+        $readerConfig = $this->readerConfig;
+        $allowed = false;
+
+        if ($readerConfig->addShowConditions) {
+            $itemConditions = StringUtil::deserialize($readerConfig->showItemConditions, true);
+
+            if (!empty($itemConditions)) {
+                list($whereCondition, $values) = System::getContainer()->get('huh.entity_filter.backend.entity_filter')->computeSqlCondition(
+                    $itemConditions,
+                    $readerConfig->dataContainer
+                );
+
+                $result = Database::getInstance()->prepare(
+                    "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND id=".$this->item->id
+                )->execute($values);
+
+                if ($result->numRows > 0) {
+                    $allowed = true;
+                }
+            }
+        }
+
+        return $allowed;
+    }
+
     protected function compile()
     {
         $readerConfig = $this->readerConfig;
 
         Controller::loadDataContainer($readerConfig->dataContainer);
         System::loadLanguageFile($readerConfig->dataContainer);
+
+        if (!$this->checkPermission()) {
+            StatusMessage::addError($this->translator->trans('huh.reader.messages.permissionDenied'), $this->id);
+            $this->Template->invalid = true;
+
+            return;
+        }
 
         $preparedItem = $this->prepareItem($this->item->row());
         $this->Template->item = $this->parseItem($preparedItem);
