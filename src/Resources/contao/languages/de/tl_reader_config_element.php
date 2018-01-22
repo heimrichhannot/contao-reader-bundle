@@ -26,6 +26,15 @@ $lang['genderField'][0]            = 'Geschlecht-Feld';
 $lang['genderField'][1]            = 'Wählen Sie hier das Feld aus, das das Geschlecht der Instanz enthält.';
 
 /**
+ * Reference
+ */
+$lang['reference'] = [
+    \HeimrichHannot\ListBundle\Backend\ListConfigElement::TYPE_IMAGE                      => 'Bild',
+    \HeimrichHannot\ListBundle\Backend\ListConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE   => 'einfach',
+    \HeimrichHannot\ListBundle\Backend\ListConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED => 'geschlechtsspezifisch',
+];
+
+/**
  * Legends
  */
 $lang['title_type_legend'] = 'Titel & Typ';
