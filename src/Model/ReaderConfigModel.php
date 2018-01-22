@@ -18,11 +18,14 @@ namespace HeimrichHannot\ReaderBundle\Model;
  * @property string $fields
  * @property string $itemRetrievalMode
  * @property string $itemRetrievalAutoItemField
+ * @property string $itemRetrievalFieldConditions
  * @property bool   $hideUnpublishedItems
  * @property string $publishedField
  * @property bool   $invertPublishedField
  * @property bool   $addShowConditions
  * @property string $showItemConditions
+ * @property bool   $setPageTitleByField
+ * @property string $pageTitleFieldPattern
  * @property string $itemTemplate
  */
 class ReaderConfigModel extends \Model

@@ -131,6 +131,7 @@ class ModuleReader extends \Contao\Module
     protected function compile()
     {
         $readerConfig = $this->readerConfig;
+        $item = $this->item;
 
         Controller::loadDataContainer($readerConfig->dataContainer);
         System::loadLanguageFile($readerConfig->dataContainer);
@@ -142,7 +143,9 @@ class ModuleReader extends \Contao\Module
             return;
         }
 
-        $preparedItem = $this->prepareItem($this->item->row());
+        $this->setPageTitle();
+
+        $preparedItem = $this->prepareItem($item->row());
         $this->Template->item = $this->parseItem($preparedItem);
     }
 
@@ -258,26 +261,10 @@ class ModuleReader extends \Contao\Module
 
         switch ($readerConfig->itemRetrievalMode) {
             case ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM:
-                if (Config::get('useAutoItem') && ($autoItem = Request::getGet('auto_item'))) {
-                    $field = $readerConfig->itemRetrievalAutoItemField;
-
-                    // try to find by a certain field (likely alias)
-                    $item = System::getContainer()->get('huh.utils.model')->findOneModelInstanceBy(
-                        $readerConfig->dataContainer,
-                        [
-                            $field.'=?',
-                        ],
-                        [
-                            $autoItem,
-                        ]
-                    );
-
-                    // fallback: ID
-                    if (null === $item) {
-                        $item = System::getContainer()->get('huh.utils.model')->findModelInstanceByPk($readerConfig->dataContainer, $autoItem);
-                    }
-                }
-
+                $item = $this->retrieveItemByAutoItem();
+                break;
+            case ReaderConfig::ITEM_RETRIEVAL_MODE_FIELD_CONDITIONS:
+                $item = $this->retrieveItemByFieldConditions();
                 break;
         }
 
@@ -287,6 +274,59 @@ class ModuleReader extends \Contao\Module
                 || $readerConfig->invertPublishedField && $item->{$readerConfig->publishedField}
             ) {
                 return null;
+            }
+        }
+
+        return $item;
+    }
+
+    protected function retrieveItemByAutoItem()
+    {
+        $readerConfig = $this->readerConfig;
+        $item = null;
+
+        if (Config::get('useAutoItem') && ($autoItem = Request::getGet('auto_item'))) {
+            $field = $readerConfig->itemRetrievalAutoItemField;
+
+            // try to find by a certain field (likely alias)
+            $item = System::getContainer()->get('huh.utils.model')->findOneModelInstanceBy(
+                $readerConfig->dataContainer,
+                [
+                    $field.'=?',
+                ],
+                [
+                    $autoItem,
+                ]
+            );
+
+            // fallback: ID
+            if (null === $item) {
+                $item = System::getContainer()->get('huh.utils.model')->findModelInstanceByPk($readerConfig->dataContainer, $autoItem);
+            }
+        }
+
+        return $item;
+    }
+
+    protected function retrieveItemByFieldConditions()
+    {
+        $readerConfig = $this->readerConfig;
+        $item = null;
+
+        $itemConditions = StringUtil::deserialize($readerConfig->itemRetrievalFieldConditions, true);
+
+        if (!empty($itemConditions)) {
+            list($whereCondition, $values) = System::getContainer()->get('huh.entity_filter.backend.entity_filter')->computeSqlCondition(
+                $itemConditions,
+                $readerConfig->dataContainer
+            );
+
+            $result = Database::getInstance()->prepare(
+                "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition)"
+            )->limit(1)->execute($values);
+
+            if ($result->numRows > 0) {
+                $item = System::getContainer()->get('huh.utils.model')->findModelInstanceByPk($readerConfig->dataContainer, $result->id);
             }
         }
 
@@ -387,5 +427,30 @@ class ModuleReader extends \Contao\Module
                 }
             }
         }
+    }
+
+    protected function setPageTitle()
+    {
+        $readerConfig = $this->readerConfig;
+        $item = $this->item;
+
+        if ($readerConfig->setPageTitleByField && $readerConfig->pageTitleFieldPattern) {
+            $pageTitle = preg_replace_callback(
+                '@%([^%]+)%@i',
+                function (array $matches) use ($item) {
+                    return $item->{$matches[1]};
+                },
+                $readerConfig->pageTitleFieldPattern
+            );
+
+            System::getContainer()->get('huh.head.tag.title')->setContent(
+                $this->modifyPageTitle($pageTitle)
+            );
+        }
+    }
+
+    protected function modifyPageTitle(string $pageTitle): string
+    {
+        return $pageTitle;
     }
 }

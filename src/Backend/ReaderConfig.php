@@ -18,9 +18,11 @@ use Contao\System;
 class ReaderConfig extends Backend
 {
     const ITEM_RETRIEVAL_MODE_AUTO_ITEM = 'auto_item';
+    const ITEM_RETRIEVAL_MODE_FIELD_CONDITIONS = 'field_conditions';
 
     const ITEM_RETRIEVAL_MODES = [
         self::ITEM_RETRIEVAL_MODE_AUTO_ITEM,
+        self::ITEM_RETRIEVAL_MODE_FIELD_CONDITIONS,
     ];
 
     /**
@@ -52,6 +54,7 @@ class ReaderConfig extends Backend
 
             if ($readerConfig->dataContainer) {
                 $dca['fields']['showItemConditions']['eval']['multiColumnEditor']['table'] = $readerConfig->dataContainer;
+                $dca['fields']['itemRetrievalFieldConditions']['eval']['multiColumnEditor']['table'] = $readerConfig->dataContainer;
             }
         }
     }

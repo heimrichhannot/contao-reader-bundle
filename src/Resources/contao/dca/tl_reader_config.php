@@ -78,17 +78,22 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'limitFields',
             'itemRetrievalMode',
             'hideUnpublishedItems',
-            'addShowConditions'
+            'addShowConditions',
+            'setPageTitleByField'
         ],
         'default'      => '{general_legend},title;' . '{config_legend},dataContainer,limitFields,itemRetrievalMode,hideUnpublishedItems;'
                           . '{security_legend},addShowConditions;' . '{jumpto_legend},addFieldDependendRedirect;'
                           . '{misc_legend},setPageTitleByField;' . '{template_legend},itemTemplate;'
     ],
     'subpalettes' => [
-        'limitFields'                                                                                           => 'fields',
-        'itemRetrievalMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM => 'itemRetrievalAutoItemField',
-        'hideUnpublishedItems'                                                                                  => 'publishedField,invertPublishedField',
-        'addShowConditions'                                                                                     => 'showItemConditions'
+        'limitFields'                                                                                                  => 'fields',
+        'itemRetrievalMode_'
+        . \HeimrichHannot\ReaderBundle\Backend\ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM                             => 'itemRetrievalAutoItemField',
+        'itemRetrievalMode_'
+        . \HeimrichHannot\ReaderBundle\Backend\ReaderConfig::ITEM_RETRIEVAL_MODE_FIELD_CONDITIONS                      => 'itemRetrievalFieldConditions',
+        'hideUnpublishedItems'                                                                                         => 'publishedField,invertPublishedField',
+        'addShowConditions'                                                                                            => 'showItemConditions',
+        'setPageTitleByField'                                                                                          => 'pageTitleFieldPattern'
     ],
     'fields'      => [
         'id'                         => [
@@ -204,6 +209,24 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
             'sql'       => "char(1) NOT NULL default ''"
         ],
+        // showItemConditions is added below
+
+        // misc
+        'setPageTitleByField'        => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['setPageTitleByField'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
+            'sql'       => "char(1) NOT NULL default ''"
+        ],
+        'pageTitleFieldPattern'      => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['pageTitleFieldPattern'],
+            'exclude'   => true,
+            'search'    => true,
+            'inputType' => 'text',
+            'eval'      => ['maxlength' => 255, 'tl_class' => 'w50', 'mandatory' => true],
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ],
         // template
         'itemTemplate'               => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config']['itemTemplate'],
@@ -217,8 +240,13 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
 ];
 
 \Contao\System::getContainer()->get('huh.entity_filter.manager')->addFilterToDca(
+    'itemRetrievalFieldConditions',
+    'tl_reader_config',
+    '' // set in modifyPalette
+);
+
+\Contao\System::getContainer()->get('huh.entity_filter.manager')->addFilterToDca(
     'showItemConditions',
     'tl_reader_config',
-    '', // is set in modifyPalette
-    ['minRowCount' => 0]
+    '' // set in modifyPalette
 );
