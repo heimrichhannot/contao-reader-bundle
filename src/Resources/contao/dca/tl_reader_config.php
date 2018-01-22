@@ -143,16 +143,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'inputType'        => 'checkboxWizard',
             'options_callback' => function (DataContainer $dc)
             {
-                if (!$dc->id || null === ($readerConfig = System::getContainer()->get('huh.reader.reader-config-registry')->findByPk($dc->id)))
-                {
-                    return [];
-                }
-
-                return \Contao\System::getContainer()->get('huh.utils.choice.field')->getCachedChoices(
-                    [
-                        'dataContainer' => $readerConfig->dataContainer
-                    ]
-                );
+                return \HeimrichHannot\ReaderBundle\Util\ReaderConfigHelper::getFields($dc);
             },
             'exclude'          => true,
             'eval'             => ['multiple' => true, 'includeBlankOption' => true, 'tl_class' => 'w50 clr autoheight'],
@@ -175,17 +166,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc)
             {
-                if (!$dc->id || null === ($readerConfig = System::getContainer()->get('huh.reader.reader-config-registry')->findByPk($dc->id)))
-                {
-                    return [];
-                }
-
-                return \Contao\System::getContainer()->get('huh.utils.choice.field')->getCachedChoices(
-                    [
-                        'dataContainer' => $readerConfig->dataContainer,
-                        'inputTypes'    => ['text']
-                    ]
-                );
+                return \HeimrichHannot\ReaderBundle\Util\ReaderConfigHelper::getTextFields($dc);
             },
             'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
             'sql'              => "varchar(64) NOT NULL default ''"
@@ -203,17 +184,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc)
             {
-                if (!$dc->id || null === ($readerConfig = System::getContainer()->get('huh.reader.reader-config-registry')->findByPk($dc->id)))
-                {
-                    return [];
-                }
-
-                return \Contao\System::getContainer()->get('huh.utils.choice.field')->getCachedChoices(
-                    [
-                        'dataContainer' => $readerConfig->dataContainer,
-                        'inputTypes'    => ['checkbox', 'radio']
-                    ]
-                );
+                return \HeimrichHannot\ReaderBundle\Util\ReaderConfigHelper::getCheckboxFields($dc);
             },
             'eval'             => ['maxlength' => 32, 'tl_class' => 'w50', 'includeBlankOption' => true, 'chosen' => true, 'mandatory' => true],
             'sql'              => "varchar(32) NOT NULL default ''"
