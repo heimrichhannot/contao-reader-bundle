@@ -61,12 +61,6 @@ class ModuleReader extends \Contao\Module
         $this->translator = System::getContainer()->get('translator');
 
         parent::__construct($objModule, $strColumn);
-
-        // add class to every reader template
-        $cssID = $this->cssID;
-        $cssID[1] = $cssID[1].($cssID[1] ? ' ' : '').'huh-reader';
-
-        $this->cssID = $cssID;
     }
 
     public function generate()
@@ -136,6 +130,16 @@ class ModuleReader extends \Contao\Module
 
         Controller::loadDataContainer($readerConfig->dataContainer);
         System::loadLanguageFile($readerConfig->dataContainer);
+
+        // apply module fields to template
+        $this->Template->headline = $this->headline;
+        $this->Template->hl = $this->hl;
+
+        // add class to every reader template
+        $cssID = $this->cssID;
+        $cssID[1] = $cssID[1].($cssID[1] ? ' ' : '').'huh-reader';
+
+        $this->cssID = $cssID;
 
         if (!$this->checkPermission()) {
             StatusMessage::addError($this->translator->trans('huh.reader.messages.permissionDenied'), $this->id);
