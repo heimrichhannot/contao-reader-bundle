@@ -11,6 +11,7 @@ namespace HeimrichHannot\ReaderBundle\Module;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database;
 use Contao\DataContainer;
@@ -107,7 +108,7 @@ class ModuleReader extends \Contao\Module
         $allowed = true;
 
         if ($readerConfig->addShowConditions) {
-            $itemConditions = StringUtil::deserialize($readerConfig->showItemConditions, true);
+            $itemConditions = StringUtil::deserialize($readerConfig->showFieldConditions, true);
 
             if (!empty($itemConditions)) {
                 list($whereCondition, $values) = System::getContainer()->get('huh.entity_filter.backend.entity_filter')->computeSqlCondition(
@@ -142,6 +143,8 @@ class ModuleReader extends \Contao\Module
 
             return;
         }
+
+        $this->doFieldDependentRedirect();
 
         $this->setPageTitle();
 
@@ -452,5 +455,38 @@ class ModuleReader extends \Contao\Module
     protected function modifyPageTitle(string $pageTitle): string
     {
         return $pageTitle;
+    }
+
+    protected function doFieldDependentRedirect()
+    {
+        $readerConfig = $this->readerConfig;
+        $redirect = false;
+
+        if (!$readerConfig->addFieldDependentRedirect || !$readerConfig->fieldDependentJumpTo) {
+            return;
+        }
+
+        $itemConditions = StringUtil::deserialize($readerConfig->redirectFieldConditions, true);
+
+        if (!empty($itemConditions)) {
+            list($whereCondition, $values) = System::getContainer()->get('huh.entity_filter.backend.entity_filter')->computeSqlCondition(
+                $itemConditions,
+                $readerConfig->dataContainer
+            );
+
+            $result = Database::getInstance()->prepare(
+                "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND id=".$this->item->id
+            )->execute($values);
+
+            $redirect = $result->numRows > 0;
+        }
+
+        if ($redirect) {
+            $jumpTo = System::getContainer()->get('huh.utils.url')->getJumpToPageObject($readerConfig->fieldDependentJumpTo);
+
+            if (null !== $jumpTo) {
+                throw new RedirectResponseException('/'.$jumpTo->getFrontendUrl());
+            }
+        }
     }
 }

@@ -79,10 +79,11 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'itemRetrievalMode',
             'hideUnpublishedItems',
             'addShowConditions',
+            'addFieldDependentRedirect',
             'setPageTitleByField'
         ],
         'default'      => '{general_legend},title;' . '{config_legend},dataContainer,limitFields,itemRetrievalMode,hideUnpublishedItems;'
-                          . '{security_legend},addShowConditions;' . '{jumpto_legend},addFieldDependendRedirect;'
+                          . '{security_legend},addShowConditions;' . '{jumpto_legend},addFieldDependentRedirect;'
                           . '{misc_legend},setPageTitleByField;' . '{template_legend},itemTemplate;'
     ],
     'subpalettes' => [
@@ -92,7 +93,8 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
         'itemRetrievalMode_'
         . \HeimrichHannot\ReaderBundle\Backend\ReaderConfig::ITEM_RETRIEVAL_MODE_FIELD_CONDITIONS                      => 'itemRetrievalFieldConditions',
         'hideUnpublishedItems'                                                                                         => 'publishedField,invertPublishedField',
-        'addShowConditions'                                                                                            => 'showItemConditions',
+        'addShowConditions'                                                                                            => 'showFieldConditions',
+        'addFieldDependentRedirect'                                                                                    => 'fieldDependentJumpTo,redirectFieldConditions',
         'setPageTitleByField'                                                                                          => 'pageTitleFieldPattern'
     ],
     'fields'      => [
@@ -209,8 +211,23 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
             'sql'       => "char(1) NOT NULL default ''"
         ],
-        // showItemConditions is added below
-
+        // jump to
+        'addFieldDependentRedirect'  => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['addFieldDependentRedirect'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
+            'sql'       => "char(1) NOT NULL default ''"
+        ],
+        'fieldDependentJumpTo'       => [
+            'label'      => &$GLOBALS['TL_LANG']['tl_reader_config']['fieldDependentJumpTo'],
+            'exclude'    => true,
+            'inputType'  => 'pageTree',
+            'foreignKey' => 'tl_page.title',
+            'eval'       => ['fieldType' => 'radio', 'mandatory' => true],
+            'sql'        => "int(10) unsigned NOT NULL default '0'",
+            'relation'   => ['type' => 'hasOne', 'load' => 'eager']
+        ],
         // misc
         'setPageTitleByField'        => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['setPageTitleByField'],
@@ -246,7 +263,13 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
 );
 
 \Contao\System::getContainer()->get('huh.entity_filter.manager')->addFilterToDca(
-    'showItemConditions',
+    'showFieldConditions',
+    'tl_reader_config',
+    '' // set in modifyPalette
+);
+
+\Contao\System::getContainer()->get('huh.entity_filter.manager')->addFilterToDca(
+    'redirectFieldConditions',
     'tl_reader_config',
     '' // set in modifyPalette
 );

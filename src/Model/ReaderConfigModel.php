@@ -23,7 +23,10 @@ namespace HeimrichHannot\ReaderBundle\Model;
  * @property string $publishedField
  * @property bool   $invertPublishedField
  * @property bool   $addShowConditions
- * @property string $showItemConditions
+ * @property string $showFieldConditions
+ * @property bool   $addFieldDependentRedirect
+ * @property int    $fieldDependentJumpTo
+ * @property string $redirectFieldConditions
  * @property bool   $setPageTitleByField
  * @property string $pageTitleFieldPattern
  * @property string $itemTemplate

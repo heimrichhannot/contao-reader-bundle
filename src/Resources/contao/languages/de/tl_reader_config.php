@@ -35,10 +35,18 @@ $lang['invertPublishedField'][1]         =
     'Wählen Sie diese Option, wenn ein "wahr" im Veröffentlicht-Feld einem nichtöffentlichen Zustand entspricht.';
 
 // security
-$lang['addShowConditions'][0]  = 'Bedingungen für die Anzeige hinzufügen';
-$lang['addShowConditions'][1]  = 'Wählen Sie diese Option, wenn Datensätze nur unter bestimmten Bedingungen angezeigt werden dürfen.';
-$lang['showItemConditions'][0] = 'Instanzbedingungen';
-$lang['showItemConditions'][1] = 'Definieren Sie hier Bedingungen, die eine Instanz erfüllen muss, damit sie angezeigt wird.';
+$lang['addShowConditions'][0]   = 'Bedingungen für die Anzeige hinzufügen';
+$lang['addShowConditions'][1]   = 'Wählen Sie diese Option, wenn Datensätze nur unter bestimmten Bedingungen angezeigt werden dürfen.';
+$lang['showFieldConditions'][0] = 'Instanzbedingungen';
+$lang['showFieldConditions'][1] = 'Definieren Sie hier Bedingungen, die eine Instanz erfüllen muss, damit sie angezeigt wird.';
+
+// jump to
+$lang['addFieldDependentRedirect'][0] = 'Instanzfeldabhängige Weiterleitung hinzufügen';
+$lang['addFieldDependentRedirect'][1] = 'Wählen Sie diese Option, wenn unter bestimmten Bedingungen eine Weiterleitung erfolgen soll.';
+$lang['redirectFieldConditions'][0]   = 'Instanzbedingungen';
+$lang['redirectFieldConditions'][1]   = 'Definieren Sie hier Bedingungen, die eine Instanz erfüllen muss, damit weitergeleitet wird.';
+$lang['fieldDependentJumpTo'][0]      = 'Weiterleitungsseite';
+$lang['fieldDependentJumpTo'][1]      = 'Definieren Sie hier eine Weiterleitungsseite.';
 
 // misc
 $lang['setPageTitleByField'][0]   = 'Instanzfeld als Seitentitel setzen';
@@ -64,6 +72,7 @@ $lang['reference'] = [
 $lang['general_legend']  = 'Allgemeine Einstellungen';
 $lang['config_legend']   = 'Konfiguration';
 $lang['security_legend'] = 'Sicherheit';
+$lang['jumpto_legend']   = 'Weiterleitung';
 $lang['misc_legend']     = 'Verschiedenes';
 $lang['template_legend'] = 'Template';
 

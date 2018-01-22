@@ -53,8 +53,9 @@ class ReaderConfig extends Backend
             $dca = &$GLOBALS['TL_DCA']['tl_reader_config'];
 
             if ($readerConfig->dataContainer) {
-                $dca['fields']['showItemConditions']['eval']['multiColumnEditor']['table'] = $readerConfig->dataContainer;
-                $dca['fields']['itemRetrievalFieldConditions']['eval']['multiColumnEditor']['table'] = $readerConfig->dataContainer;
+                foreach (['itemRetrievalFieldConditions', 'showItemConditions', 'redirectFieldConditions'] as $field) {
+                    $dca['fields'][$field]['eval']['multiColumnEditor']['table'] = $readerConfig->dataContainer;
+                }
             }
         }
     }
