@@ -7,4 +7,6 @@
     <?= $this->item ?>
 <?php endif; ?>
 
+<?= \Contao\System::getContainer()->get('huh.filter.registry')->findById(2)->hasData(); ?>
+
 <?php $this->endblock(); ?>
