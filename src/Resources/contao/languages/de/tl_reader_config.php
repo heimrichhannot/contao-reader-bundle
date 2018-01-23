@@ -8,8 +8,10 @@ $lang = &$GLOBALS['TL_LANG']['tl_reader_config'];
 $lang['tstamp'][0] = 'Änderungsdatum';
 
 // general
-$lang['title'][0] = 'Titel';
-$lang['title'][1] = 'Geben Sie hier bitte den Titel ein.';
+$lang['title'][0]              = 'Titel';
+$lang['title'][1]              = 'Geben Sie hier bitte den Titel ein.';
+$lang['parentReaderConfig'][0] = 'Eltern-Leserkonfiguration';
+$lang['parentReaderConfig'][1] = 'Wählen Sie hier eine Leserkonfiguration aus, von der geerbt werden soll. Sie können dann punktuell einzelne Eigenschaften überschreiben.';
 
 // config
 $lang['dataContainer'][0]                = 'Data-Container';

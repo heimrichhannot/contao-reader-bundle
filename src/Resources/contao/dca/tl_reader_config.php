@@ -9,7 +9,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
         'ctable'            => 'tl_reader_config_element',
         'enableVersioning'  => true,
         'onload_callback'   => [
-            ['HeimrichHannot\ReaderBundle\Backend\ReaderConfig', 'modifyPalette'],
+            ['HeimrichHannot\ReaderBundle\Backend\ReaderConfig', 'modifyPalette']
         ],
         'onsubmit_callback' => [
             ['huh.utils.dca', 'setDateAdded'],
@@ -82,7 +82,8 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'addFieldDependentRedirect',
             'setPageTitleByField'
         ],
-        'default'      => '{general_legend},title;' . '{config_legend},dataContainer,limitFields,itemRetrievalMode,hideUnpublishedItems;'
+        'default'      => '{general_legend},title;' // TODO add parentReaderConfig
+                          . '{config_legend},dataContainer,limitFields,itemRetrievalMode,hideUnpublishedItems;'
                           . '{security_legend},addShowConditions;' . '{jumpto_legend},addFieldDependentRedirect;'
                           . '{misc_legend},setPageTitleByField;' . '{template_legend},itemTemplate;'
     ],
@@ -99,17 +100,19 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
     ],
     'fields'      => [
         'id'                         => [
-            'sql' => "int(10) unsigned NOT NULL auto_increment"
+            'sql'  => "int(10) unsigned NOT NULL auto_increment",
+            'eval' => ['notOverridable' => true],
         ],
         'tstamp'                     => [
             'label' => &$GLOBALS['TL_LANG']['tl_reader_config']['tstamp'],
+            'eval'  => ['notOverridable' => true],
             'sql'   => "int(10) unsigned NOT NULL default '0'"
         ],
         'dateAdded'                  => [
             'label'   => &$GLOBALS['TL_LANG']['MSC']['dateAdded'],
             'sorting' => true,
             'flag'    => 6,
-            'eval'    => ['rgxp' => 'datim', 'doNotCopy' => true],
+            'eval'    => ['rgxp' => 'datim', 'doNotCopy' => true, 'notOverridable' => true],
             'sql'     => "int(10) unsigned NOT NULL default '0'"
         ],
         // general
@@ -120,8 +123,24 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'sorting'   => true,
             'flag'      => 1,
             'inputType' => 'text',
-            'eval'      => ['mandatory' => true, 'tl_class' => 'w50'],
+            'eval'      => ['mandatory' => true, 'tl_class' => 'w50', 'notOverridable' => true],
             'sql'       => "varchar(255) NOT NULL default ''"
+        ],
+        'parentReaderConfig'         => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config']['parentReaderConfig'],
+            'exclude'          => true,
+            'filter'           => true,
+            'inputType'        => 'select',
+            'options_callback' => function (DataContainer $dc)
+            {
+                return \Contao\System::getContainer()->get('huh.reader.choice.parent-reader-config')->getCachedChoices(
+                    [
+                        'id' => $dc->id
+                    ]
+                );
+            },
+            'eval'             => ['tl_class' => 'w50', 'includeBlankOption' => true, 'chosen' => true, 'notOverridable' => true],
+            'sql'              => "int(10) unsigned NOT NULL default '0'"
         ],
         // config
         'dataContainer'              => [
@@ -134,6 +153,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
                 'includeBlankOption' => true,
                 'tl_class'           => 'w50',
                 'mandatory'          => true,
+                'notOverridable'     => true
             ],
             'exclude'          => true,
             'sql'              => "varchar(128) NOT NULL default ''",
@@ -273,3 +293,5 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
     'tl_reader_config',
     '' // set in modifyPalette
 );
+
+\HeimrichHannot\ReaderBundle\Backend\ReaderConfig::addOverridableFields();
