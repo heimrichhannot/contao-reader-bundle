@@ -9,7 +9,8 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
         'ctable'            => 'tl_reader_config_element',
         'enableVersioning'  => true,
         'onload_callback'   => [
-            ['HeimrichHannot\ReaderBundle\Backend\ReaderConfig', 'modifyPalette']
+            ['HeimrichHannot\ReaderBundle\Backend\ReaderConfig', 'modifyPalette'],
+            ['HeimrichHannot\ReaderBundle\Backend\ReaderConfig', 'flattenPaletteForSubEntities']
         ],
         'onsubmit_callback' => [
             ['huh.utils.dca', 'setDateAdded'],
@@ -46,7 +47,8 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'edit'       => [
                 'label' => &$GLOBALS['TL_LANG']['tl_reader_config']['edit'],
                 'href'  => 'table=tl_reader_config_element',
-                'icon'  => 'edit.svg'
+                'icon'  => 'edit.svg',
+                'button_callback' => ['HeimrichHannot\ReaderBundle\Backend\ReaderConfig', 'edit']
             ],
             'editheader' => [
                 'label'           => &$GLOBALS['TL_LANG']['tl_reader_config']['editheader'],
@@ -82,7 +84,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'addFieldDependentRedirect',
             'setPageTitleByField'
         ],
-        'default'      => '{general_legend},title;' // TODO add parentReaderConfig
+        'default'      => '{general_legend},title,parentReaderConfig;'
                           . '{config_legend},dataContainer,limitFields,itemRetrievalMode,hideUnpublishedItems;'
                           . '{security_legend},addShowConditions;' . '{jumpto_legend},addFieldDependentRedirect;'
                           . '{misc_legend},setPageTitleByField;' . '{template_legend},itemTemplate;'
@@ -139,7 +141,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
                     ]
                 );
             },
-            'eval'             => ['tl_class' => 'w50', 'includeBlankOption' => true, 'chosen' => true, 'notOverridable' => true],
+            'eval'             => ['tl_class' => 'w50', 'includeBlankOption' => true, 'chosen' => true, 'notOverridable' => true, 'submitOnChange' => true],
             'sql'              => "int(10) unsigned NOT NULL default '0'"
         ],
         // config

@@ -8,7 +8,7 @@
     "contao/core-bundle": "^4.4",
     "heimrichhannot/contao-head-bundle": "^1.0",
     "heimrichhannot/contao-utils-bundle": "dev-master",
-    "heimrichhannot/contao-entity-filter-bundle": "dev-master"
+    "heimrichhannot/contao-entity-filter-bundle": "^1.0"
   },
   "require-dev": {
     "contao/manager-plugin": "^2.0",

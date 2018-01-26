@@ -41,7 +41,11 @@ class ReaderConfigRegistry
     public function findBy($column, $value, array $options = [])
     {
         return System::getContainer()->get('huh.utils.model')->findModelInstancesBy(
-            'tl_reader_config', $column, $value, $options);
+            'tl_reader_config',
+            $column,
+            $value,
+            $options
+        );
     }
 
     /**
@@ -56,7 +60,11 @@ class ReaderConfigRegistry
     public function findOneBy($column, $value, array $options = [])
     {
         return System::getContainer()->get('huh.utils.model')->findModelInstancesBy(
-            'tl_reader_config', $column, $value, $options);
+            'tl_reader_config',
+            $column,
+            $value,
+            $options
+        );
     }
 
     /**
@@ -71,7 +79,10 @@ class ReaderConfigRegistry
     public function findByPk($pk, array $options = [])
     {
         return System::getContainer()->get('huh.utils.model')->findModelInstanceByPk(
-            'tl_reader_config', $pk, $options);
+            'tl_reader_config',
+            $pk,
+            $options
+        );
     }
 
     /**
@@ -92,5 +103,68 @@ class ReaderConfigRegistry
         }
 
         return $filterConfig->getFilter();
+    }
+
+    public function getOverridableProperty($property, int $readerConfigPk)
+    {
+        if (null === ($readerConfig = $this->findByPk($readerConfigPk))) {
+            return null;
+        }
+
+        $parentReaderConfigs = System::getContainer()->get('huh.utils.model')->findParentsRecursively(
+            'parentReaderConfig',
+            'tl_reader_config',
+            $readerConfig
+        );
+
+        if (empty($parentReaderConfigs)) {
+            return null;
+        }
+
+        return System::getContainer()->get('huh.utils.dca')->getOverridableProperty(
+            $property,
+            $parentReaderConfigs
+        );
+    }
+
+    /**
+     * Computes the reader config respecting the reader config hierarchy (sub reader configs can override parts of their ancestors).
+     *
+     * @param int $readerConfigPk
+     *
+     * @return ReaderConfigModel|null
+     */
+    public function computeReaderConfig(int $readerConfigPk)
+    {
+        if (null === ($readerConfig = $this->findByPk($readerConfigPk))) {
+            return null;
+        }
+
+        if (!$readerConfig->parentReaderConfig) {
+            return $readerConfig;
+        }
+
+        $computedReaderConfig = new ReaderConfigModel();
+
+        $parentReaderConfigs = System::getContainer()->get('huh.utils.model')->findParentsRecursively(
+            'parentReaderConfig', 'tl_reader_config', $readerConfig
+        );
+
+        $rootReaderConfig = System::getContainer()->get('huh.utils.model')->findRootParentRecursively(
+            'parentReaderConfig', 'tl_reader_config', $readerConfig
+        );
+
+        foreach ($GLOBALS['TL_DCA']['tl_reader_config']['fields'] as $field => $data) {
+            if ($data['eval']['notOverridable']) {
+                $computedReaderConfig->{$field} = $rootReaderConfig->{$field};
+            } else {
+                $computedReaderConfig->{$field} = System::getContainer()->get('huh.utils.dca')->getOverridableProperty(
+                    $field,
+                    array_merge($parentReaderConfigs, [$readerConfig])
+                );
+            }
+        }
+
+        return $computedReaderConfig;
     }
 }

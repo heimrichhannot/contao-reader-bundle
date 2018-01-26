@@ -20,9 +20,15 @@ class ReaderConfigHelper
             return [];
         }
 
+        $readerConfig = System::getContainer()->get('huh.utils.model')->findRootParentRecursively(
+            'parentReaderConfig', 'tl_reader_config', $readerConfig
+        );
+
         return \Contao\System::getContainer()->get('huh.utils.choice.field')->getCachedChoices(
             [
-                'dataContainer' => $readerConfig->dataContainer,
+                'dataContainer' => System::getContainer()->get('huh.utils.dca')->getOverridableProperty('dataContainer', [
+                    $readerConfig,
+                ]),
             ]
         );
     }
@@ -32,6 +38,10 @@ class ReaderConfigHelper
         if (!$dc->id || null === ($readerConfig = System::getContainer()->get('huh.reader.reader-config-registry')->findByPk($dc->id))) {
             return [];
         }
+
+        $readerConfig = System::getContainer()->get('huh.utils.model')->findRootParentRecursively(
+            'parentReaderConfig', 'tl_reader_config', $readerConfig
+        );
 
         return \Contao\System::getContainer()->get('huh.utils.choice.field')->getCachedChoices(
             [
@@ -46,6 +56,10 @@ class ReaderConfigHelper
         if (!$dc->id || null === ($readerConfig = System::getContainer()->get('huh.reader.reader-config-registry')->findByPk($dc->id))) {
             return [];
         }
+
+        $readerConfig = System::getContainer()->get('huh.utils.model')->findRootParentRecursively(
+            'parentReaderConfig', 'tl_reader_config', $readerConfig
+        );
 
         return \Contao\System::getContainer()->get('huh.utils.choice.field')->getCachedChoices(
             [

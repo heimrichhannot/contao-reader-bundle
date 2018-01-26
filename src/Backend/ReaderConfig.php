@@ -30,6 +30,10 @@ class ReaderConfig extends Backend
         if (null !== ($readerConfig = System::getContainer()->get('huh.reader.reader-config-registry')->findByPk($dc->id))) {
             $dca = &$GLOBALS['TL_DCA']['tl_reader_config'];
 
+            $readerConfig = System::getContainer()->get('huh.utils.model')->findRootParentRecursively(
+                'parentReaderConfig', 'tl_reader_config', $readerConfig
+            );
+
             if ($readerConfig->dataContainer) {
                 foreach (['itemRetrievalFieldConditions', 'showItemConditions', 'redirectFieldConditions'] as $field) {
                     $dca['fields'][$field]['eval']['multiColumnEditor']['table'] = $readerConfig->dataContainer;
@@ -41,7 +45,6 @@ class ReaderConfig extends Backend
     public static function addOverridableFields()
     {
         $dca = &$GLOBALS['TL_DCA']['tl_reader_config'];
-        $arrayUtil = System::getContainer()->get('huh.utils.array');
 
         $overridableFields = [];
 
@@ -63,71 +66,39 @@ class ReaderConfig extends Backend
                 ],
             ]
         );
+    }
 
-        // palette
-        // remove data container
-        unset($dca['fields']['dataContainer']);
+    public static function flattenPaletteForSubEntities(DataContainer $dc)
+    {
+        if (null !== ($readerConfig = System::getContainer()->get('huh.reader.reader-config-registry')->findByPk($dc->id))) {
+            if ($readerConfig->parentReaderConfig) {
+                $dca = &$GLOBALS['TL_DCA']['tl_reader_config'];
 
-        foreach ($overridableFields as $field) {
-            if ($dca['fields'][$field]['eval']['submitOnChange'] === true) {
-                unset($dca['fields'][$field]['eval']['submitOnChange']);
+                $overridableFields = [];
 
-                if (in_array($field, $dca['palettes']['__selector__'], true)) {
-                    // flatten concatenated type selectors
-                    foreach ($dca['subpalettes'] as $selector => $subPaletteFields) {
-                        if (false !== strpos($selector, $field.'_')) {
-                            if ($dca['subpalettes'][$selector]) {
-                                $subPaletteFields = explode(',', $dca['subpalettes'][$selector]);
-
-                                foreach (array_reverse($subPaletteFields) as $subPaletteField) {
-                                    $dca['palettes']['default'] = str_replace($field, $field.','.$subPaletteField, $dca['palettes']['default']);
-                                }
-                            }
-
-                            // remove nested field in order to avoid its normal "selector" behavior
-                            $arrayUtil->removeValue($field, $dca['palettes']['__selector__']);
-                            unset($dca['subpalettes'][$selector]);
-                        }
+                foreach ($dca['fields'] as $field => $data) {
+                    if (isset($data['eval']['notOverridable']) || isset($data['eval']['isOverrideSelector'])) {
+                        continue;
                     }
 
-                    // flatten sub palettes
-                    if (isset($dca['subpalettes'][$field]) && $dca['subpalettes'][$field]) {
-                        $subPaletteFields = explode(',', $dca['subpalettes'][$field]);
-
-                        foreach (array_reverse($subPaletteFields) as $subPaletteField) {
-                            $dca['palettes']['default'] = str_replace($field, $field.','.$subPaletteField, $dca['palettes']['default']);
-                        }
-
-                        // remove nested field in order to avoid its normal "selector" behavior
-                        $arrayUtil->removeValue($field, $dca['palettes']['__selector__']);
-                        unset($dca['subpalettes'][$field]);
-                    }
+                    $overridableFields[] = $field;
                 }
-            }
 
-            $dca['palettes']['default'] = str_replace($field, 'override'.ucfirst($field), $dca['palettes']['default']);
+                System::getContainer()->get('huh.utils.dca')->flattenPaletteForSubEntities('tl_reader_config', $overridableFields);
+
+                // remove data container
+                unset($dca['fields']['dataContainer']);
+            }
+        }
+    }
+
+    public function edit($row, $href, $label, $title, $icon, $attributes)
+    {
+        if ($row['parentReaderConfig']) {
+            return '';
         }
 
-        // sub palettes
-//        foreach ($overridableFields as $field)
-//        {
-//            foreach ($dca['subpalettes'] as $selector => $subPalettePields)
-//            {
-//                if ($selector == 'override' . ucfirst($field))
-//                {
-//                    continue;
-//                }
-//
-//                $dca['subpalettes'][$selector] = str_replace($field, 'override' . ucfirst($field), $subPalettePields);
-//            }
-//        }
-
-//        echo '<pre>';
-//        var_dump(array_keys($dca['fields']));
-//        var_dump($dca['palettes']);
-//        var_dump($dca['subpalettes']);
-//        echo '</pre>';
-//        die();
+        return sprintf('<a href="%s" title="%s" class="edit">%s</a>', $this->addToUrl($href.'&amp;id='.$row['id']), $title, Image::getHtml($icon, $label));
     }
 
     /**
