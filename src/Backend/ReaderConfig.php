@@ -122,4 +122,23 @@ class ReaderConfig extends Backend
                 preg_replace('/\.svg$/i', '_.svg', $icon)
             ).' ';
     }
+
+    /**
+     * @param array
+     * @param string
+     * @param object
+     * @param string
+     *
+     * @return string
+     */
+    public function generateLabel($row, $label, $dca, $attributes)
+    {
+        if ($row['parentReaderConfig']) {
+            if (null !== ($readerConfig = System::getContainer()->get('huh.reader.reader-config-registry')->findByPk($row['parentReaderConfig']))) {
+                $label .= '<span style="padding-left:3px;color:#b3b3b3;">['.$GLOBALS['TL_LANG']['MSC']['readerBundle']['parentConfig'].': '.$readerConfig->title.']</span>';
+            }
+        }
+
+        return $label;
+    }
 }

@@ -27,7 +27,8 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
     'list'        => [
         'label'             => [
             'fields' => ['title'],
-            'format' => '%s'
+            'format' => '%s',
+            'label_callback' => ['HeimrichHannot\ReaderBundle\Backend\ReaderConfig', 'generateLabel']
         ],
         'sorting'           => [
             'mode'         => 1,
