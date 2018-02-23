@@ -16,10 +16,10 @@ $lang['parentReaderConfig'][1] = 'Wählen Sie hier eine Leserkonfiguration aus, 
 // config
 $lang['dataContainer'][0]                = 'Data-Container';
 $lang['dataContainer'][1]                = 'Wählen Sie hier bitte den Data-Container aus, dem die anzuzeigenden Entitäten angehören.';
-$lang['limitFields'][0]                  = 'Verarbeitete Felder einschränken';
-$lang['limitFields'][1]                  = 'Wählen Sie diese Option, wenn nicht alle Felder des Data-Containers verarbeitet werden sollen.';
-$lang['fields'][0]                       = 'Felder';
-$lang['fields'][1]                       = 'Wählen Sie hier die zu verarbeitenden Felder aus.';
+$lang['limitFormattedFields'][0]         = 'Formatierte Felder einschränken (Geschwindigkeit verbessern)';
+$lang['limitFormattedFields'][1]         = 'Wählen Sie diese Option, wenn nur bestimmte Felder auf Basis der Data-Containers-Konfiguration formatiert werden sollen möchten.';
+$lang['formattedFields'][0]              = 'Formatierte Felder';
+$lang['formattedFields'][1]              = 'Wählen Sie hier die zu formatierenden Felder aus.';
 $lang['itemRetrievalMode'][0]            = 'Instanzabruf-Modus';
 $lang['itemRetrievalMode'][1]            =
     'Die anzuzeigende Instanz kann über verschiedene Methoden bezogen werden. Wählen Sie hier bitte eine solche aus.';

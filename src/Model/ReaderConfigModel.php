@@ -14,8 +14,8 @@ namespace HeimrichHannot\ReaderBundle\Model;
  * @property int    $dateAdded
  * @property string $title
  * @property string $dataContainer
- * @property bool   $limitFields
- * @property string $fields
+ * @property bool   $limitFormattedFields
+ * @property string $formattedFields
  * @property string $itemRetrievalMode
  * @property string $itemRetrievalAutoItemField
  * @property string $itemRetrievalFieldConditions

@@ -168,7 +168,10 @@ class ModuleReader extends \Contao\Module
         $dca = &$GLOBALS['TL_DCA'][$readerConfig->dataContainer];
         $dc = $this->dc;
 
-        $fields = $readerConfig->limitFields ? StringUtil::deserialize($readerConfig->fields, true) : array_keys($dca['fields']);
+        $fields = $readerConfig->limitFormattedFields ? StringUtil::deserialize($readerConfig->formattedFields,
+            true) : array_keys($dca['fields']);
+
+        $result['raw'] = $item;
 
         foreach ($fields as $field) {
             $dc->field = $field;
@@ -180,9 +183,6 @@ class ModuleReader extends \Contao\Module
                     $value = $instance->{$callback[1]}($value, $dc);
                 }
             }
-
-            // add raw value
-            $result['raw'][$field] = $value;
 
             $result['formatted'][$field] = $formUtil->prepareSpecialValueForOutput(
                 $field,

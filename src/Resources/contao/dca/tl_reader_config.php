@@ -26,8 +26,8 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
     ],
     'list'        => [
         'label'             => [
-            'fields' => ['title'],
-            'format' => '%s',
+            'fields'         => ['title'],
+            'format'         => '%s',
             'label_callback' => ['HeimrichHannot\ReaderBundle\Backend\ReaderConfig', 'generateLabel']
         ],
         'sorting'           => [
@@ -46,9 +46,9 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
         ],
         'operations'        => [
             'edit'       => [
-                'label' => &$GLOBALS['TL_LANG']['tl_reader_config']['edit'],
-                'href'  => 'table=tl_reader_config_element',
-                'icon'  => 'edit.svg',
+                'label'           => &$GLOBALS['TL_LANG']['tl_reader_config']['edit'],
+                'href'            => 'table=tl_reader_config_element',
+                'icon'            => 'edit.svg',
                 'button_callback' => ['HeimrichHannot\ReaderBundle\Backend\ReaderConfig', 'edit']
             ],
             'editheader' => [
@@ -67,7 +67,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
                 'href'       => 'act=delete',
                 'icon'       => 'delete.gif',
                 'attributes' => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm']
-                                . '\'))return false;Backend.getScrollOffset()"'
+                    . '\'))return false;Backend.getScrollOffset()"'
             ],
             'show'       => [
                 'label' => &$GLOBALS['TL_LANG']['tl_reader_config']['show'],
@@ -78,7 +78,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
     ],
     'palettes'    => [
         '__selector__' => [
-            'limitFields',
+            'limitFormattedFields',
             'itemRetrievalMode',
             'hideUnpublishedItems',
             'addShowConditions',
@@ -86,20 +86,20 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'setPageTitleByField'
         ],
         'default'      => '{general_legend},title,parentReaderConfig;'
-                          . '{config_legend},dataContainer,limitFields,itemRetrievalMode,hideUnpublishedItems;'
-                          . '{security_legend},addShowConditions;' . '{jumpto_legend},addFieldDependentRedirect;'
-                          . '{misc_legend},setPageTitleByField;' . '{template_legend},itemTemplate;'
+            . '{config_legend},dataContainer,limitFields,itemRetrievalMode,hideUnpublishedItems;'
+            . '{security_legend},addShowConditions;' . '{jumpto_legend},addFieldDependentRedirect;'
+            . '{misc_legend},setPageTitleByField;' . '{template_legend},itemTemplate;'
     ],
     'subpalettes' => [
-        'limitFields'                                                                                                  => 'fields',
+        'limitFormattedFields'                                                                    => 'formattedFields',
         'itemRetrievalMode_'
-        . \HeimrichHannot\ReaderBundle\Backend\ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM                             => 'itemRetrievalAutoItemField',
+        . \HeimrichHannot\ReaderBundle\Backend\ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM        => 'itemRetrievalAutoItemField',
         'itemRetrievalMode_'
-        . \HeimrichHannot\ReaderBundle\Backend\ReaderConfig::ITEM_RETRIEVAL_MODE_FIELD_CONDITIONS                      => 'itemRetrievalFieldConditions',
-        'hideUnpublishedItems'                                                                                         => 'publishedField,invertPublishedField',
-        'addShowConditions'                                                                                            => 'showFieldConditions',
-        'addFieldDependentRedirect'                                                                                    => 'fieldDependentJumpTo,redirectFieldConditions',
-        'setPageTitleByField'                                                                                          => 'pageTitleFieldPattern'
+        . \HeimrichHannot\ReaderBundle\Backend\ReaderConfig::ITEM_RETRIEVAL_MODE_FIELD_CONDITIONS => 'itemRetrievalFieldConditions',
+        'hideUnpublishedItems'                                                                    => 'publishedField,invertPublishedField',
+        'addShowConditions'                                                                       => 'showFieldConditions',
+        'addFieldDependentRedirect'                                                               => 'fieldDependentJumpTo,redirectFieldConditions',
+        'setPageTitleByField'                                                                     => 'pageTitleFieldPattern'
     ],
     'fields'      => [
         'id'                         => [
@@ -134,8 +134,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'exclude'          => true,
             'filter'           => true,
             'inputType'        => 'select',
-            'options_callback' => function (DataContainer $dc)
-            {
+            'options_callback' => function (DataContainer $dc) {
                 return \Contao\System::getContainer()->get('huh.reader.choice.parent-reader-config')->getCachedChoices(
                     [
                         'id' => $dc->id
@@ -161,18 +160,17 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'exclude'          => true,
             'sql'              => "varchar(128) NOT NULL default ''",
         ],
-        'limitFields'                => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['limitFields'],
+        'limitFormattedFields'                => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['limitFormattedFields'],
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
             'sql'       => "char(1) NOT NULL default ''"
         ],
-        'fields'                     => [
-            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config']['fields'],
+        'formattedFields'                     => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config']['formattedFields'],
             'inputType'        => 'checkboxWizard',
-            'options_callback' => function (DataContainer $dc)
-            {
+            'options_callback' => function (DataContainer $dc) {
                 return \HeimrichHannot\ReaderBundle\Util\ReaderConfigHelper::getFields($dc);
             },
             'exclude'          => true,
@@ -194,8 +192,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'exclude'          => true,
             'filter'           => true,
             'inputType'        => 'select',
-            'options_callback' => function (DataContainer $dc)
-            {
+            'options_callback' => function (DataContainer $dc) {
                 return \HeimrichHannot\ReaderBundle\Util\ReaderConfigHelper::getTextFields($dc);
             },
             'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
@@ -212,8 +209,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config']['publishedField'],
             'exclude'          => true,
             'inputType'        => 'select',
-            'options_callback' => function (DataContainer $dc)
-            {
+            'options_callback' => function (DataContainer $dc) {
                 return \HeimrichHannot\ReaderBundle\Util\ReaderConfigHelper::getCheckboxFields($dc);
             },
             'eval'             => ['maxlength' => 32, 'tl_class' => 'w50', 'includeBlankOption' => true, 'chosen' => true, 'mandatory' => true],
