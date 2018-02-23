@@ -86,7 +86,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'setPageTitleByField'
         ],
         'default'      => '{general_legend},title,parentReaderConfig;'
-            . '{config_legend},dataContainer,limitFields,itemRetrievalMode,hideUnpublishedItems;'
+            . '{config_legend},dataContainer,limitFormattedFields,itemRetrievalMode,hideUnpublishedItems;'
             . '{security_legend},addShowConditions;' . '{jumpto_legend},addFieldDependentRedirect;'
             . '{misc_legend},setPageTitleByField;' . '{template_legend},itemTemplate;'
     ],
