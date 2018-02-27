@@ -53,11 +53,11 @@ class ModuleReader extends \Contao\Module
      * ModuleReader constructor.
      *
      * @param ModuleModel $objModule
-     * @param string $strColumn
+     * @param string      $strColumn
      */
     public function __construct(ModuleModel $objModule, $strColumn = 'main')
     {
-        $this->framework  = System::getContainer()->get('contao.framework');
+        $this->framework = System::getContainer()->get('contao.framework');
         $this->translator = System::getContainer()->get('translator');
 
         parent::__construct($objModule, $strColumn);
@@ -66,12 +66,12 @@ class ModuleReader extends \Contao\Module
     public function generate()
     {
         if (TL_MODE == 'BE') {
-            $objTemplate           = new \BackendTemplate('be_wildcard');
-            $objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD'][$this->type][0]) . ' ###';
-            $objTemplate->title    = $this->headline;
-            $objTemplate->id       = $this->id;
-            $objTemplate->link     = $this->name;
-            $objTemplate->href     = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+            $objTemplate = new \BackendTemplate('be_wildcard');
+            $objTemplate->wildcard = '### '.Utf8::strtoupper($GLOBALS['TL_LANG']['FMD'][$this->type][0]).' ###';
+            $objTemplate->title = $this->headline;
+            $objTemplate->id = $this->id;
+            $objTemplate->link = $this->name;
+            $objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id='.$this->id;
 
             return $objTemplate->parse();
         }
@@ -92,7 +92,7 @@ class ModuleReader extends \Contao\Module
 
         // throw a 404 if no item found
         if (null === $this->item) {
-            throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+            throw new PageNotFoundException('Page not found: '.Environment::get('uri'));
         }
 
         return parent::generate();
@@ -101,7 +101,7 @@ class ModuleReader extends \Contao\Module
     public function checkPermission()
     {
         $readerConfig = $this->readerConfig;
-        $allowed      = true;
+        $allowed = true;
 
         if ($readerConfig->addShowConditions) {
             $itemConditions = StringUtil::deserialize($readerConfig->showFieldConditions, true);
@@ -113,7 +113,7 @@ class ModuleReader extends \Contao\Module
                 );
 
                 $result = Database::getInstance()->prepare(
-                    "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND id=" . $this->item->id
+                    "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND id=".$this->item->id
                 )->execute($values);
 
                 if ($result->numRows < 1) {
@@ -128,18 +128,18 @@ class ModuleReader extends \Contao\Module
     protected function compile()
     {
         $readerConfig = $this->readerConfig;
-        $item         = $this->item;
+        $item = $this->item;
 
         Controller::loadDataContainer($readerConfig->dataContainer);
         System::loadLanguageFile($readerConfig->dataContainer);
 
         // apply module fields to template
         $this->Template->headline = $this->headline;
-        $this->Template->hl       = $this->hl;
+        $this->Template->hl = $this->hl;
 
         // add class to every reader template
-        $cssID    = $this->cssID;
-        $cssID[1] = $cssID[1] . ($cssID[1] ? ' ' : '') . 'huh-reader';
+        $cssID = $this->cssID;
+        $cssID[1] = $cssID[1].($cssID[1] ? ' ' : '').'huh-reader';
 
         $this->cssID = $cssID;
 
@@ -154,19 +154,19 @@ class ModuleReader extends \Contao\Module
 
         $this->setPageTitle();
 
-        $preparedItem         = $this->prepareItem($item->row());
+        $preparedItem = $this->prepareItem($item->row());
         $this->Template->item = $this->parseItem($preparedItem);
     }
 
     protected function prepareItem(array $item): array
     {
         $readerConfig = $this->readerConfig;
-        $formUtil     = System::getContainer()->get('huh.utils.form');
+        $formUtil = System::getContainer()->get('huh.utils.form');
 
         $result = [];
 
         $dca = &$GLOBALS['TL_DCA'][$readerConfig->dataContainer];
-        $dc  = $this->dc;
+        $dc = $this->dc;
 
         $fields = $readerConfig->limitFormattedFields ? StringUtil::deserialize($readerConfig->formattedFields,
             true) : array_keys($dca['fields']);
@@ -175,12 +175,12 @@ class ModuleReader extends \Contao\Module
 
         foreach ($fields as $field) {
             $dc->field = $field;
-            $value     = $item[$field];
+            $value = $item[$field];
 
             if (is_array($dca['fields'][$field]['load_callback'])) {
                 foreach ($dca['fields'][$field]['load_callback'] as $callback) {
                     $instance = System::importStatic($callback[0]);
-                    $value    = $instance->{$callback[1]}($value, $dc);
+                    $value = $instance->{$callback[1]}($value, $dc);
                 }
             }
 
@@ -209,7 +209,7 @@ class ModuleReader extends \Contao\Module
             if (is_array($dca['fields'][$field]['load_callback'])) {
                 foreach ($dca['fields'][$field]['load_callback'] as $callback) {
                     $instance = System::importStatic($callback[0]);
-                    $value    = $instance->{$callback[1]}($value, $dc);
+                    $value = $instance->{$callback[1]}($value, $dc);
                 }
             }
 
@@ -273,7 +273,7 @@ class ModuleReader extends \Contao\Module
     protected function retrieveItem()
     {
         $readerConfig = $this->readerConfig;
-        $item         = null;
+        $item = null;
 
         switch ($readerConfig->itemRetrievalMode) {
             case ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM:
@@ -298,7 +298,7 @@ class ModuleReader extends \Contao\Module
     protected function retrieveItemByAutoItem()
     {
         $readerConfig = $this->readerConfig;
-        $item         = null;
+        $item = null;
 
         if (Config::get('useAutoItem') && ($autoItem = Request::getGet('auto_item'))) {
             $field = $readerConfig->itemRetrievalAutoItemField;
@@ -307,7 +307,7 @@ class ModuleReader extends \Contao\Module
             $item = System::getContainer()->get('huh.utils.model')->findOneModelInstanceBy(
                 $readerConfig->dataContainer,
                 [
-                    $field . '=?',
+                    $field.'=?',
                 ],
                 [
                     $autoItem,
@@ -326,7 +326,7 @@ class ModuleReader extends \Contao\Module
     protected function retrieveItemByFieldConditions()
     {
         $readerConfig = $this->readerConfig;
-        $item         = null;
+        $item = null;
 
         $itemConditions = StringUtil::deserialize($readerConfig->itemRetrievalFieldConditions, true);
 
@@ -362,7 +362,7 @@ class ModuleReader extends \Contao\Module
 
     protected function getItemTemplateByName($name)
     {
-        $config    = System::getContainer()->getParameter('huh.reader');
+        $config = System::getContainer()->getParameter('huh.reader');
         $templates = $config['reader']['templates']['item'];
 
         foreach ($templates as $template) {
@@ -387,11 +387,11 @@ class ModuleReader extends \Contao\Module
 
                 if ($item['raw'][$imageReaderConfigElements->imageSelectorField] && $item['raw'][$imageReaderConfigElements->imageField]) {
                     $imageSelectorField = $imageReaderConfigElements->imageSelectorField;
-                    $image              = $item['raw'][$imageReaderConfigElements->imageField];
-                    $imageField         = $imageReaderConfigElements->imageField;
+                    $image = $item['raw'][$imageReaderConfigElements->imageField];
+                    $imageField = $imageReaderConfigElements->imageField;
                 } elseif ($imageReaderConfigElements->placeholderImageMode) {
                     $imageSelectorField = $imageReaderConfigElements->imageSelectorField;
-                    $imageField         = $imageReaderConfigElements->imageField;
+                    $imageField = $imageReaderConfigElements->imageField;
 
                     switch ($imageReaderConfigElements->placeholderImageMode) {
                         case ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED:
@@ -412,7 +412,7 @@ class ModuleReader extends \Contao\Module
                 $imageModel = FilesModel::findByUuid($image);
 
                 if (null !== $imageModel
-                    && is_file(System::getContainer()->get('huh.utils.container')->getProjectDir() . '/' . $imageModel->path)) {
+                    && is_file(System::getContainer()->get('huh.utils.container')->getProjectDir().'/'.$imageModel->path)) {
                     $imageArray = $item['raw'];
 
                     // Override the default image size
@@ -424,7 +424,7 @@ class ModuleReader extends \Contao\Module
                         }
                     }
 
-                    $imageArray[$imageField]             = $imageModel->path;
+                    $imageArray[$imageField] = $imageModel->path;
                     $templateData['images'][$imageField] = [];
 
                     System::getContainer()->get('huh.utils.image')->addToTemplateData(
@@ -445,7 +445,7 @@ class ModuleReader extends \Contao\Module
     protected function setPageTitle()
     {
         $readerConfig = $this->readerConfig;
-        $item         = $this->item;
+        $item = $this->item;
 
         if ($readerConfig->setPageTitleByField && $readerConfig->pageTitleFieldPattern) {
             $pageTitle = preg_replace_callback(
@@ -470,7 +470,7 @@ class ModuleReader extends \Contao\Module
     protected function doFieldDependentRedirect()
     {
         $readerConfig = $this->readerConfig;
-        $redirect     = false;
+        $redirect = false;
 
         if (!$readerConfig->addFieldDependentRedirect || !$readerConfig->fieldDependentJumpTo) {
             return;
@@ -485,7 +485,7 @@ class ModuleReader extends \Contao\Module
             );
 
             $result = Database::getInstance()->prepare(
-                "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND id=" . $this->item->id
+                "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND id=".$this->item->id
             )->execute($values);
 
             $redirect = $result->numRows > 0;
@@ -495,7 +495,7 @@ class ModuleReader extends \Contao\Module
             $jumpTo = System::getContainer()->get('huh.utils.url')->getJumpToPageObject($readerConfig->fieldDependentJumpTo);
 
             if (null !== $jumpTo) {
-                throw new RedirectResponseException('/' . $jumpTo->getFrontendUrl());
+                throw new RedirectResponseException('/'.$jumpTo->getFrontendUrl());
             }
         }
     }
