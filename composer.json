@@ -7,7 +7,7 @@
     "php": ">=7.1.0",
     "contao/core-bundle": "^4.4",
     "heimrichhannot/contao-head-bundle": "^1.0",
-    "heimrichhannot/contao-utils-bundle": "dev-master",
+    "heimrichhannot/contao-utils-bundle": "^1.0",
     "heimrichhannot/contao-entity-filter-bundle": "^1.0",
     "twig/extensions": "^1.5"
   },
