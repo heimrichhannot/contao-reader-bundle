@@ -19,6 +19,17 @@ services:
         arguments:
             - "@contao.framework"
             - "@huh.reader.reader-config-registry"
+    huh.reader.manager.reader:
+        class: HeimrichHannot\ReaderBundle\Manager\ReaderManager
+        arguments:
+            - "@contao.framework"
+            - "@huh.entity_filter.backend.entity_filter"
+            - "@huh.reader.reader-config-registry"
+            - "@huh.reader.reader-config-element-registry"
+            - "@huh.utils.model"
+            - "@huh.utils.url"
+            - "@huh.utils.form"
+            - "@twig"
     huh.reader.reader-config-registry:
         class: HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry
         arguments:
