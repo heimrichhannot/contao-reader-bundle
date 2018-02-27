@@ -8,14 +8,14 @@
 
 namespace HeimrichHannot\ReaderBundle\Backend;
 
-use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Database;
 use Contao\Input;
 use Contao\System;
 
-class ReaderConfigElement extends Backend
+class ReaderConfigElement
 {
     const TYPE_IMAGE = 'image';
 
@@ -31,6 +31,14 @@ class ReaderConfigElement extends Backend
         self::PLACEHOLDER_IMAGE_MODE_GENDERED,
         self::PLACEHOLDER_IMAGE_MODE_SIMPLE,
     ];
+
+    /** @var ContaoFrameworkInterface */
+    protected $framework;
+
+    public function __construct(ContaoFrameworkInterface $framework)
+    {
+        $this->framework = $framework;
+    }
 
     public function listChildren($arrRow)
     {

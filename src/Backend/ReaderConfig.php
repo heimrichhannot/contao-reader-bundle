@@ -8,14 +8,18 @@
 
 namespace HeimrichHannot\ReaderBundle\Backend;
 
-use Contao\Backend;
 use Contao\BackendUser;
+use Contao\Controller;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\StringUtil;
 use Contao\System;
+use HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry;
+use HeimrichHannot\UtilsBundle\Dca\DcaUtil;
+use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 
-class ReaderConfig extends Backend
+class ReaderConfig
 {
     const ITEM_RETRIEVAL_MODE_AUTO_ITEM = 'auto_item';
     const ITEM_RETRIEVAL_MODE_FIELD_CONDITIONS = 'field_conditions';
@@ -25,23 +29,46 @@ class ReaderConfig extends Backend
         self::ITEM_RETRIEVAL_MODE_FIELD_CONDITIONS,
     ];
 
+    /** @var ContaoFrameworkInterface */
+    protected $framework;
+
+    /** @var ReaderConfigRegistry */
+    protected $readerConfigRegistry;
+
+    /** @var ModelUtil */
+    protected $modelUtil;
+
+    /** @var DcaUtil */
+    protected $dcaUtil;
+
+    public function __construct(ContaoFrameworkInterface $framework, ReaderConfigRegistry $readerConfigRegistry, ModelUtil $modelUtil, DcaUtil $dcaUtil)
+    {
+        $this->framework = $framework;
+        $this->readerConfigRegistry = $readerConfigRegistry;
+        $this->modelUtil = $modelUtil;
+        $this->dcaUtil = $dcaUtil;
+    }
+
     public function modifyPalette(DataContainer $dc)
     {
-        if (null !== ($readerConfig = System::getContainer()->get('huh.reader.reader-config-registry')->findByPk($dc->id))) {
+        if (null !== ($readerConfig = $this->readerConfigRegistry->findByPk($dc->id))) {
             $dca = &$GLOBALS['TL_DCA']['tl_reader_config'];
 
-            $readerConfig = System::getContainer()->get('huh.utils.model')->findRootParentRecursively(
+            $readerConfig = $this->modelUtil->findRootParentRecursively(
                 'parentReaderConfig', 'tl_reader_config', $readerConfig
             );
 
             if ($readerConfig->dataContainer) {
-                foreach (['itemRetrievalFieldConditions', 'showItemConditions', 'redirectFieldConditions'] as $field) {
+                foreach (['itemRetrievalFieldConditions', 'showFieldConditions', 'redirectFieldConditions'] as $field) {
                     $dca['fields'][$field]['eval']['multiColumnEditor']['table'] = $readerConfig->dataContainer;
                 }
             }
         }
     }
 
+    /**
+     * static because else db field won't get added by install tool.
+     */
     public static function addOverridableFields()
     {
         $dca = &$GLOBALS['TL_DCA']['tl_reader_config'];
@@ -68,9 +95,9 @@ class ReaderConfig extends Backend
         );
     }
 
-    public static function flattenPaletteForSubEntities(DataContainer $dc)
+    public function flattenPaletteForSubEntities(DataContainer $dc)
     {
-        if (null !== ($readerConfig = System::getContainer()->get('huh.reader.reader-config-registry')->findByPk($dc->id))) {
+        if (null !== ($readerConfig = $this->readerConfigRegistry->findByPk($dc->id))) {
             if ($readerConfig->parentReaderConfig) {
                 $dca = &$GLOBALS['TL_DCA']['tl_reader_config'];
 
@@ -84,7 +111,7 @@ class ReaderConfig extends Backend
                     $overridableFields[] = $field;
                 }
 
-                System::getContainer()->get('huh.utils.dca')->flattenPaletteForSubEntities('tl_reader_config', $overridableFields);
+                $this->dcaUtil->flattenPaletteForSubEntities('tl_reader_config', $overridableFields);
 
                 // remove data container
                 unset($dca['fields']['dataContainer']);
@@ -98,7 +125,7 @@ class ReaderConfig extends Backend
             return '';
         }
 
-        return sprintf('<a href="%s" title="%s" class="edit">%s</a>', $this->addToUrl($href.'&amp;id='.$row['id']), $title, Image::getHtml($icon, $label));
+        return sprintf('<a href="%s" title="%s" class="edit">%s</a>', Controller::addToUrl($href.'&amp;id='.$row['id']), $title, Image::getHtml($icon, $label));
     }
 
     /**
@@ -116,8 +143,8 @@ class ReaderConfig extends Backend
     public function editHeader($row, $href, $label, $title, $icon, $attributes)
     {
         return BackendUser::getInstance()->canEditFieldsOf('tl_reader_config')
-            ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes
-              .'>'.Image::getHtml($icon, $label).'</a> '
+            ? '<a href="'.Controller::addToUrl($href.'&amp;id='.$row['id'].'&amp;rt='.REQUEST_TOKEN).'" title="'.StringUtil::specialchars($title).'"'.$attributes
+            .'>'.Image::getHtml($icon, $label).'</a> '
             : Image::getHtml(
                 preg_replace('/\.svg$/i', '_.svg', $icon)
             ).' ';
@@ -134,7 +161,7 @@ class ReaderConfig extends Backend
     public function generateLabel($row, $label, $dca, $attributes)
     {
         if ($row['parentReaderConfig']) {
-            if (null !== ($readerConfig = System::getContainer()->get('huh.reader.reader-config-registry')->findByPk($row['parentReaderConfig']))) {
+            if (null !== ($readerConfig = $this->readerConfigRegistry->findByPk($row['parentReaderConfig']))) {
                 $label .= '<span style="padding-left:3px;color:#b3b3b3;">['.$GLOBALS['TL_LANG']['MSC']['readerBundle']['parentConfig'].': '.$readerConfig->title.']</span>';
             }
         }

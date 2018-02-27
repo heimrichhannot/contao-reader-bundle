@@ -8,11 +8,23 @@
 
 namespace HeimrichHannot\ReaderBundle\Choice;
 
-use Contao\System;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry;
 use HeimrichHannot\UtilsBundle\Choice\AbstractChoice;
 
 class ParentReaderConfigChoice extends AbstractChoice
 {
+    /** @var ReaderConfigRegistry */
+    protected $readerConfigRegistry;
+
+    public function __construct(ContaoFrameworkInterface $framework, ReaderConfigRegistry $readerConfigRegistry)
+    {
+        $this->framework = $framework;
+        $this->readerConfigRegistry = $readerConfigRegistry;
+
+        parent::__construct($framework);
+    }
+
     /**
      * @return array
      */
@@ -21,7 +33,7 @@ class ParentReaderConfigChoice extends AbstractChoice
         $id = $this->getContext()['id'];
 
         if (!$id
-            || null === ($readerConfigs = System::getContainer()->get('huh.reader.reader-config-registry')->findBy(
+            || null === ($readerConfigs = $this->readerConfigRegistry->findBy(
                 [
                     'tl_reader_config.id != ?',
                 ],

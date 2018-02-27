@@ -9,24 +9,31 @@
 namespace HeimrichHannot\ReaderBundle\Registry;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\System;
+use HeimrichHannot\FilterBundle\Registry\FilterRegistry;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
+use HeimrichHannot\UtilsBundle\Dca\DcaUtil;
+use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 
 class ReaderConfigRegistry
 {
-    /**
-     * @var ContaoFrameworkInterface
-     */
+    /** @var ContaoFrameworkInterface */
     protected $framework;
 
-    /**
-     * Constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     */
-    public function __construct(ContaoFrameworkInterface $framework)
+    /** @var FilterRegistry */
+    protected $filterRegistry;
+
+    /** @var ModelUtil */
+    protected $modelUtil;
+
+    /** @var DcaUtil */
+    protected $dcaUtil;
+
+    public function __construct(ContaoFrameworkInterface $framework, FilterRegistry $filterRegistry, ModelUtil $modelUtil, DcaUtil $dcaUtil)
     {
         $this->framework = $framework;
+        $this->filterRegistry = $filterRegistry;
+        $this->modelUtil = $modelUtil;
+        $this->dcaUtil = $dcaUtil;
     }
 
     /**
@@ -40,7 +47,7 @@ class ReaderConfigRegistry
      */
     public function findBy($column, $value, array $options = [])
     {
-        return System::getContainer()->get('huh.utils.model')->findModelInstancesBy(
+        return $this->modelUtil->findModelInstancesBy(
             'tl_reader_config',
             $column,
             $value,
@@ -59,7 +66,7 @@ class ReaderConfigRegistry
      */
     public function findOneBy($column, $value, array $options = [])
     {
-        return System::getContainer()->get('huh.utils.model')->findModelInstancesBy(
+        return $this->modelUtil->findModelInstancesBy(
             'tl_reader_config',
             $column,
             $value,
@@ -78,7 +85,7 @@ class ReaderConfigRegistry
      */
     public function findByPk($pk, array $options = [])
     {
-        return System::getContainer()->get('huh.utils.model')->findModelInstanceByPk(
+        return $this->modelUtil->findModelInstanceByPk(
             'tl_reader_config',
             $pk,
             $options
@@ -98,7 +105,7 @@ class ReaderConfigRegistry
             return null;
         }
 
-        if (!$readerConfig->filter || null === ($filterConfig = System::getContainer()->get('huh.filter.registry')->findById($readerConfig->filter))) {
+        if (!$readerConfig->filter || null === ($filterConfig = $this->filterRegistry->findById($readerConfig->filter))) {
             return null;
         }
 
@@ -111,7 +118,7 @@ class ReaderConfigRegistry
             return null;
         }
 
-        $parentReaderConfigs = System::getContainer()->get('huh.utils.model')->findParentsRecursively(
+        $parentReaderConfigs = $this->modelUtil->findParentsRecursively(
             'parentReaderConfig',
             'tl_reader_config',
             $readerConfig
@@ -121,7 +128,7 @@ class ReaderConfigRegistry
             return null;
         }
 
-        return System::getContainer()->get('huh.utils.dca')->getOverridableProperty(
+        return $this->dcaUtil->getOverridableProperty(
             $property,
             $parentReaderConfigs
         );
@@ -146,11 +153,11 @@ class ReaderConfigRegistry
 
         $computedReaderConfig = new ReaderConfigModel();
 
-        $parentReaderConfigs = System::getContainer()->get('huh.utils.model')->findParentsRecursively(
+        $parentReaderConfigs = $this->modelUtil->findParentsRecursively(
             'parentReaderConfig', 'tl_reader_config', $readerConfig
         );
 
-        $rootReaderConfig = System::getContainer()->get('huh.utils.model')->findRootParentRecursively(
+        $rootReaderConfig = $this->modelUtil->findRootParentRecursively(
             'parentReaderConfig', 'tl_reader_config', $readerConfig
         );
 
@@ -158,7 +165,7 @@ class ReaderConfigRegistry
             if ($data['eval']['notOverridable']) {
                 $computedReaderConfig->{$field} = $rootReaderConfig->{$field};
             } else {
-                $computedReaderConfig->{$field} = System::getContainer()->get('huh.utils.dca')->getOverridableProperty(
+                $computedReaderConfig->{$field} = $this->dcaUtil->getOverridableProperty(
                     $field,
                     array_merge($parentReaderConfigs, [$readerConfig])
                 );

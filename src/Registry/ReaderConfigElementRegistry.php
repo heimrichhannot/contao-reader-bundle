@@ -9,24 +9,25 @@
 namespace HeimrichHannot\ReaderBundle\Registry;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\System;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
+use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 
 class ReaderConfigElementRegistry
 {
-    /**
-     * @var ContaoFrameworkInterface
-     */
+    /** @var ContaoFrameworkInterface */
     protected $framework;
 
-    /**
-     * Constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     */
-    public function __construct(ContaoFrameworkInterface $framework)
+    /** @var ReaderConfigRegistry */
+    protected $readerConfigRegistry;
+
+    /** @var ModelUtil */
+    protected $modelUtil;
+
+    public function __construct(ContaoFrameworkInterface $framework, ReaderConfigRegistry $readerConfigRegistry, ModelUtil $modelUtil)
     {
         $this->framework = $framework;
+        $this->readerConfigRegistry = $readerConfigRegistry;
+        $this->modelUtil = $modelUtil;
     }
 
     /**
@@ -40,7 +41,7 @@ class ReaderConfigElementRegistry
      */
     public function findBy($column, $value, array $options = [])
     {
-        return System::getContainer()->get('huh.utils.model')->findModelInstancesBy(
+        return $this->modelUtil->findModelInstancesBy(
             'tl_reader_config_element', $column, $value, $options);
     }
 
@@ -55,7 +56,7 @@ class ReaderConfigElementRegistry
      */
     public function findOneBy($column, $value, array $options = [])
     {
-        return System::getContainer()->get('huh.utils.model')->findModelInstancesBy(
+        return $this->modelUtil->findModelInstancesBy(
             'tl_reader_config_element', $column, $value, $options);
     }
 
@@ -70,7 +71,7 @@ class ReaderConfigElementRegistry
      */
     public function findByPk($pk, array $options = [])
     {
-        return System::getContainer()->get('huh.utils.model')->findModelInstanceByPk(
+        return $this->modelUtil->findModelInstanceByPk(
             'tl_reader_config_element', $pk, $options);
     }
 
@@ -87,6 +88,6 @@ class ReaderConfigElementRegistry
             return null;
         }
 
-        return System::getContainer()->get('huh.reader.reader-config-registry')->getFilterByPk($readerConfigElement->pid);
+        return $this->readerConfigRegistry->getFilterByPk($readerConfigElement->pid);
     }
 }

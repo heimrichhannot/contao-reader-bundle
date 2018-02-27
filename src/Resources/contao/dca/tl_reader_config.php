@@ -9,8 +9,8 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
         'ctable'            => 'tl_reader_config_element',
         'enableVersioning'  => true,
         'onload_callback'   => [
-            ['HeimrichHannot\ReaderBundle\Backend\ReaderConfig', 'modifyPalette'],
-            ['HeimrichHannot\ReaderBundle\Backend\ReaderConfig', 'flattenPaletteForSubEntities']
+            ['huh.reader.backend.reader-config', 'modifyPalette'],
+            ['huh.reader.backend.reader-config', 'flattenPaletteForSubEntities']
         ],
         'onsubmit_callback' => [
             ['huh.utils.dca', 'setDateAdded'],
@@ -28,7 +28,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
         'label'             => [
             'fields'         => ['title'],
             'format'         => '%s',
-            'label_callback' => ['HeimrichHannot\ReaderBundle\Backend\ReaderConfig', 'generateLabel']
+            'label_callback' => ['huh.reader.backend.reader-config', 'generateLabel']
         ],
         'sorting'           => [
             'mode'         => 1,
@@ -49,13 +49,13 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
                 'label'           => &$GLOBALS['TL_LANG']['tl_reader_config']['edit'],
                 'href'            => 'table=tl_reader_config_element',
                 'icon'            => 'edit.svg',
-                'button_callback' => ['HeimrichHannot\ReaderBundle\Backend\ReaderConfig', 'edit']
+                'button_callback' => ['huh.reader.backend.reader-config', 'edit']
             ],
             'editheader' => [
                 'label'           => &$GLOBALS['TL_LANG']['tl_reader_config']['editheader'],
                 'href'            => 'act=edit',
                 'icon'            => 'header.svg',
-                'button_callback' => ['HeimrichHannot\ReaderBundle\Backend\ReaderConfig', 'editHeader']
+                'button_callback' => ['huh.reader.backend.reader-config', 'editHeader']
             ],
             'copy'       => [
                 'label' => &$GLOBALS['TL_LANG']['tl_reader_config']['copy'],
@@ -171,7 +171,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config']['formattedFields'],
             'inputType'        => 'checkboxWizard',
             'options_callback' => function (DataContainer $dc) {
-                return \HeimrichHannot\ReaderBundle\Util\ReaderConfigHelper::getFields($dc);
+                return System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc);
             },
             'exclude'          => true,
             'eval'             => ['multiple' => true, 'includeBlankOption' => true, 'tl_class' => 'w50 clr autoheight'],
@@ -193,7 +193,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'filter'           => true,
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
-                return \HeimrichHannot\ReaderBundle\Util\ReaderConfigHelper::getTextFields($dc);
+                return System::getContainer()->get('huh.reader.util.reader-config-util')->getTextFields($dc);
             },
             'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
             'sql'              => "varchar(64) NOT NULL default ''"
@@ -210,7 +210,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'exclude'          => true,
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
-                return \HeimrichHannot\ReaderBundle\Util\ReaderConfigHelper::getCheckboxFields($dc);
+                return System::getContainer()->get('huh.reader.util.reader-config-util')->getCheckboxFields($dc);
             },
             'eval'             => ['maxlength' => 32, 'tl_class' => 'w50', 'includeBlankOption' => true, 'chosen' => true, 'mandatory' => true],
             'sql'              => "varchar(32) NOT NULL default ''"

@@ -7,6 +7,9 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         'dataContainer'     => 'Table',
         'ptable'            => 'tl_reader_config',
         'enableVersioning'  => true,
+        'onload_callback'   => [
+            ['huh.reader.backend.reader-config-element', 'checkPermission']
+        ],
         'onsubmit_callback' => [
             ['huh.utils.dca', 'setDateAdded'],
         ],
@@ -29,7 +32,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'fields'                => ['title'],
             'headerFields'          => ['title'],
             'panelLayout'           => 'filter;sort,search,limit',
-            'child_record_callback' => ['HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement', 'readerChildren']
+            'child_record_callback' => ['huh.reader.backend.reader-config-element', 'readerChildren']
         ],
         'global_operations' => [
             'all' => [
@@ -120,7 +123,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc)
             {
-                return \HeimrichHannot\ReaderBundle\Util\ReaderConfigElementHelper::getCheckboxFields($dc);
+                return System::getContainer()->get('huh.reader.util.reader-config-element-util')->getCheckboxFields($dc);
             },
             'exclude'          => true,
             'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
@@ -131,7 +134,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc)
             {
-                return \HeimrichHannot\ReaderBundle\Util\ReaderConfigElementHelper::getFields($dc);
+                return System::getContainer()->get('huh.reader.util.reader-config-element-util')->getFields($dc);
             },
             'exclude'          => true,
             'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
@@ -167,7 +170,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc)
             {
-                return \HeimrichHannot\ReaderBundle\Util\ReaderConfigElementHelper::getFields($dc);
+                return System::getContainer()->get('huh.reader.util.reader-config-element-util')->getFields($dc);
             },
             'exclude'          => true,
             'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],

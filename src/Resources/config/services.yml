@@ -1,4 +1,15 @@
 services:
+    huh.reader.backend.reader-config:
+        class: HeimrichHannot\ReaderBundle\Backend\ReaderConfig
+        arguments:
+            - "@contao.framework"
+            - "@huh.reader.reader-config-registry"
+            - "@huh.utils.model"
+            - "@huh.utils.dca"
+    huh.reader.backend.reader-config-element:
+        class: HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement
+        arguments:
+            - "@contao.framework"
     huh.reader.choice.template.item:
         class: HeimrichHannot\ReaderBundle\Choice\ReaderItemTemplateChoice
         arguments:
@@ -7,11 +18,32 @@ services:
         class: HeimrichHannot\ReaderBundle\Choice\ParentReaderConfigChoice
         arguments:
             - "@contao.framework"
+            - "@huh.reader.reader-config-registry"
     huh.reader.reader-config-registry:
         class: HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry
         arguments:
             - "@contao.framework"
+            - "@huh.filter.registry"
+            - "@huh.utils.model"
+            - "@huh.utils.dca"
     huh.reader.reader-config-element-registry:
         class: HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry
         arguments:
             - "@contao.framework"
+            - "@huh.reader.reader-config-registry"
+            - "@huh.utils.model"
+    huh.reader.util.reader-config-element-util:
+        class: HeimrichHannot\ReaderBundle\Util\ReaderConfigElementUtil
+        arguments:
+            - "@contao.framework"
+            - "@huh.reader.reader-config-registry"
+            - "@huh.reader.reader-config-element-registry"
+            - "@huh.utils.choice.field"
+    huh.reader.util.reader-config-util:
+        class: HeimrichHannot\ReaderBundle\Util\ReaderConfigUtil
+        arguments:
+            - "@contao.framework"
+            - "@huh.reader.reader-config-registry"
+            - "@huh.utils.choice.field"
+            - "@huh.utils.model"
+            - "@huh.utils.dca"
