@@ -110,7 +110,8 @@ class ReaderManager
         // hide unpublished items?
         if (null !== $item && $readerConfig->hideUnpublishedItems) {
             if (!$readerConfig->invertPublishedField && !$item->{$readerConfig->publishedField}
-                || $readerConfig->invertPublishedField && $item->{$readerConfig->publishedField}) {
+                || $readerConfig->invertPublishedField && $item->{$readerConfig->publishedField}
+            ) {
                 return null;
             }
         }
@@ -151,9 +152,14 @@ class ReaderManager
             $itemConditions = StringUtil::deserialize($readerConfig->showFieldConditions, true);
 
             if (!empty($itemConditions)) {
-                list($whereCondition, $values) = $this->entityFilter->computeSqlCondition($itemConditions, $readerConfig->dataContainer);
+                list($whereCondition, $values) = $this->entityFilter->computeSqlCondition(
+                    $itemConditions,
+                    $readerConfig->dataContainer
+                );
 
-                $result = Database::getInstance()->prepare("SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND id=".$this->item->id)->execute($values);
+                $result = Database::getInstance()->prepare(
+                    "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND id=".$this->item->id
+                )->execute($values);
 
                 if ($result->numRows < 1) {
                     $allowed = false;
@@ -176,9 +182,14 @@ class ReaderManager
         $itemConditions = StringUtil::deserialize($readerConfig->redirectFieldConditions, true);
 
         if (!empty($itemConditions)) {
-            list($whereCondition, $values) = $this->entityFilter->computeSqlCondition($itemConditions, $readerConfig->dataContainer);
+            list($whereCondition, $values) = $this->entityFilter->computeSqlCondition(
+                $itemConditions,
+                $readerConfig->dataContainer
+            );
 
-            $result = Database::getInstance()->prepare("SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND id=".$this->item->id)->execute($values);
+            $result = Database::getInstance()->prepare(
+                "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND id=".$this->item->id
+            )->execute($values);
 
             $redirect = $result->numRows > 0;
         }
@@ -198,9 +209,13 @@ class ReaderManager
         $item = $this->item;
 
         if ($readerConfig->setPageTitleByField && $readerConfig->pageTitleFieldPattern) {
-            $pageTitle = preg_replace_callback('@%([^%]+)%@i', function (array $matches) use ($item) {
-                return $item->{$matches[1]};
-            }, $readerConfig->pageTitleFieldPattern);
+            $pageTitle = preg_replace_callback(
+                '@%([^%]+)%@i',
+                function (array $matches) use ($item) {
+                    return $item->{$matches[1]};
+                },
+                $readerConfig->pageTitleFieldPattern
+            );
 
             $this->modifyPageTitle($pageTitle);
         }
@@ -215,7 +230,10 @@ class ReaderManager
         $dca = &$GLOBALS['TL_DCA'][$readerConfig->dataContainer];
         $dc = $this->dc;
 
-        $fields = $readerConfig->limitFormattedFields ? StringUtil::deserialize($readerConfig->formattedFields, true) : array_keys($dca['fields']);
+        $fields = $readerConfig->limitFormattedFields ? StringUtil::deserialize(
+            $readerConfig->formattedFields,
+            true
+        ) : array_keys($dca['fields']);
 
         $result['raw'] = $item;
 
@@ -230,10 +248,18 @@ class ReaderManager
                 }
             }
 
-            $result['formatted'][$field] = $this->formUtil->prepareSpecialValueForOutput($field, $value, $dc);
+            $result['formatted'][$field] = $this->formUtil->prepareSpecialValueForOutput(
+                $field,
+                $value,
+                $dc
+            );
 
             // anti-xss: escape everything besides some tags
-            $result['formatted'][$field] = $this->formUtil->escapeAllHtmlEntities($readerConfig->dataContainer, $field, $result['formatted'][$field]);
+            $result['formatted'][$field] = $this->formUtil->escapeAllHtmlEntities(
+                $readerConfig->dataContainer,
+                $field,
+                $result['formatted'][$field]
+            );
         }
 
         // add the missing field's raw values (these should always be inserted completely)
@@ -288,10 +314,15 @@ class ReaderManager
 
     public function getReaderConfig()
     {
+        if ($this->readerConfig) {
+            return $this->readerConfig;
+        }
+
         $readerConfigId = $this->moduleData['readerConfig'];
 
         if (!$readerConfigId
-            || null === ($readerConfig = $this->readerConfigRegistry->findByPk($readerConfigId))) {
+            || null === ($readerConfig = $this->readerConfigRegistry->findByPk($readerConfigId))
+        ) {
             throw new \Exception(sprintf('The module %s has no valid reader config. Please set one.', $this->id));
         }
 
@@ -306,6 +337,11 @@ class ReaderManager
     public function setModuleData(array $moduleData)
     {
         $this->moduleData = $moduleData;
+    }
+
+    public function setItem(Model $item)
+    {
+        $this->item = $item;
     }
 
     protected function retrieveItemByAutoItem()
@@ -340,9 +376,16 @@ class ReaderManager
         $itemConditions = StringUtil::deserialize($readerConfig->itemRetrievalFieldConditions, true);
 
         if (!empty($itemConditions)) {
-            list($whereCondition, $values) = $this->entityFilter->computeSqlCondition($itemConditions, $readerConfig->dataContainer);
+            list($whereCondition, $values) = $this->entityFilter->computeSqlCondition(
+                $itemConditions,
+                $readerConfig->dataContainer
+            );
 
-            $result = Database::getInstance()->prepare("SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition)")->limit(1)->execute($values);
+            $database = $this->framework->createInstance(Database::class);
+
+            $result = $database->prepare(
+                "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition)"
+            )->limit(1)->execute($values);
 
             if ($result->numRows > 0) {
                 $item = $this->modelUtil->findModelInstanceByPk($readerConfig->dataContainer, $result->id);
