@@ -18,16 +18,16 @@ use Contao\System;
 class ReaderConfigElement
 {
     const TYPE_IMAGE = 'image';
-    const TYPE_LIST  = 'list';
+    const TYPE_LIST = 'list';
 
     const TYPES = [
         self::TYPE_IMAGE,
         self::TYPE_LIST,
     ];
 
-    const PLACEHOLDER_IMAGE_MODE_NONE     = 'none';
+    const PLACEHOLDER_IMAGE_MODE_NONE = 'none';
     const PLACEHOLDER_IMAGE_MODE_GENDERED = 'gendered';
-    const PLACEHOLDER_IMAGE_MODE_SIMPLE   = 'simple';
+    const PLACEHOLDER_IMAGE_MODE_SIMPLE = 'simple';
 
     const PLACEHOLDER_IMAGE_MODES = [
         self::PLACEHOLDER_IMAGE_MODE_GENDERED,
@@ -44,12 +44,12 @@ class ReaderConfigElement
 
     public function listChildren($arrRow)
     {
-        return '<div class="tl_content_left">' . ($arrRow['title'] ?: $arrRow['id']) . ' <span style="color:#b3b3b3; padding-left:3px">[' . \Date::parse(\Contao\Config::get('datimFormat'), trim($arrRow['dateAdded'])) . ']</span></div>';
+        return '<div class="tl_content_left">'.($arrRow['title'] ?: $arrRow['id']).' <span style="color:#b3b3b3; padding-left:3px">['.\Date::parse(\Contao\Config::get('datimFormat'), trim($arrRow['dateAdded'])).']</span></div>';
     }
 
     public function checkPermission()
     {
-        $user     = BackendUser::getInstance();
+        $user = BackendUser::getInstance();
         $database = Database::getInstance();
 
         if ($user->isAdmin) {
@@ -73,14 +73,14 @@ class ReaderConfigElement
 
             case 'create':
                 if (!strlen(Input::get('pid')) || !in_array(Input::get('pid'), $root, true)) {
-                    throw new AccessDeniedException('Not enough permissions to create reader_config_element items in reader_config_element archive ID ' . Input::get('pid') . '.');
+                    throw new AccessDeniedException('Not enough permissions to create reader_config_element items in reader_config_element archive ID '.Input::get('pid').'.');
                 }
                 break;
 
             case 'cut':
             case 'copy':
                 if (!in_array(Input::get('pid'), $root, true)) {
-                    throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' reader_config_element item ID ' . $id . ' to reader_config_element archive ID ' . Input::get('pid') . '.');
+                    throw new AccessDeniedException('Not enough permissions to '.Input::get('act').' reader_config_element item ID '.$id.' to reader_config_element archive ID '.Input::get('pid').'.');
                 }
             // no break STATEMENT HERE
 
@@ -92,11 +92,11 @@ class ReaderConfigElement
                 $objArchive = $database->prepare('SELECT pid FROM tl_reader_config_element WHERE id=?')->limit(1)->execute($id);
 
                 if ($objArchive->numRows < 1) {
-                    throw new AccessDeniedException('Invalid reader_config_element item ID ' . $id . '.');
+                    throw new AccessDeniedException('Invalid reader_config_element item ID '.$id.'.');
                 }
 
                 if (!in_array($objArchive->pid, $root, true)) {
-                    throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' reader_config_element item ID ' . $id . ' of reader_config_element archive ID ' . $objArchive->pid . '.');
+                    throw new AccessDeniedException('Not enough permissions to '.Input::get('act').' reader_config_element item ID '.$id.' of reader_config_element archive ID '.$objArchive->pid.'.');
                 }
                 break;
 
@@ -107,28 +107,28 @@ class ReaderConfigElement
             case 'cutAll':
             case 'copyAll':
                 if (!in_array($id, $root, true)) {
-                    throw new AccessDeniedException('Not enough permissions to access reader_config_element archive ID ' . $id . '.');
+                    throw new AccessDeniedException('Not enough permissions to access reader_config_element archive ID '.$id.'.');
                 }
 
                 $objArchive = $database->prepare('SELECT id FROM tl_reader_config_element WHERE pid=?')->execute($id);
 
                 if ($objArchive->numRows < 1) {
-                    throw new AccessDeniedException('Invalid reader_config_element archive ID ' . $id . '.');
+                    throw new AccessDeniedException('Invalid reader_config_element archive ID '.$id.'.');
                 }
 
                 /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
                 $session = System::getContainer()->get('session');
 
-                $session                   = $session->all();
+                $session = $session->all();
                 $session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objArchive->fetchEach('id'));
                 $session->replace($session);
                 break;
 
             default:
                 if (strlen(Input::get('act'))) {
-                    throw new AccessDeniedException('Invalid command "' . Input::get('act') . '".');
+                    throw new AccessDeniedException('Invalid command "'.Input::get('act').'".');
                 } elseif (!in_array($id, $root, true)) {
-                    throw new AccessDeniedException('Not enough permissions to access reader_config_element archive ID ' . $id . '.');
+                    throw new AccessDeniedException('Not enough permissions to access reader_config_element archive ID '.$id.'.');
                 }
                 break;
         }

@@ -80,14 +80,14 @@ class ReaderManager
         FormUtil $formUtil,
         \Twig_Environment $twig
     ) {
-        $this->framework                   = $framework;
-        $this->entityFilter                = $entityFilter;
-        $this->readerConfigRegistry        = $readerConfigRegistry;
+        $this->framework = $framework;
+        $this->entityFilter = $entityFilter;
+        $this->readerConfigRegistry = $readerConfigRegistry;
         $this->readerConfigElementRegistry = $readerConfigElementRegistry;
-        $this->modelUtil                   = $modelUtil;
-        $this->urlUtil                     = $urlUtil;
-        $this->formUtil                    = $formUtil;
-        $this->twig                        = $twig;
+        $this->modelUtil = $modelUtil;
+        $this->urlUtil = $urlUtil;
+        $this->formUtil = $formUtil;
+        $this->twig = $twig;
     }
 
     /**
@@ -96,7 +96,7 @@ class ReaderManager
     public function retrieveItem()
     {
         $readerConfig = $this->readerConfig;
-        $item         = null;
+        $item = null;
 
         switch ($readerConfig->itemRetrievalMode) {
             case ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM:
@@ -145,7 +145,7 @@ class ReaderManager
     public function checkPermission()
     {
         $readerConfig = $this->readerConfig;
-        $allowed      = true;
+        $allowed = true;
 
         if ($readerConfig->addShowConditions) {
             $itemConditions = StringUtil::deserialize($readerConfig->showFieldConditions, true);
@@ -153,7 +153,7 @@ class ReaderManager
             if (!empty($itemConditions)) {
                 list($whereCondition, $values) = $this->entityFilter->computeSqlCondition($itemConditions, $readerConfig->dataContainer);
 
-                $result = Database::getInstance()->prepare("SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND id=" . $this->item->id)->execute($values);
+                $result = Database::getInstance()->prepare("SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND id=".$this->item->id)->execute($values);
 
                 if ($result->numRows < 1) {
                     $allowed = false;
@@ -167,7 +167,7 @@ class ReaderManager
     public function doFieldDependentRedirect()
     {
         $readerConfig = $this->readerConfig;
-        $redirect     = false;
+        $redirect = false;
 
         if (!$readerConfig->addFieldDependentRedirect || !$readerConfig->fieldDependentJumpTo) {
             return;
@@ -178,7 +178,7 @@ class ReaderManager
         if (!empty($itemConditions)) {
             list($whereCondition, $values) = $this->entityFilter->computeSqlCondition($itemConditions, $readerConfig->dataContainer);
 
-            $result = Database::getInstance()->prepare("SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND id=" . $this->item->id)->execute($values);
+            $result = Database::getInstance()->prepare("SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND id=".$this->item->id)->execute($values);
 
             $redirect = $result->numRows > 0;
         }
@@ -187,7 +187,7 @@ class ReaderManager
             $jumpTo = $this->urlUtil->getJumpToPageObject($readerConfig->fieldDependentJumpTo);
 
             if (null !== $jumpTo) {
-                throw new RedirectResponseException('/' . $jumpTo->getFrontendUrl());
+                throw new RedirectResponseException('/'.$jumpTo->getFrontendUrl());
             }
         }
     }
@@ -195,7 +195,7 @@ class ReaderManager
     public function setPageTitle()
     {
         $readerConfig = $this->readerConfig;
-        $item         = $this->item;
+        $item = $this->item;
 
         if ($readerConfig->setPageTitleByField && $readerConfig->pageTitleFieldPattern) {
             $pageTitle = preg_replace_callback('@%([^%]+)%@i', function (array $matches) use ($item) {
@@ -213,7 +213,7 @@ class ReaderManager
         $result = [];
 
         $dca = &$GLOBALS['TL_DCA'][$readerConfig->dataContainer];
-        $dc  = $this->dc;
+        $dc = $this->dc;
 
         $fields = $readerConfig->limitFormattedFields ? StringUtil::deserialize($readerConfig->formattedFields, true) : array_keys($dca['fields']);
 
@@ -221,12 +221,12 @@ class ReaderManager
 
         foreach ($fields as $field) {
             $dc->field = $field;
-            $value     = $item[$field];
+            $value = $item[$field];
 
             if (is_array($dca['fields'][$field]['load_callback'])) {
                 foreach ($dca['fields'][$field]['load_callback'] as $callback) {
                     $instance = System::importStatic($callback[0]);
-                    $value    = $instance->{$callback[1]}($value, $dc);
+                    $value = $instance->{$callback[1]}($value, $dc);
                 }
             }
 
@@ -247,7 +247,7 @@ class ReaderManager
             if (is_array($dca['fields'][$field]['load_callback'])) {
                 foreach ($dca['fields'][$field]['load_callback'] as $callback) {
                     $instance = System::importStatic($callback[0]);
-                    $value    = $instance->{$callback[1]}($value, $dc);
+                    $value = $instance->{$callback[1]}($value, $dc);
                 }
             }
 
@@ -311,14 +311,14 @@ class ReaderManager
     protected function retrieveItemByAutoItem()
     {
         $readerConfig = $this->readerConfig;
-        $item         = null;
+        $item = null;
 
         if (Config::get('useAutoItem') && ($autoItem = Request::getGet('auto_item'))) {
             $field = $readerConfig->itemRetrievalAutoItemField;
 
             // try to find by a certain field (likely alias)
             $item = $this->modelUtil->findOneModelInstanceBy($readerConfig->dataContainer, [
-                $field . '=?',
+                $field.'=?',
             ], [
                 $autoItem,
             ]);
@@ -335,7 +335,7 @@ class ReaderManager
     protected function retrieveItemByFieldConditions()
     {
         $readerConfig = $this->readerConfig;
-        $item         = null;
+        $item = null;
 
         $itemConditions = StringUtil::deserialize($readerConfig->itemRetrievalFieldConditions, true);
 
@@ -365,7 +365,7 @@ class ReaderManager
 
     protected function getItemTemplateByName($name)
     {
-        $config    = System::getContainer()->getParameter('huh.reader');
+        $config = System::getContainer()->getParameter('huh.reader');
         $templates = $config['reader']['templates']['item'];
 
         foreach ($templates as $template) {
@@ -405,9 +405,9 @@ class ReaderManager
             return;
         }
 
-        $listModule   = new ModuleList($module);
+        $listModule = new ModuleList($module);
         $filterConfig = $listModule->getFilterConfig();
-        $filter       = \Contao\StringUtil::deserialize($listReaderConfigElement->initialFilter, true);
+        $filter = \Contao\StringUtil::deserialize($listReaderConfigElement->initialFilter, true);
 
         if (!isset($filter[0]['filterElement']) || !isset($filter[0]['selector'])) {
             return;
@@ -424,11 +424,11 @@ class ReaderManager
 
         if ($item['raw'][$imageReaderConfigElement->imageSelectorField] && $item['raw'][$imageReaderConfigElement->imageField]) {
             $imageSelectorField = $imageReaderConfigElement->imageSelectorField;
-            $image              = $item['raw'][$imageReaderConfigElement->imageField];
-            $imageField         = $imageReaderConfigElement->imageField;
+            $image = $item['raw'][$imageReaderConfigElement->imageField];
+            $imageField = $imageReaderConfigElement->imageField;
         } elseif ($imageReaderConfigElement->placeholderImageMode) {
             $imageSelectorField = $imageReaderConfigElement->imageSelectorField;
-            $imageField         = $imageReaderConfigElement->imageField;
+            $imageField = $imageReaderConfigElement->imageField;
 
             switch ($imageReaderConfigElement->placeholderImageMode) {
                 case ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED:
@@ -449,7 +449,7 @@ class ReaderManager
         $imageModel = FilesModel::findByUuid($image);
 
         if (null !== $imageModel
-            && is_file(System::getContainer()->get('huh.utils.container')->getProjectDir() . '/' . $imageModel->path)) {
+            && is_file(System::getContainer()->get('huh.utils.container')->getProjectDir().'/'.$imageModel->path)) {
             $imageArray = $item['raw'];
 
             // Override the default image size
@@ -461,7 +461,7 @@ class ReaderManager
                 }
             }
 
-            $imageArray[$imageField]             = $imageModel->path;
+            $imageArray[$imageField] = $imageModel->path;
             $templateData['images'][$imageField] = [];
 
             System::getContainer()->get('huh.utils.image')->addToTemplateData($imageField, $imageSelectorField, $templateData['images'][$imageField], $imageArray, null, null, null, $imageModel);
