@@ -31,40 +31,64 @@ use HeimrichHannot\UtilsBundle\Url\UrlUtil;
 
 class ReaderManager
 {
-    /** @var ContaoFrameworkInterface */
+    /**
+     * @var ContaoFrameworkInterface
+     */
     protected $framework;
 
-    /** @var ReaderConfigModel */
+    /**
+     * @var ReaderConfigModel
+     */
     protected $readerConfig;
 
-    /** @var EntityFilter */
+    /**
+     * @var EntityFilter
+     */
     protected $entityFilter;
 
-    /** @var ReaderConfigRegistry */
+    /**
+     * @var ReaderConfigRegistry
+     */
     protected $readerConfigRegistry;
 
-    /** @var ReaderConfigElementRegistry */
+    /**
+     * @var ReaderConfigElementRegistry
+     */
     protected $readerConfigElementRegistry;
 
-    /** @var ModelUtil */
+    /**
+     * @var ModelUtil
+     */
     protected $modelUtil;
 
-    /** @var UrlUtil */
+    /**
+     * @var UrlUtil
+     */
     protected $urlUtil;
 
-    /** @var FormUtil */
+    /**
+     * @var FormUtil
+     */
     protected $formUtil;
 
-    /** @var \Twig_Environment */
+    /**
+     * @var \Twig_Environment
+     */
     protected $twig;
 
-    /** @var Model */
+    /**
+     * @var Model
+     */
     protected $item;
 
-    /** @var DataContainer */
+    /**
+     * @var DataContainer
+     */
     protected $dc;
 
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $moduleData;
 
     public function __construct(
@@ -227,8 +251,10 @@ class ReaderManager
         $dca = &$GLOBALS['TL_DCA'][$readerConfig->dataContainer];
         $dc = $this->dc;
 
-        $fields = $readerConfig->limitFormattedFields ? StringUtil::deserialize($readerConfig->formattedFields,
-            true) : array_keys($dca['fields']);
+        $fields = $readerConfig->limitFormattedFields ? StringUtil::deserialize(
+            $readerConfig->formattedFields,
+            true
+        ) : array_keys($dca['fields']);
 
         $result['raw'] = $item;
 
@@ -309,6 +335,10 @@ class ReaderManager
 
     public function getReaderConfig()
     {
+        if ($this->readerConfig) {
+            return $this->readerConfig;
+        }
+
         $readerConfigId = $this->moduleData['readerConfig'];
 
         if (!$readerConfigId
@@ -328,6 +358,11 @@ class ReaderManager
     public function setModuleData(array $moduleData)
     {
         $this->moduleData = $moduleData;
+    }
+
+    public function setItem(Model $item)
+    {
+        $this->item = $item;
     }
 
     protected function retrieveItemByAutoItem()
@@ -371,7 +406,9 @@ class ReaderManager
                 $readerConfig->dataContainer
             );
 
-            $result = Database::getInstance()->prepare(
+            $database = $this->framework->createInstance(Database::class);
+
+            $result = $database->prepare(
                 "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition)"
             )->limit(1)->execute($values);
 
