@@ -58,3 +58,5 @@ services:
             - "@huh.utils.choice.field"
             - "@huh.utils.model"
             - "@huh.utils.dca"
+    huh.reader.backend.module:
+        class: HeimrichHannot\ReaderBundle\Backend\Module
