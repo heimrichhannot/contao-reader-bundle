@@ -13,19 +13,23 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Database;
 use Contao\DataContainer;
+use Contao\FilesModel;
 use Contao\Model;
+use Contao\ModuleModel;
 use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\EntityFilterBundle\Backend\EntityFilter;
-use HeimrichHannot\FileCredit\FilesModel;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfig;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement;
+use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry;
 use HeimrichHannot\Request\Request;
+use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
 use HeimrichHannot\UtilsBundle\Form\FormUtil;
+use HeimrichHannot\UtilsBundle\Image\ImageUtil;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 use HeimrichHannot\UtilsBundle\Url\UrlUtil;
 
@@ -72,6 +76,16 @@ class ReaderManager
     protected $formUtil;
 
     /**
+     * @var ContainerUtil
+     */
+    protected $containerUtil;
+
+    /**
+     * @var ImageUtil
+     */
+    protected $imageUtil;
+
+    /**
      * @var \Twig_Environment
      */
     protected $twig;
@@ -103,6 +117,8 @@ class ReaderManager
         ReaderConfigElementRegistry $readerConfigElementRegistry,
         ModelUtil $modelUtil,
         UrlUtil $urlUtil,
+        ContainerUtil $containerUtil,
+        ImageUtil $imageUtil,
         FormUtil $formUtil,
         \Twig_Environment $twig
     ) {
@@ -113,6 +129,8 @@ class ReaderManager
         $this->modelUtil = $modelUtil;
         $this->urlUtil = $urlUtil;
         $this->formUtil = $formUtil;
+        $this->containerUtil = $containerUtil;
+        $this->imageUtil = $imageUtil;
         $this->twig = $twig;
         $this->database = $framework->createInstance(Database::class);
     }
@@ -220,8 +238,8 @@ class ReaderManager
             );
 
             $result = $this->database->prepare(
-                "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND id=".$this->item->id
-            )->execute($values);
+                "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND $readerConfig->dataContainer.id=?"
+            )->execute($values, $this->item->id);
 
             $redirect = $result->numRows > 0;
         }
@@ -328,7 +346,7 @@ class ReaderManager
 
         $templateData['dataContainer'] = $readerConfig->dataContainer;
 
-        $this->addImagesToTemplate($item, $templateData, $readerConfig);
+        $this->addDataToTemplate($item, $templateData, $readerConfig);
 
         $templateData['module'] = $this->moduleData;
 
@@ -346,16 +364,12 @@ class ReaderManager
 
     public function getReaderConfig()
     {
-        if ($this->readerConfig) {
-            return $this->readerConfig;
-        }
-
         $readerConfigId = $this->moduleData['readerConfig'];
 
         if (!$readerConfigId
             || null === ($readerConfig = $this->readerConfigRegistry->findByPk($readerConfigId))
         ) {
-            throw new \Exception(sprintf('The module %s has no valid reader config. Please set one.', $this->id));
+            throw new \Exception(sprintf('The module %s has no valid reader config. Please set one.', $this->moduleData['id']));
         }
 
         return $readerConfig;
@@ -459,72 +473,97 @@ class ReaderManager
         return null;
     }
 
-    protected function addImagesToTemplate(array $item, array &$templateData, ReaderConfigModel $readerConfig)
+    protected function addDataToTemplate(array $item, array &$templateData, ReaderConfigModel $readerConfig)
     {
-        $imageReaderConfigElements = $this->readerConfigElementRegistry->findBy(
-            ['type=?', 'pid=?'],
-            [ReaderConfigElement::TYPE_IMAGE, $readerConfig->id]
-        );
+        $readerConfigElements = $this->readerConfigElementRegistry->findBy(['pid'], [$readerConfig->id]);
 
-        if (null !== $imageReaderConfigElements) {
-            while ($imageReaderConfigElements->next()) {
-                $image = null;
-
-                if ($item['raw'][$imageReaderConfigElements->imageSelectorField] && $item['raw'][$imageReaderConfigElements->imageField]) {
-                    $imageSelectorField = $imageReaderConfigElements->imageSelectorField;
-                    $image = $item['raw'][$imageReaderConfigElements->imageField];
-                    $imageField = $imageReaderConfigElements->imageField;
-                } elseif ($imageReaderConfigElements->placeholderImageMode) {
-                    $imageSelectorField = $imageReaderConfigElements->imageSelectorField;
-                    $imageField = $imageReaderConfigElements->imageField;
-
-                    switch ($imageReaderConfigElements->placeholderImageMode) {
-                        case ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED:
-                            if ($item['raw'][$imageReaderConfigElements->genderField] == 'female') {
-                                $image = $imageReaderConfigElements->placeholderImageFemale;
-                            } else {
-                                $image = $imageReaderConfigElements->placeholderImage;
-                            }
-                            break;
-                        case ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE:
-                            $image = $imageReaderConfigElements->placeholderImage;
-                            break;
-                    }
-                } else {
-                    continue;
-                }
-
-                $imageModel = FilesModel::findByUuid($image);
-
-                if (null !== $imageModel
-                    && is_file(System::getContainer()->get('huh.utils.container')->getProjectDir().'/'.$imageModel->path)
-                ) {
-                    $imageArray = $item['raw'];
-
-                    // Override the default image size
-                    if ('' != $imageReaderConfigElements->imgSize) {
-                        $size = StringUtil::deserialize($imageReaderConfigElements->imgSize);
-
-                        if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2])) {
-                            $imageArray['size'] = $imageReaderConfigElements->imgSize;
-                        }
-                    }
-
-                    $imageArray[$imageField] = $imageModel->path;
-                    $templateData['images'][$imageField] = [];
-
-                    System::getContainer()->get('huh.utils.image')->addToTemplateData(
-                        $imageField,
-                        $imageSelectorField,
-                        $templateData['images'][$imageField],
-                        $imageArray,
-                        null,
-                        null,
-                        null,
-                        $imageModel
-                    );
+        if (null !== $readerConfigElements) {
+            foreach ($readerConfigElements as $readerConfigElement) {
+                switch ($readerConfigElement->type) {
+                    case ReaderConfigElement::TYPE_IMAGE:
+                        $this->addImagesToTemplate($item, $templateData, $readerConfigElement);
+                        break;
+                    case ReaderConfigElement::TYPE_LIST:
+                        $this->addListToTemplate($item, $templateData, $readerConfigElement);
+                        break;
+                    default:
+                        break;
                 }
             }
         }
+    }
+
+    protected function addImagesToTemplate(array $item, array &$templateData, ReaderConfigElementModel $imageReaderConfigElement)
+    {
+        $image = null;
+
+        if ($item['raw'][$imageReaderConfigElement->imageSelectorField] && $item['raw'][$imageReaderConfigElement->imageField]) {
+            $imageSelectorField = $imageReaderConfigElement->imageSelectorField;
+            $image = $item['raw'][$imageReaderConfigElement->imageField];
+            $imageField = $imageReaderConfigElement->imageField;
+        } elseif ($imageReaderConfigElement->placeholderImageMode) {
+            $imageSelectorField = $imageReaderConfigElement->imageSelectorField;
+            $imageField = $imageReaderConfigElement->imageField;
+
+            switch ($imageReaderConfigElement->placeholderImageMode) {
+                case ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED:
+                    if ($item['raw'][$imageReaderConfigElement->genderField] == 'female') {
+                        $image = $imageReaderConfigElement->placeholderImageFemale;
+                    } else {
+                        $image = $imageReaderConfigElement->placeholderImage;
+                    }
+                    break;
+                case ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE:
+                    $image = $imageReaderConfigElement->placeholderImage;
+                    break;
+            }
+        } else {
+            return;
+        }
+
+        /**
+         * @var FilesModel
+         */
+        $imageModel = $this->modelUtil->findOneModelInstanceBy('tl_files', ['uuid=?'], [$image]);
+
+        if (null !== $imageModel
+            && file_exists($this->containerUtil->getProjectDir().'/'.$imageModel->path)) {
+            $imageArray = $item['raw'];
+
+            // Override the default image size
+            if ('' != $imageReaderConfigElement->imgSize) {
+                $size = StringUtil::deserialize($imageReaderConfigElement->imgSize);
+
+                if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2])) {
+                    $imageArray['size'] = $imageReaderConfigElement->imgSize;
+                }
+            }
+
+            $imageArray[$imageField] = $imageModel->path;
+            $templateData['images'][$imageField] = [];
+
+            $this->imageUtil->addToTemplateData($imageField, $imageSelectorField, $templateData['images'][$imageField], $imageArray, null, null, null, $imageModel);
+        }
+    }
+
+    protected function addListToTemplate(array $item, array &$templateData, ReaderConfigElementModel $listReaderConfigElement)
+    {
+        $module = ModuleModel::findById($listReaderConfigElement->listModule);
+
+        if (null === $module) {
+            return;
+        }
+
+        $listModule = new \HeimrichHannot\ListBundle\Module\ModuleList($module);
+        $filterConfig = $listModule->getFilterConfig();
+        $filter = \Contao\StringUtil::deserialize($listReaderConfigElement->initialFilter, true);
+
+        if (!isset($filter[0]['filterElement']) || !isset($filter[0]['selector'])) {
+            return;
+        }
+
+        $filterConfig->addContextualValue($filter[0]['filterElement'], $item['raw'][$filter[0]['selector']]);
+        $filterConfig->initQueryBuilder();
+        $templateData['list'][$listReaderConfigElement->listName] = $listModule->generate();
     }
 }

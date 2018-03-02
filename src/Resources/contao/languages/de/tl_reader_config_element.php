@@ -25,6 +25,12 @@ $lang['placeholderImageFemale'][1] = 'Wählen Sie hier ein Platzhalterbild für 
 $lang['genderField'][0]            = 'Geschlecht-Feld';
 $lang['genderField'][1]            = 'Wählen Sie hier das Feld aus, das das Geschlecht der Instanz enthält.';
 
+$lang['listModule']    = ['Listen Modul', 'Wählen Sie ein Listen Module aus.'];
+$lang['initialFilter'] = ['Initialer Filter', ''];
+$lang['selector']      = ['Selektor', 'Wählen Sie ein Feld aus, von dem der Wert übergeben werden soll.'];
+$lang['filterElement'] = ['Filterelement', 'Wählen Sie ein Feld aus, nachdem gefiltert werden soll.'];
+$lang['listName']      = ['Listenname', 'Vergeben Sie einen einamligen Namen für Ihre Liste.'];
+
 /**
  * Reference
  */

@@ -9,17 +9,24 @@
 namespace HeimrichHannot\ReaderBundle\Tests\Manager;
 
 use Contao\Config;
+use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Database;
+use Contao\FilesModel;
 use Contao\Model;
+use Contao\PageModel;
+use Contao\System;
 use HeimrichHannot\EntityFilterBundle\Backend\EntityFilter;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfig;
+use HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement;
 use HeimrichHannot\ReaderBundle\Manager\ReaderManager;
+use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry;
 use HeimrichHannot\ReaderBundle\Tests\TestCaseEnvironment;
 use HeimrichHannot\Request\Request;
+use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
 use HeimrichHannot\UtilsBundle\Form\FormUtil;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 use HeimrichHannot\UtilsBundle\Url\UrlUtil;
@@ -60,14 +67,31 @@ class ReaderManagerTest extends TestCaseEnvironment
             ['computeSqlCondition' => ['firstname=?', ['John']]]
         );
 
-        $this->readerConfigRegistry = $this->createConfiguredMock(
-            ReaderConfigRegistry::class,
-            []
+        $this->readerConfigRegistry = $this->createMock(ReaderConfigRegistry::class);
+
+        $imageElement = $this->mockClassWithProperties(
+            ReaderConfigElementModel::class,
+            [
+                'type' => ReaderConfigElement::TYPE_IMAGE,
+                'imageSelectorField' => 'addImage',
+                'imageField' => 'singleSRC',
+                'placeholderImageMode' => ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED,
+                'genderField' => 'gender',
+                'placeholderImageFemale' => 'female.png',
+                'placeholderImageMale' => 'male.png',
+            ]
         );
+
+//        $listElement = $this->mockClassWithProperties(
+//            ReaderConfigElementModel::class,
+//            [
+//                'type' => ReaderConfigElement::TYPE_LIST,
+//            ]
+//        );
 
         $this->readerConfigElementRegistry = $this->createConfiguredMock(
             ReaderConfigElementRegistry::class,
-            []
+            ['findBy' => [$imageElement/*, $listElement*/]]
         );
 
         $johnDoeModel = $this->mockClassWithProperties(
@@ -95,7 +119,11 @@ class ReaderManagerTest extends TestCaseEnvironment
         $modelUtil = $this->createMock(ModelUtil::class);
         $modelUtil->method('findOneModelInstanceBy')->willReturnCallback(
             function ($table, $columns, $values) use ($johnDoeModel) {
-                if ('tl_test' === $table && $columns === ['tl_test.alias=?'] && $values === ['john-doe']) {
+                if ('tl_files' === $table) {
+                    return $this->mockClassWithProperties(FilesModel::class, [
+                        'path' => 'data/image.png',
+                    ]);
+                } elseif ('tl_test' === $table && $columns === ['tl_test.alias=?'] && $values === ['john-doe']) {
                     return $johnDoeModel;
                 }
             }
@@ -117,7 +145,19 @@ class ReaderManagerTest extends TestCaseEnvironment
 
         $this->urlUtil = $this->createConfiguredMock(
             UrlUtil::class,
-            []
+            [
+                'getJumpToPageObject' => $this->createConfiguredMock(
+                    PageModel::class,
+                    [
+                        'getFrontendUrl' => 'https://www.google.de',
+                    ]
+                ),
+            ]
+        );
+
+        $this->containerUtil = $this->createConfiguredMock(
+            ContainerUtil::class,
+            ['getProjectDir' => __DIR__.'/..']
         );
 
         $this->formUtil = $this->createConfiguredMock(
@@ -153,6 +193,22 @@ class ReaderManagerTest extends TestCaseEnvironment
             }
         );
         $databaseAdapter->method('limit')->willReturn($limitAdapter);
+
+        $container = $this->mockContainer();
+        $container->setParameter(
+            'huh.reader',
+            [
+                'reader' => [
+                    'templates' => [
+                        'item' => [
+                            ['name' => 'my_item_template', 'template' => 'template.twig'],
+                        ],
+                    ],
+                ],
+            ]
+        );
+        System::setContainer($container);
+
         $this->framework = $this->mockContaoFramework();
         $this->framework->method('createInstance')->willReturn($databaseAdapter);
 
@@ -163,6 +219,7 @@ class ReaderManagerTest extends TestCaseEnvironment
             $this->readerConfigElementRegistry,
             $this->modelUtil,
             $this->urlUtil,
+            $this->containerUtil,
             $this->formUtil,
             $this->twig
         );
@@ -315,5 +372,124 @@ class ReaderManagerTest extends TestCaseEnvironment
         $this->manager->setModuleData(['id' => 1]);
 
         $this->assertSame(['id' => 1], $this->manager->getModuleData());
+    }
+
+    public function testGetReaderConfig()
+    {
+        $this->manager->setModuleData(
+            [
+                'readerConfig' => 1,
+            ]
+        );
+
+        $readerConfigMock = $this->createMock(ReaderConfigModel::class);
+
+        $this->readerConfigRegistry->method('findByPk')->willReturnCallback(
+            function ($id) use ($readerConfigMock) {
+                switch ($id) {
+                    case 1:
+                        return $readerConfigMock;
+                        break;
+                    default:
+                        return null;
+                }
+            }
+        );
+
+        $this->assertSame($readerConfigMock, $this->manager->getReaderConfig());
+
+        $this->manager->setModuleData(
+            [
+                'id' => 3,
+                'readerConfig' => 2,
+            ]
+        );
+
+        $this->expectExceptionMessage('The module 3 has no valid reader config. Please set one.');
+        $this->manager->getReaderConfig();
+    }
+
+    public function testGetItemTemplateByName()
+    {
+        $function = self::getMethod(ReaderManager::class, 'getItemTemplateByName');
+
+        $this->assertSame('template.twig', $function->invokeArgs($this->manager, ['my_item_template']));
+
+        $this->assertNull($function->invokeArgs($this->manager, ['notexisting']));
+    }
+
+    public function testDoFieldDependentRedirect()
+    {
+        // needed properties not set
+        $this->prepareReaderConfig();
+        $this->assertNull($this->manager->doFieldDependentRedirect());
+
+        $this->prepareReaderConfig(
+            [
+                'addFieldDependentRedirect' => true,
+                'fieldDependentJumpTo' => 1,
+                'redirectFieldConditions' => serialize(
+                    [
+                        [
+                            'bracketLeft' => true,
+                            'field' => 'firstname',
+                            'operator' => 'equal',
+                            'value' => 'John',
+                            'bracketRight' => true,
+                        ],
+                    ]
+                ),
+            ]
+        );
+
+        // no redirect since entity didn't fulfill the conditions
+        $this->manager->setItem($this->janeDoeModel);
+        $this->assertNull($this->manager->doFieldDependentRedirect());
+
+        // regular redirect
+        $this->manager->setItem($this->johnDoeModel);
+
+        $this->expectException(RedirectResponseException::class);
+        $this->manager->doFieldDependentRedirect();
+    }
+
+    public function testAddDataToTemplate()
+    {
+        $readerConfig = $this->mockClassWithProperties(
+            ReaderConfigModel::class,
+            [
+                'dataContainer' => 'tl_test',
+            ]
+        );
+
+        $item = [
+            'raw' => [
+                'addImage' => true,
+                'singleSRC' => 'test',
+            ],
+        ];
+
+        $templateData = [];
+
+        $function = self::getMethod(ReaderManager::class, 'addDataToTemplate');
+        $function->invokeArgs($this->manager, [$item, &$templateData, $readerConfig]);
+
+        $this->assertSame(
+            [
+                'images' => [
+                    'singleSRC' => 'test.png',
+                ],
+            ],
+            $templateData
+        );
+    }
+
+    protected static function getMethod($class, $name)
+    {
+        $class = new \ReflectionClass($class);
+        $method = $class->getMethod($name);
+        $method->setAccessible(true);
+
+        return $method;
     }
 }
