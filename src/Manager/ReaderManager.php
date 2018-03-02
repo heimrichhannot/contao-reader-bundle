@@ -91,6 +91,11 @@ class ReaderManager
      */
     protected $moduleData;
 
+    /**
+     * @var Database
+     */
+    protected $database;
+
     public function __construct(
         ContaoFrameworkInterface $framework,
         EntityFilter $entityFilter,
@@ -109,6 +114,7 @@ class ReaderManager
         $this->urlUtil = $urlUtil;
         $this->formUtil = $formUtil;
         $this->twig = $twig;
+        $this->database = $framework->createInstance(Database::class);
     }
 
     /**
@@ -157,6 +163,11 @@ class ReaderManager
         }
     }
 
+    /**
+     * @codeCoverageIgnore
+     *
+     * @return DataContainer
+     */
     public function createDataContainerFromItem()
     {
         $this->dc = DC_Table_Utils::createFromModel($this->item);
@@ -178,9 +189,9 @@ class ReaderManager
                     $readerConfig->dataContainer
                 );
 
-                $result = Database::getInstance()->prepare(
-                    "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND id=".$this->item->id
-                )->execute($values);
+                $result = $this->database->prepare(
+                    "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND $readerConfig->dataContainer.id=?"
+                )->execute($values, $this->item->id);
 
                 if ($result->numRows < 1) {
                     $allowed = false;
@@ -208,7 +219,7 @@ class ReaderManager
                 $readerConfig->dataContainer
             );
 
-            $result = Database::getInstance()->prepare(
+            $result = $this->database->prepare(
                 "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND id=".$this->item->id
             )->execute($values);
 
@@ -360,9 +371,21 @@ class ReaderManager
         $this->moduleData = $moduleData;
     }
 
+    public function getModuleData()
+    {
+        return $this->moduleData;
+    }
+
     public function setItem(Model $item)
     {
         $this->item = $item;
+    }
+
+    protected function modifyPageTitle(string $pageTitle)
+    {
+        global $objPage;
+
+        $objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($pageTitle));
     }
 
     protected function retrieveItemByAutoItem()
@@ -377,7 +400,7 @@ class ReaderManager
             $item = $this->modelUtil->findOneModelInstanceBy(
                 $readerConfig->dataContainer,
                 [
-                    $field.'=?',
+                    $readerConfig->dataContainer.'.'.$field.'=?',
                 ],
                 [
                     $autoItem,
@@ -406,9 +429,7 @@ class ReaderManager
                 $readerConfig->dataContainer
             );
 
-            $database = $this->framework->createInstance(Database::class);
-
-            $result = $database->prepare(
+            $result = $this->database->prepare(
                 "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition)"
             )->limit(1)->execute($values);
 
@@ -418,13 +439,6 @@ class ReaderManager
         }
 
         return $item;
-    }
-
-    protected function modifyPageTitle(string $pageTitle)
-    {
-        global $objPage;
-
-        $objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($pageTitle));
     }
 
     protected function modifyItemTemplateData(array &$templateData, array $item): void

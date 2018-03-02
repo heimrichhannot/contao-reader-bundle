@@ -11,9 +11,7 @@ namespace HeimrichHannot\ReaderBundle\Tests\Manager;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Database;
-use Contao\DataContainer;
 use Contao\Model;
-use Contao\PageModel;
 use HeimrichHannot\EntityFilterBundle\Backend\EntityFilter;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfig;
 use HeimrichHannot\ReaderBundle\Manager\ReaderManager;
@@ -57,26 +55,22 @@ class ReaderManagerTest extends TestCaseEnvironment
     {
         parent::setUp();
 
-        $framework = $this->mockContaoFramework();
-
-        $entityFilter = $this->createConfiguredMock(
+        $this->entityFilter = $this->createConfiguredMock(
             EntityFilter::class,
             ['computeSqlCondition' => ['firstname=?', ['John']]]
         );
 
-        $readerConfigRegistry = $this->createConfiguredMock(
+        $this->readerConfigRegistry = $this->createConfiguredMock(
             ReaderConfigRegistry::class,
-            [
-            ]
+            []
         );
 
-        $readerConfigElementRegistry = $this->createConfiguredMock(
+        $this->readerConfigElementRegistry = $this->createConfiguredMock(
             ReaderConfigElementRegistry::class,
-            [
-            ]
+            []
         );
 
-        $this->johnDoeModel = $johnDoeModel = $this->mockClassWithProperties(
+        $johnDoeModel = $this->mockClassWithProperties(
             Model::class,
             [
                 'id' => '1',
@@ -85,6 +79,8 @@ class ReaderManagerTest extends TestCaseEnvironment
                 'published' => '1',
             ]
         );
+
+        $this->johnDoeModel = $johnDoeModel;
 
         $this->janeDoeModel = $janeDoeModel = $this->mockClassWithProperties(
             Model::class,
@@ -99,7 +95,7 @@ class ReaderManagerTest extends TestCaseEnvironment
         $modelUtil = $this->createMock(ModelUtil::class);
         $modelUtil->method('findOneModelInstanceBy')->willReturnCallback(
             function ($table, $columns, $values) use ($johnDoeModel) {
-                if ('tl_test' === $table && $columns === ['alias=?'] && $values === ['john-doe']) {
+                if ('tl_test' === $table && $columns === ['tl_test.alias=?'] && $values === ['john-doe']) {
                     return $johnDoeModel;
                 }
             }
@@ -117,39 +113,63 @@ class ReaderManagerTest extends TestCaseEnvironment
             }
         );
 
-        $urlUtil = $this->createConfiguredMock(
+        $this->modelUtil = $modelUtil;
+
+        $this->urlUtil = $this->createConfiguredMock(
             UrlUtil::class,
-            [
-            ]
+            []
         );
 
-        $formUtil = $this->createConfiguredMock(
+        $this->formUtil = $this->createConfiguredMock(
             FormUtil::class,
-            [
-            ]
+            []
         );
 
-        $twig = $this->createConfiguredMock(
+        $this->twig = $this->createConfiguredMock(
             \Twig_Environment::class,
-            [
-            ]
+            []
         );
 
         // database
-        $total = $this->mockClassWithProperties(Database\Result::class, ['total' => 1]);
-        $result = $this->mockClassWithProperties(Database\Result::class, ['numRows' => 1, 'id' => '1']);
         $databaseAdapter = $this->mockAdapter(['execute', 'prepare', 'limit']);
-        $databaseAdapter->method('execute')->willReturn($total);
+        $databaseAdapter->method('execute')->willReturnCallback(
+            function ($values, $id = null) {
+                if (!isset($id)) {
+                    return $this->mockClassWithProperties(Database\Result::class, ['total' => 1]);
+                }
+
+                if ('1' === $id) {
+                    return $this->mockClassWithProperties(Database\Result::class, ['numRows' => 1, 'id' => '1']);
+                }
+
+                return $this->mockClassWithProperties(Database\Result::class, ['numRows' => 0]);
+            }
+        );
         $databaseAdapter->method('prepare')->willReturn($databaseAdapter);
         $limitAdapter = $this->mockAdapter(['execute']);
-        $limitAdapter->method('execute')->willReturn($result);
+        $limitAdapter->method('execute')->willReturnCallback(
+            function ($values, $id = null) {
+                return $this->mockClassWithProperties(Database\Result::class, ['numRows' => 1, 'id' => '1']);
+            }
+        );
         $databaseAdapter->method('limit')->willReturn($limitAdapter);
-        $framework = $this->mockContaoFramework();
-        $framework->method('createInstance')->willReturn($databaseAdapter);
+        $this->framework = $this->mockContaoFramework();
+        $this->framework->method('createInstance')->willReturn($databaseAdapter);
 
         $this->manager = new ReaderManager(
-            $framework, $entityFilter, $readerConfigRegistry, $readerConfigElementRegistry, $modelUtil, $urlUtil, $formUtil, $twig
+            $this->framework,
+            $this->entityFilter,
+            $this->readerConfigRegistry,
+            $this->readerConfigElementRegistry,
+            $this->modelUtil,
+            $this->urlUtil,
+            $this->formUtil,
+            $this->twig
         );
+
+        if (!\interface_exists('listable')) {
+            include_once __DIR__.'/../../vendor/contao/core-bundle/src/Resources/contao/helper/interface.php';
+        }
     }
 
     public function prepareReaderConfig(array $attributes = [])
@@ -240,19 +260,60 @@ class ReaderManagerTest extends TestCaseEnvironment
 
     public function testSetPageTitle()
     {
-        $this->prepareReaderConfig([
-            'setPageTitleByField' => true,
-            'pageTitleFieldPattern' => '%firstname% %lastname%',
-        ]);
+        $this->prepareReaderConfig(
+            [
+                'setPageTitleByField' => true,
+                'pageTitleFieldPattern' => '%firstname% %lastname%',
+            ]
+        );
 
         $this->manager->setItem($this->johnDoeModel);
 
         global $objPage;
 
-        $objPage = $this->mockClassWithProperties(PageModel::class, ['language' => 'de', 'rootFallbackLanguage' => 'de']);
+        $objPage = $this->createMock(\stdClass::class);
 
         $this->manager->setPageTitle();
 
         $this->assertSame('John Doe', $objPage->pageTitle);
+    }
+
+    public function testCheckPermission()
+    {
+        $this->prepareReaderConfig();
+        $this->manager->setItem($this->johnDoeModel);
+
+        // no conditions -> always allowed
+        $this->assertTrue($this->manager->checkPermission());
+
+        // conditions
+        $this->prepareReaderConfig(
+            [
+                'addShowConditions' => true,
+                'showFieldConditions' => serialize(
+                    [
+                        [
+                            'bracketLeft' => true,
+                            'field' => 'firstname',
+                            'operator' => 'equal',
+                            'value' => 'John',
+                            'bracketRight' => true,
+                        ],
+                    ]
+                ),
+            ]
+        );
+
+        $this->assertTrue($this->manager->checkPermission());
+
+        $this->manager->setItem($this->janeDoeModel);
+        $this->assertFalse($this->manager->checkPermission());
+    }
+
+    public function testSetModuleData()
+    {
+        $this->manager->setModuleData(['id' => 1]);
+
+        $this->assertSame(['id' => 1], $this->manager->getModuleData());
     }
 }
