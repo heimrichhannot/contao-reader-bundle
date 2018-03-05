@@ -12,6 +12,7 @@ use Contao\Config;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Database;
+use Contao\DataContainer;
 use Contao\FilesModel;
 use Contao\Model;
 use Contao\PageModel;
@@ -19,6 +20,7 @@ use Contao\System;
 use HeimrichHannot\EntityFilterBundle\Backend\EntityFilter;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfig;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement;
+use HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType;
 use HeimrichHannot\ReaderBundle\Manager\ReaderManager;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
@@ -28,6 +30,7 @@ use HeimrichHannot\ReaderBundle\Tests\TestCaseEnvironment;
 use HeimrichHannot\Request\Request;
 use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
 use HeimrichHannot\UtilsBundle\Form\FormUtil;
+use HeimrichHannot\UtilsBundle\Image\ImageUtil;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 use HeimrichHannot\UtilsBundle\Url\UrlUtil;
 
@@ -69,16 +72,37 @@ class ReaderManagerTest extends TestCaseEnvironment
 
         $this->readerConfigRegistry = $this->createMock(ReaderConfigRegistry::class);
 
-        $imageElement = $this->mockClassWithProperties(
+        $imageElement1 = $this->mockClassWithProperties(
             ReaderConfigElementModel::class,
             [
                 'type' => ReaderConfigElement::TYPE_IMAGE,
-                'imageSelectorField' => 'addImage',
-                'imageField' => 'singleSRC',
+                'imageSelectorField' => 'addImage1',
+                'imageField' => 'singleSRC1',
                 'placeholderImageMode' => ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED,
                 'genderField' => 'gender',
-                'placeholderImageFemale' => 'female.png',
-                'placeholderImageMale' => 'male.png',
+                'placeholderImageFemale' => 'female',
+                'placeholderImage' => 'male',
+            ]
+        );
+
+        $imageElement2 = $this->mockClassWithProperties(
+            ReaderConfigElementModel::class,
+            [
+                'type' => ReaderConfigElement::TYPE_IMAGE,
+                'imageSelectorField' => 'addImage2',
+                'imageField' => 'singleSRC2',
+                'placeholderImageMode' => ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE,
+                'placeholderImage' => 'male',
+                'imgSize' => serialize([1, 1, 1]),
+            ]
+        );
+
+        $imageElement3 = $this->mockClassWithProperties(
+            ReaderConfigElementModel::class,
+            [
+                'type' => ReaderConfigElement::TYPE_IMAGE,
+                'imageSelectorField' => 'addImage3',
+                'imageField' => 'singleSRC3',
             ]
         );
 
@@ -91,7 +115,7 @@ class ReaderManagerTest extends TestCaseEnvironment
 
         $this->readerConfigElementRegistry = $this->createConfiguredMock(
             ReaderConfigElementRegistry::class,
-            ['findBy' => [$imageElement/*, $listElement*/]]
+            ['findBy' => [$imageElement1, $imageElement2, $imageElement3/*, $listElement*/]]
         );
 
         $johnDoeModel = $this->mockClassWithProperties(
@@ -119,11 +143,7 @@ class ReaderManagerTest extends TestCaseEnvironment
         $modelUtil = $this->createMock(ModelUtil::class);
         $modelUtil->method('findOneModelInstanceBy')->willReturnCallback(
             function ($table, $columns, $values) use ($johnDoeModel) {
-                if ('tl_files' === $table) {
-                    return $this->mockClassWithProperties(FilesModel::class, [
-                        'path' => 'data/image.png',
-                    ]);
-                } elseif ('tl_test' === $table && $columns === ['tl_test.alias=?'] && $values === ['john-doe']) {
+                if ('tl_test' === $table && $columns === ['tl_test.alias=?'] && $values === ['john-doe']) {
                     return $johnDoeModel;
                 }
             }
@@ -160,14 +180,59 @@ class ReaderManagerTest extends TestCaseEnvironment
             ['getProjectDir' => __DIR__.'/..']
         );
 
-        $this->formUtil = $this->createConfiguredMock(
-            FormUtil::class,
-            []
+        $this->imageUtil = $this->createMock(ImageUtil::class);
+        $this->imageUtil->method('addToTemplateData')->willReturnCallback(
+            function (
+                string $imageField,
+                string $imageSelectorField,
+                array &$templateData,
+                array $item,
+                int $maxWidth = null,
+                string $lightboxId = null,
+                string $lightboxName = null,
+                FilesModel $model = null
+            ) {
+                $templateData['picture'] = $item[$imageField];
+            }
+        );
+
+        $this->formUtil = $this->createMock(FormUtil::class);
+
+        $this->formUtil->method('prepareSpecialValueForOutput')->willReturnCallback(
+            function ($field, $value, $dc) {
+                switch ($field) {
+                    case 'firstname':
+                        return $value;
+                        break;
+                    case 'lastname':
+                        return $value;
+                        break;
+                    case 'someDate':
+                        return '02.03.2018';
+                        break;
+                }
+            }
+        );
+
+        $this->formUtil->method('escapeAllHtmlEntities')->willReturnCallback(
+            function ($table, $field, $value) {
+                switch ($field) {
+                    case 'firstname':
+                        return $value;
+                        break;
+                    case 'lastname':
+                        return $value;
+                        break;
+                    case 'someDate':
+                        return '02.03.2018';
+                        break;
+                }
+            }
         );
 
         $this->twig = $this->createConfiguredMock(
             \Twig_Environment::class,
-            []
+            ['render' => 'twigResult']
         );
 
         // database
@@ -194,11 +259,16 @@ class ReaderManagerTest extends TestCaseEnvironment
         );
         $databaseAdapter->method('limit')->willReturn($limitAdapter);
 
+        // container
         $container = $this->mockContainer();
         $container->setParameter(
             'huh.reader',
             [
                 'reader' => [
+                    'config_element_types' => [
+                        ['name' => 'image', 'class' => 'HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType'],
+                        ['name' => 'list', 'class' => 'HeimrichHannot\ReaderBundle\ConfigElementType\ListConfigElementType'],
+                    ],
                     'templates' => [
                         'item' => [
                             ['name' => 'my_item_template', 'template' => 'template.twig'],
@@ -207,10 +277,70 @@ class ReaderManagerTest extends TestCaseEnvironment
                 ],
             ]
         );
+
+        $container->set('huh.utils.container', $this->containerUtil);
+        $container->set('huh.utils.image', $this->imageUtil);
+        $container->set('huh.utils.model', $this->modelUtil);
+
         System::setContainer($container);
 
-        $this->framework = $this->mockContaoFramework();
-        $this->framework->method('createInstance')->willReturn($databaseAdapter);
+        $filesAdapter = $this->mockAdapter(
+            [
+                'findByUuid',
+            ]
+        );
+
+        $filesAdapter->method('findByUuid')->willReturnCallback(
+            function ($uuid) {
+                switch ($uuid) {
+                    case 'default':
+                        return $this->mockClassWithProperties(
+                            FilesModel::class,
+                            [
+                                'path' => 'data/image.png',
+                            ]
+                        );
+                        break;
+                    case 'female':
+                        return $this->mockClassWithProperties(
+                            FilesModel::class,
+                            [
+                                'path' => 'data/female.png',
+                            ]
+                        );
+                        break;
+                    case 'male':
+                        return $this->mockClassWithProperties(
+                            FilesModel::class,
+                            [
+                                'path' => 'data/male.png',
+                            ]
+                        );
+                        break;
+                }
+            }
+        );
+
+        $this->framework = $this->mockContaoFramework(
+            [
+                FilesModel::class => $filesAdapter,
+            ]
+        );
+
+        $this->framework->method('createInstance')->willReturnCallback(
+            function ($class) use ($databaseAdapter) {
+                switch ($class) {
+                    case Database::class:
+                        return $databaseAdapter;
+                        break;
+                    case ImageConfigElementType::class:
+                        return new ImageConfigElementType($this->framework);
+                        break;
+                    default:
+                        return null;
+                }
+            }
+        );
 
         $this->manager = new ReaderManager(
             $this->framework,
@@ -220,6 +350,7 @@ class ReaderManagerTest extends TestCaseEnvironment
             $this->modelUtil,
             $this->urlUtil,
             $this->containerUtil,
+            $this->imageUtil,
             $this->formUtil,
             $this->twig
         );
@@ -227,6 +358,24 @@ class ReaderManagerTest extends TestCaseEnvironment
         if (!\interface_exists('listable')) {
             include_once __DIR__.'/../../vendor/contao/core-bundle/src/Resources/contao/helper/interface.php';
         }
+
+        $GLOBALS['TL_DCA']['tl_test']['fields'] = [
+            'firstname' => [
+                'inputType' => 'text',
+                'eval' => ['maxlength' => 255, 'tl_class' => 'w50', 'mandatory' => true],
+            ],
+            'lastname' => [
+                'inputType' => 'text',
+                'load_callback' => [
+                    ['HeimrichHannot\ReaderBundle\Tests\Manager\ReaderManagerTest', 'loadCallback'],
+                ],
+                'eval' => ['maxlength' => 255, 'tl_class' => 'w50', 'mandatory' => true],
+            ],
+            'someDate' => [
+                'inputType' => 'text',
+                'eval' => ['rgxp' => 'date', 'datepicker' => true, 'tl_class' => 'w50 wizard', 'mandatory' => true],
+            ],
+        ];
     }
 
     public function prepareReaderConfig(array $attributes = [])
@@ -313,6 +462,15 @@ class ReaderManagerTest extends TestCaseEnvironment
     public function onloadCallback2()
     {
         static::$testArray[] = 'b';
+    }
+
+    public function loadCallback($value, $dc)
+    {
+        if ('Doe' === $value) {
+            return 'DoeModified';
+        }
+
+        return $value;
     }
 
     public function testSetPageTitle()
@@ -462,26 +620,188 @@ class ReaderManagerTest extends TestCaseEnvironment
             ]
         );
 
+        // positive
         $item = [
             'raw' => [
-                'addImage' => true,
-                'singleSRC' => 'test',
+                'addImage1' => true,
+                'singleSRC1' => 'default',
             ],
         ];
 
         $templateData = [];
 
-        $function = self::getMethod(ReaderManager::class, 'addDataToTemplate');
+        $function = self::getMethod(ReaderManager::class, 'applyReaderConfigElements');
         $function->invokeArgs($this->manager, [$item, &$templateData, $readerConfig]);
 
         $this->assertSame(
             [
                 'images' => [
-                    'singleSRC' => 'test.png',
+                    'singleSRC1' => [
+                        'picture' => 'data/image.png',
+                    ],
+                    'singleSRC2' => [
+                        'picture' => 'data/male.png',
+                    ],
                 ],
             ],
             $templateData
         );
+
+        // selector not set
+        // male
+        $templateData = [];
+
+        $item = [
+            'raw' => [
+                'addImage1' => false,
+                'gender' => 'male',
+            ],
+        ];
+
+        $function->invokeArgs($this->manager, [$item, &$templateData, $readerConfig]);
+
+        $this->assertSame(
+            [
+                'images' => [
+                    'singleSRC1' => [
+                        'picture' => 'data/male.png',
+                    ],
+                    'singleSRC2' => [
+                        'picture' => 'data/male.png',
+                    ],
+                ],
+            ],
+            $templateData
+        );
+
+        // female
+        $templateData = [];
+
+        $item = [
+            'raw' => [
+                'addImage1' => false,
+                'gender' => 'female',
+            ],
+        ];
+
+        $function->invokeArgs($this->manager, [$item, &$templateData, $readerConfig]);
+
+        $this->assertSame(
+            [
+                'images' => [
+                    'singleSRC1' => [
+                        'picture' => 'data/female.png',
+                    ],
+                    'singleSRC2' => [
+                        'picture' => 'data/male.png',
+                    ],
+                ],
+            ],
+            $templateData
+        );
+    }
+
+    public function testPrepareItem()
+    {
+        $this->prepareReaderConfig();
+        $this->manager->setItem($this->johnDoeModel);
+        $this->manager->setDataContainer(
+            $this->mockClassWithProperties(
+                DataContainer::class,
+                [
+                    'table' => 'tl_test',
+                ]
+            )
+        );
+
+        Config::set('dateFormat', 'd.m.Y');
+
+        $this->assertSame(
+            [
+                'raw' => [
+                    'firstname' => 'John',
+                    'lastname' => 'DoeModified',
+                    'someDate' => 1520004293,
+                ],
+                'formatted' => [
+                    'firstname' => 'John',
+                    'lastname' => 'DoeModified',
+                    'someDate' => '02.03.2018',
+                ],
+            ],
+            $this->manager->prepareItem(
+                [
+                    'firstname' => 'John',
+                    'lastname' => 'Doe',
+                    'someDate' => 1520004293,
+                ]
+            )
+        );
+
+        $this->prepareReaderConfig(
+            [
+                'limitFormattedFields' => true,
+                'formattedFields' => serialize(
+                    [
+                        'firstname',
+                        'lastname',
+                    ]
+                ),
+            ]
+        );
+
+        $this->assertSame(
+            [
+                'raw' => [
+                    'firstname' => 'John',
+                    'lastname' => 'DoeModified',
+                    'someDate' => 1520004293,
+                ],
+                'formatted' => [
+                    'firstname' => 'John',
+                    'lastname' => 'DoeModified',
+                ],
+            ],
+            $this->manager->prepareItem(
+                [
+                    'firstname' => 'John',
+                    'lastname' => 'Doe',
+                    'someDate' => 1520004293,
+                ]
+            )
+        );
+    }
+
+    public function testParseItem()
+    {
+        $this->prepareReaderConfig(
+            [
+                'itemTemplate' => 'my_item_template',
+            ]
+        );
+
+        $this->assertSame('twigResult', $this->manager->parseItem(
+            [
+                'raw' => [
+                    'firstname' => 'John',
+                    'lastname' => 'DoeModified',
+                    'someDate' => 1520004293,
+                ],
+                'formatted' => [
+                    'firstname' => 'John',
+                    'lastname' => 'DoeModified',
+                ],
+            ]
+        ));
+    }
+
+    public function testGetConfigElementTypeClassByName()
+    {
+        $function = self::getMethod(ReaderManager::class, 'getConfigElementTypeClassByName');
+
+        $this->assertSame('HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType', $function->invokeArgs($this->manager, ['image']));
+
+        $this->assertNull($function->invokeArgs($this->manager, ['notexisting']));
     }
 
     protected static function getMethod($class, $name)

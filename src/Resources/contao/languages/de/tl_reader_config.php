@@ -23,7 +23,7 @@ $lang['formattedFields'][1]              = 'Wählen Sie hier die zu formatierend
 $lang['itemRetrievalMode'][0]            = 'Instanzabruf-Modus';
 $lang['itemRetrievalMode'][1]            =
     'Die anzuzeigende Instanz kann über verschiedene Methoden bezogen werden. Wählen Sie hier bitte eine solche aus.';
-$lang['itemRetrievalAutoItemField'][0]   = 'Auto-Item-Feld (Fallback: "ID")';
+$lang['itemRetrievalAutoItemField'][0]   = 'Auto-Item-Feld';
 $lang['itemRetrievalAutoItemField'][1]   =
     'Wählen Sie hier das Data-Container-Feld aus, das mit dem gefundenen Auto-Item abgeglichen werden soll. Hinweis: Enthält das entsprechende Feld keinen Wert, erfolgt ein Fallback auf das Feld "ID".';
 $lang['itemRetrievalFieldConditions'][0] = 'Instanzbedingungen';

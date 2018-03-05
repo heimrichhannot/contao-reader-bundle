@@ -13,15 +13,12 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Database;
 use Contao\DataContainer;
-use Contao\FilesModel;
 use Contao\Model;
-use Contao\ModuleModel;
 use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\EntityFilterBundle\Backend\EntityFilter;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfig;
-use HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement;
-use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
+use HeimrichHannot\ReaderBundle\ConfigElementType\ConfigElementType;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry;
@@ -79,11 +76,6 @@ class ReaderManager
      * @var ContainerUtil
      */
     protected $containerUtil;
-
-    /**
-     * @var ImageUtil
-     */
-    protected $imageUtil;
 
     /**
      * @var \Twig_Environment
@@ -193,6 +185,11 @@ class ReaderManager
         return $this->dc;
     }
 
+    public function setDataContainer(DataContainer $dc)
+    {
+        $this->dc = $dc;
+    }
+
     public function checkPermission()
     {
         $readerConfig = $this->readerConfig;
@@ -280,23 +277,33 @@ class ReaderManager
         $dca = &$GLOBALS['TL_DCA'][$readerConfig->dataContainer];
         $dc = $this->dc;
 
-        $fields = $readerConfig->limitFormattedFields ? StringUtil::deserialize(
-            $readerConfig->formattedFields,
-            true
-        ) : array_keys($dca['fields']);
+        // add raw values
+        $result['raw'] = [];
 
-        $result['raw'] = $item;
-
-        foreach ($fields as $field) {
-            $dc->field = $field;
+        foreach (array_keys($dca['fields']) as $field) {
             $value = $item[$field];
 
-            if (is_array($dca['fields'][$field]['load_callback'])) {
+            $dc->field = $field;
+
+            if (isset($dca['fields'][$field]['load_callback']) && is_array($dca['fields'][$field]['load_callback'])) {
                 foreach ($dca['fields'][$field]['load_callback'] as $callback) {
                     $instance = System::importStatic($callback[0]);
                     $value = $instance->{$callback[1]}($value, $dc);
                 }
             }
+
+            // add raw value
+            $result['raw'][$field] = $value;
+        }
+
+        $fields = $readerConfig->limitFormattedFields ? StringUtil::deserialize(
+            $readerConfig->formattedFields,
+            true
+        ) : array_keys($dca['fields']);
+
+        foreach ($fields as $field) {
+            $dc->field = $field;
+            $value = $result['raw'][$field];
 
             $result['formatted'][$field] = $this->formUtil->prepareSpecialValueForOutput(
                 $field,
@@ -310,25 +317,6 @@ class ReaderManager
                 $field,
                 $result['formatted'][$field]
             );
-        }
-
-        // add the missing field's raw values (these should always be inserted completely)
-        foreach (array_keys($dca['fields']) as $field) {
-            if (isset($result['raw'][$field])) {
-                continue;
-            }
-
-            $value = $item[$field];
-
-            if (is_array($dca['fields'][$field]['load_callback'])) {
-                foreach ($dca['fields'][$field]['load_callback'] as $callback) {
-                    $instance = System::importStatic($callback[0]);
-                    $value = $instance->{$callback[1]}($value, $dc);
-                }
-            }
-
-            // add raw value
-            $result['raw'][$field] = $value;
         }
 
         return $result;
@@ -346,7 +334,7 @@ class ReaderManager
 
         $templateData['dataContainer'] = $readerConfig->dataContainer;
 
-        $this->addDataToTemplate($item, $templateData, $readerConfig);
+        $this->applyReaderConfigElements($item, $templateData, $readerConfig);
 
         $templateData['module'] = $this->moduleData;
 
@@ -473,97 +461,35 @@ class ReaderManager
         return null;
     }
 
-    protected function addDataToTemplate(array $item, array &$templateData, ReaderConfigModel $readerConfig)
+    protected function applyReaderConfigElements(array $item, array &$templateData, ReaderConfigModel $readerConfig)
     {
         $readerConfigElements = $this->readerConfigElementRegistry->findBy(['pid'], [$readerConfig->id]);
 
         if (null !== $readerConfigElements) {
             foreach ($readerConfigElements as $readerConfigElement) {
-                switch ($readerConfigElement->type) {
-                    case ReaderConfigElement::TYPE_IMAGE:
-                        $this->addImagesToTemplate($item, $templateData, $readerConfigElement);
-                        break;
-                    case ReaderConfigElement::TYPE_LIST:
-                        $this->addListToTemplate($item, $templateData, $readerConfigElement);
-                        break;
-                    default:
-                        break;
+                $class = $this->getConfigElementTypeClassByName($readerConfigElement->type);
+
+                if ($class && class_exists($class)) {
+                    /**
+                     * @var ConfigElementType
+                     */
+                    $type = $this->framework->createInstance($class, [$this->framework]);
+
+                    $type->addToTemplateData($item, $templateData, $readerConfigElement);
                 }
             }
         }
     }
 
-    protected function addImagesToTemplate(array $item, array &$templateData, ReaderConfigElementModel $imageReaderConfigElement)
+    protected function getConfigElementTypeClassByName($name)
     {
-        $image = null;
+        $config = System::getContainer()->getParameter('huh.reader');
+        $templates = $config['reader']['config_element_types'];
 
-        if ($item['raw'][$imageReaderConfigElement->imageSelectorField] && $item['raw'][$imageReaderConfigElement->imageField]) {
-            $imageSelectorField = $imageReaderConfigElement->imageSelectorField;
-            $image = $item['raw'][$imageReaderConfigElement->imageField];
-            $imageField = $imageReaderConfigElement->imageField;
-        } elseif ($imageReaderConfigElement->placeholderImageMode) {
-            $imageSelectorField = $imageReaderConfigElement->imageSelectorField;
-            $imageField = $imageReaderConfigElement->imageField;
-
-            switch ($imageReaderConfigElement->placeholderImageMode) {
-                case ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED:
-                    if ($item['raw'][$imageReaderConfigElement->genderField] == 'female') {
-                        $image = $imageReaderConfigElement->placeholderImageFemale;
-                    } else {
-                        $image = $imageReaderConfigElement->placeholderImage;
-                    }
-                    break;
-                case ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE:
-                    $image = $imageReaderConfigElement->placeholderImage;
-                    break;
+        foreach ($templates as $template) {
+            if ($template['name'] == $name) {
+                return $template['class'];
             }
-        } else {
-            return;
         }
-
-        /**
-         * @var FilesModel
-         */
-        $imageModel = $this->modelUtil->findOneModelInstanceBy('tl_files', ['uuid=?'], [$image]);
-
-        if (null !== $imageModel
-            && file_exists($this->containerUtil->getProjectDir().'/'.$imageModel->path)) {
-            $imageArray = $item['raw'];
-
-            // Override the default image size
-            if ('' != $imageReaderConfigElement->imgSize) {
-                $size = StringUtil::deserialize($imageReaderConfigElement->imgSize);
-
-                if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2])) {
-                    $imageArray['size'] = $imageReaderConfigElement->imgSize;
-                }
-            }
-
-            $imageArray[$imageField] = $imageModel->path;
-            $templateData['images'][$imageField] = [];
-
-            $this->imageUtil->addToTemplateData($imageField, $imageSelectorField, $templateData['images'][$imageField], $imageArray, null, null, null, $imageModel);
-        }
-    }
-
-    protected function addListToTemplate(array $item, array &$templateData, ReaderConfigElementModel $listReaderConfigElement)
-    {
-        $module = ModuleModel::findById($listReaderConfigElement->listModule);
-
-        if (null === $module) {
-            return;
-        }
-
-        $listModule = new \HeimrichHannot\ListBundle\Module\ModuleList($module);
-        $filterConfig = $listModule->getFilterConfig();
-        $filter = \Contao\StringUtil::deserialize($listReaderConfigElement->initialFilter, true);
-
-        if (!isset($filter[0]['filterElement']) || !isset($filter[0]['selector'])) {
-            return;
-        }
-
-        $filterConfig->addContextualValue($filter[0]['filterElement'], $item['raw'][$filter[0]['selector']]);
-        $filterConfig->initQueryBuilder();
-        $templateData['list'][$listReaderConfigElement->listName] = $listModule->generate();
     }
 }
