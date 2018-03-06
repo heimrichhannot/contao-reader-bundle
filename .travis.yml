@@ -6,6 +6,7 @@ env:
   - CONTAO_VERSION="4.4.*"
   - CONTAO_VERSION="4.5.*"
 install:
+  - mkdir packages
   - composer require contao/core-bundle:${CONTAO_VERSION}
 sudo: false
 notifications:
