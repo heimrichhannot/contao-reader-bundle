@@ -1,5 +1,10 @@
 # Contao Reader Bundle
 
+![](https://img.shields.io/packagist/v/heimrichhannot/contao-reader-bundle.svg)
+![](https://img.shields.io/packagist/dt/heimrichhannot/contao-reader-bundle.svg)
+[![](https://img.shields.io/travis/heimrichhannot/contao-reader-bundle/master.svg)](https://travis-ci.org/heimrichhannot/contao-reader-bundle/)
+[![](https://img.shields.io/coveralls/heimrichhannot/contao-reader-bundle/master.svg)](https://coveralls.io/github/heimrichhannot/contao-reader-bundle)
+
 This bundle offers a generic reader module to use with arbitrary contao entities containing standard reader specific functionality like field output, images and auto_item handling.
 
 ## Features
