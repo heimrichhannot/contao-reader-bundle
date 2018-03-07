@@ -14,6 +14,14 @@ services:
         class: HeimrichHannot\ReaderBundle\Choice\ReaderItemTemplateChoice
         arguments:
             - "@contao.framework"
+    huh.reader.choice.manager:
+        class: HeimrichHannot\ReaderBundle\Choice\ManagerChoice
+        arguments:
+            - "@contao.framework"
+    huh.reader.choice.item:
+        class: HeimrichHannot\ReaderBundle\Choice\ItemChoice
+        arguments:
+            - "@contao.framework"
     huh.reader.choice.parent-reader-config:
         class: HeimrichHannot\ReaderBundle\Choice\ParentReaderConfigChoice
         arguments:

@@ -13,12 +13,11 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Database;
 use Contao\DataContainer;
-use Contao\Model;
 use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\EntityFilterBundle\Backend\EntityFilter;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfig;
-use HeimrichHannot\ReaderBundle\ConfigElementType\ConfigElementType;
+use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry;
@@ -30,7 +29,7 @@ use HeimrichHannot\UtilsBundle\Image\ImageUtil;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 use HeimrichHannot\UtilsBundle\Url\UrlUtil;
 
-class ReaderManager
+class ReaderManager implements ReaderManagerInterface
 {
     /**
      * @var ContaoFrameworkInterface
@@ -83,7 +82,7 @@ class ReaderManager
     protected $twig;
 
     /**
-     * @var Model
+     * @var ItemInterface
      */
     protected $item;
 
@@ -128,9 +127,9 @@ class ReaderManager
     }
 
     /**
-     * @return Model|null
+     * {@inheritdoc}
      */
-    public function retrieveItem()
+    public function retrieveItem(): ?ItemInterface
     {
         $readerConfig = $this->readerConfig;
         $item = null;
@@ -144,6 +143,10 @@ class ReaderManager
                 break;
         }
 
+        if (null === $item) {
+            return null;
+        }
+
         // hide unpublished items?
         if (null !== $item && $readerConfig->hideUnpublishedItems) {
             if (!$readerConfig->invertPublishedField && !$item->{$readerConfig->publishedField}
@@ -153,13 +156,31 @@ class ReaderManager
             }
         }
 
-        $this->item = $item;
+        $data = $item->row();
+        $this->dc = DC_Table_Utils::createFromModelData($data, $this->readerConfig->dataContainer);
 
-        return $item;
+        if (null !== ($itemClass = $this->getItemClassByName($this->readerConfig->item ?: 'default'))) {
+            $reflection = new \ReflectionClass($itemClass);
+
+            if (!$reflection->implementsInterface(ItemInterface::class)) {
+                throw new \Exception(sprintf('Item class %s must implement %s', $itemClass, ItemInterface::class));
+            }
+
+            $this->item = new $itemClass($this, $data);
+        }
+
+        return $this->item;
     }
 
-    public function triggerOnLoadCallbacks()
+    /**
+     * {@inheritdoc}
+     */
+    public function triggerOnLoadCallbacks(): void
     {
+        if (null === $this->dc) {
+            $this->retrieveItem();
+        }
+
         $table = $this->readerConfig->dataContainer;
 
         // Only call onload_callbacks with *true* as third argument
@@ -174,23 +195,25 @@ class ReaderManager
     }
 
     /**
-     * @codeCoverageIgnore
-     *
-     * @return DataContainer
+     * {@inheritdoc}
      */
-    public function createDataContainerFromItem()
-    {
-        $this->dc = DC_Table_Utils::createFromModel($this->item);
-
-        return $this->dc;
-    }
-
-    public function setDataContainer(DataContainer $dc)
+    public function setDataContainer(DataContainer $dc): void
     {
         $this->dc = $dc;
     }
 
-    public function checkPermission()
+    /**
+     * {@inheritdoc}
+     */
+    public function getDataContainer(): ?DataContainer
+    {
+        return $this->dc;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function checkPermission(): bool
     {
         $readerConfig = $this->readerConfig;
         $allowed = true;
@@ -217,7 +240,10 @@ class ReaderManager
         return $allowed;
     }
 
-    public function doFieldDependentRedirect()
+    /**
+     * {@inheritdoc}
+     */
+    public function doFieldDependentRedirect(): void
     {
         $readerConfig = $this->readerConfig;
         $redirect = false;
@@ -250,7 +276,10 @@ class ReaderManager
         }
     }
 
-    public function setPageTitle()
+    /**
+     * {@inheritdoc}
+     */
+    public function setPageTitle(): void
     {
         $readerConfig = $this->readerConfig;
         $item = $this->item;
@@ -268,121 +297,141 @@ class ReaderManager
         }
     }
 
-    public function prepareItem(array $item): array
-    {
-        $readerConfig = $this->readerConfig;
-
-        $result = [];
-
-        $dca = &$GLOBALS['TL_DCA'][$readerConfig->dataContainer];
-        $dc = $this->dc;
-
-        // add raw values
-        $result['raw'] = [];
-
-        foreach (array_keys($dca['fields']) as $field) {
-            $value = $item[$field];
-
-            $dc->field = $field;
-
-            if (isset($dca['fields'][$field]['load_callback']) && is_array($dca['fields'][$field]['load_callback'])) {
-                foreach ($dca['fields'][$field]['load_callback'] as $callback) {
-                    $instance = System::importStatic($callback[0]);
-                    $value = $instance->{$callback[1]}($value, $dc);
-                }
-            }
-
-            // add raw value
-            $result['raw'][$field] = $value;
-        }
-
-        $fields = $readerConfig->limitFormattedFields ? StringUtil::deserialize(
-            $readerConfig->formattedFields,
-            true
-        ) : array_keys($dca['fields']);
-
-        foreach ($fields as $field) {
-            $dc->field = $field;
-            $value = $result['raw'][$field];
-
-            $result['formatted'][$field] = $this->formUtil->prepareSpecialValueForOutput(
-                $field,
-                $value,
-                $dc
-            );
-
-            // anti-xss: escape everything besides some tags
-            $result['formatted'][$field] = $this->formUtil->escapeAllHtmlEntities(
-                $readerConfig->dataContainer,
-                $field,
-                $result['formatted'][$field]
-            );
-        }
-
-        return $result;
-    }
-
-    public function parseItem(array $item): string
-    {
-        $readerConfig = $this->readerConfig;
-
-        $templateData = $item['formatted'];
-
-        foreach ($item as $field => $value) {
-            $templateData[$field] = $value;
-        }
-
-        $templateData['dataContainer'] = $readerConfig->dataContainer;
-
-        $this->applyReaderConfigElements($item, $templateData, $readerConfig);
-
-        $templateData['module'] = $this->moduleData;
-
-        $this->modifyItemTemplateData($templateData, $item);
-
-        $twig = $this->twig;
-
-        $twig->hasExtension('\Twig_Extensions_Extension_Text') ?: $twig->addExtension(new \Twig_Extensions_Extension_Text());
-        $twig->hasExtension('\Twig_Extensions_Extension_Intl') ?: $twig->addExtension(new \Twig_Extensions_Extension_Intl());
-        $twig->hasExtension('\Twig_Extensions_Extension_Array') ?: $twig->addExtension(new \Twig_Extensions_Extension_Array());
-        $twig->hasExtension('\Twig_Extensions_Extension_Date') ?: $twig->addExtension(new \Twig_Extensions_Extension_Date());
-
-        return $twig->render($this->getItemTemplateByName($readerConfig->itemTemplate ?: 'default'), $templateData);
-    }
-
-    public function getReaderConfig()
+    /**
+     * {@inheritdoc}
+     */
+    public function getReaderConfig(): ReaderConfigModel
     {
         $readerConfigId = $this->moduleData['readerConfig'];
 
-        if (!$readerConfigId
-            || null === ($readerConfig = $this->readerConfigRegistry->findByPk($readerConfigId))
-        ) {
+        if (!$readerConfigId || null === ($readerConfig = $this->readerConfigRegistry->findByPk($readerConfigId))) {
             throw new \Exception(sprintf('The module %s has no valid reader config. Please set one.', $this->moduleData['id']));
         }
 
         return $readerConfig;
     }
 
-    public function setReaderConfig(ReaderConfigModel $readerConfig)
+    /**
+     * {@inheritdoc}
+     */
+    public function setReaderConfig(ReaderConfigModel $readerConfig): void
     {
         $this->readerConfig = $readerConfig;
     }
 
-    public function setModuleData(array $moduleData)
+    /**
+     * {@inheritdoc}
+     */
+    public function setModuleData(array $moduleData): void
     {
         $this->moduleData = $moduleData;
     }
 
-    public function getModuleData()
+    /**
+     * {@inheritdoc}
+     */
+    public function getModuleData(): array
     {
         return $this->moduleData;
     }
 
-    public function setItem(Model $item)
+    /**
+     * {@inheritdoc}
+     */
+    public function setItem(ItemInterface $item): void
     {
         $this->item = $item;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getItem(): ItemInterface
+    {
+        return $this->item;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getItemClassByName(string $name)
+    {
+        $config = System::getContainer()->getParameter('huh.reader');
+
+        if (!isset($config['reader']['items'])) {
+            return null;
+        }
+
+        $items = $config['reader']['items'];
+
+        foreach ($items as $item) {
+            if ($item['name'] == $name) {
+                return class_exists($item['class']) ? $item['class'] : null;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getItemTemplateByName(string $name)
+    {
+        $config = System::getContainer()->getParameter('huh.reader');
+
+        if (!isset($config['reader']['templates']['item'])) {
+            return null;
+        }
+
+        $templates = $config['reader']['templates']['item'];
+
+        foreach ($templates as $template) {
+            if ($template['name'] == $name) {
+                return $template['template'];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getReaderConfigElementRegistry(): ReaderConfigElementRegistry
+    {
+        return $this->readerConfigElementRegistry;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTwig(): \Twig_Environment
+    {
+        return $this->twig;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFrameWork(): ContaoFrameworkInterface
+    {
+        return $this->framework;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormUtil(): FormUtil
+    {
+        return $this->formUtil;
+    }
+
+    /**
+     * Modify current page title.
+     *
+     * @param string $pageTitle
+     */
     protected function modifyPageTitle(string $pageTitle)
     {
         global $objPage;
@@ -390,6 +439,11 @@ class ReaderManager
         $objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($pageTitle));
     }
 
+    /**
+     * Retrieve current item by auto_item request parameter.
+     *
+     * @return mixed|null
+     */
     protected function retrieveItemByAutoItem()
     {
         $readerConfig = $this->readerConfig;
@@ -418,6 +472,11 @@ class ReaderManager
         return $item;
     }
 
+    /**
+     * Retrieve current item by field conditions.
+     *
+     * @return mixed|null
+     */
     protected function retrieveItemByFieldConditions()
     {
         $readerConfig = $this->readerConfig;
@@ -441,55 +500,5 @@ class ReaderManager
         }
 
         return $item;
-    }
-
-    protected function modifyItemTemplateData(array &$templateData, array $item): void
-    {
-    }
-
-    protected function getItemTemplateByName($name)
-    {
-        $config = System::getContainer()->getParameter('huh.reader');
-        $templates = $config['reader']['templates']['item'];
-
-        foreach ($templates as $template) {
-            if ($template['name'] == $name) {
-                return $template['template'];
-            }
-        }
-
-        return null;
-    }
-
-    protected function applyReaderConfigElements(array $item, array &$templateData, ReaderConfigModel $readerConfig)
-    {
-        $readerConfigElements = $this->readerConfigElementRegistry->findBy(['pid'], [$readerConfig->id]);
-
-        if (null !== $readerConfigElements) {
-            foreach ($readerConfigElements as $readerConfigElement) {
-                $class = $this->getConfigElementTypeClassByName($readerConfigElement->type);
-
-                if ($class && class_exists($class)) {
-                    /**
-                     * @var ConfigElementType
-                     */
-                    $type = $this->framework->createInstance($class, [$this->framework]);
-
-                    $type->addToTemplateData($item, $templateData, $readerConfigElement);
-                }
-            }
-        }
-    }
-
-    protected function getConfigElementTypeClassByName($name)
-    {
-        $config = System::getContainer()->getParameter('huh.reader');
-        $templates = $config['reader']['config_element_types'];
-
-        foreach ($templates as $template) {
-            if ($template['name'] == $name) {
-                return $template['class'];
-            }
-        }
     }
 }

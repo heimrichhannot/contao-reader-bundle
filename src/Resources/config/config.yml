@@ -1,5 +1,9 @@
 huh:
     reader:
+        managers:
+            - {name: default, id: huh.reader.manager.reader}
+        items:
+            - {name: default, class: HeimrichHannot\ReaderBundle\Item\DefaultItem}
         config_element_types:
             - {name: image, class: HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType}
             - {name: list, class: HeimrichHannot\ReaderBundle\ConfigElementType\ListConfigElementType}

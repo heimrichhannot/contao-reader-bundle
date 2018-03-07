@@ -16,7 +16,7 @@ use Contao\Environment;
 use Contao\Model;
 use Contao\ModuleModel;
 use Contao\System;
-use HeimrichHannot\ReaderBundle\Manager\ReaderManager;
+use HeimrichHannot\ReaderBundle\Manager\ReaderManagerInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry;
 use HeimrichHannot\StatusMessages\StatusMessage;
@@ -30,7 +30,7 @@ class ModuleReader extends \Contao\Module
     /** @var ContaoFramework */
     protected $framework;
 
-    /** @var ReaderManager */
+    /** @var ReaderManagerInterface */
     protected $manager;
 
     /** @var Translator */
@@ -57,9 +57,14 @@ class ModuleReader extends \Contao\Module
     public function __construct(ModuleModel $objModule, $strColumn = 'main')
     {
         $this->framework = System::getContainer()->get('contao.framework');
-        $this->manager = System::getContainer()->get('huh.reader.manager.reader');
         $this->translator = System::getContainer()->get('translator');
         $this->readerConfigRegistry = System::getContainer()->get('huh.reader.reader-config-registry');
+
+        $this->readerConfig = $this->readerConfigRegistry->computeReaderConfig(
+            $objModule->readerConfig
+        );
+
+        $this->manager = $this->getReaderManagerByName($this->readerConfig->manager ?: 'default');
 
         parent::__construct($objModule, $strColumn);
     }
@@ -77,20 +82,19 @@ class ModuleReader extends \Contao\Module
             return $objTemplate->parse();
         }
 
+        if (null === $this->manager) {
+            return parent::generate();
+        }
+
         Controller::loadDataContainer('tl_reader_config');
 
         $this->manager->setModuleData($this->arrData);
 
-        $this->readerConfig = $readerConfig = $this->readerConfigRegistry->computeReaderConfig(
-            $this->manager->getReaderConfig()->id
-        );
-
-        $this->manager->setReaderConfig($readerConfig);
+        $this->manager->setReaderConfig($this->readerConfig);
 
         $this->item = $this->manager->retrieveItem();
 
         if (null !== $this->item) {
-            $this->manager->createDataContainerFromItem();
             $this->manager->triggerOnLoadCallbacks();
         }
 
@@ -105,7 +109,6 @@ class ModuleReader extends \Contao\Module
     protected function compile()
     {
         $readerConfig = $this->readerConfig;
-        $item = $this->item;
 
         Controller::loadDataContainer($readerConfig->dataContainer);
         System::loadLanguageFile($readerConfig->dataContainer);
@@ -131,7 +134,46 @@ class ModuleReader extends \Contao\Module
 
         $this->manager->setPageTitle();
 
-        $preparedItem = $this->manager->prepareItem($item->row());
-        $this->Template->item = $this->manager->parseItem($preparedItem);
+        $this->Template->item = $this->manager->getItem()->parse();
+    }
+
+    /**
+     * Get the reader manager.
+     *
+     * @param string $name
+     *
+     * @throws \Exception
+     *
+     * @return null|ReaderManagerInterface
+     */
+    protected function getReaderManagerByName(string $name): ?ReaderManagerInterface
+    {
+        $config = System::getContainer()->getParameter('huh.reader');
+
+        if (!isset($config['reader']['managers'])) {
+            return null;
+        }
+
+        $managers = $config['reader']['managers'];
+
+        foreach ($managers as $manager) {
+            if ($manager['name'] == $name) {
+                if (!System::getContainer()->has($manager['id'])) {
+                    return null;
+                }
+
+                /** @var ReaderManagerInterface $manager */
+                $manager = System::getContainer()->get($manager['id']);
+                $interfaces = class_implements($manager);
+
+                if (!is_array($interfaces) || !in_array(ReaderManagerInterface::class, $interfaces, true)) {
+                    throw new \Exception(sprintf('Reader manager service %s must implement %s', $manager['id'], ReaderManagerInterface::class));
+                }
+
+                return $manager;
+            }
+        }
+
+        return null;
     }
 }

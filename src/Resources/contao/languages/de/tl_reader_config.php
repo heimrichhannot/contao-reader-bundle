@@ -16,6 +16,10 @@ $lang['parentReaderConfig'][1] = 'Wählen Sie hier eine Leserkonfiguration aus, 
 // config
 $lang['dataContainer'][0]                = 'Data-Container';
 $lang['dataContainer'][1]                = 'Wählen Sie hier bitte den Data-Container aus, dem die anzuzeigenden Entitäten angehören.';
+$lang['manager'][0]                      = 'Manager';
+$lang['manager'][1]                      = 'Wählen Sie hier eine individuelle Manager-Klasse oder Service aus.';
+$lang['item'][0]                         = 'Item';
+$lang['item'][1]                         = 'Wählen Sie hier eine individuelle Item-Klasse oder Service aus.';
 $lang['limitFormattedFields'][0]         = 'Formatierte Felder einschränken (Geschwindigkeit verbessern)';
 $lang['limitFormattedFields'][1]         = 'Wählen Sie diese Option, wenn nur bestimmte Felder auf Basis der Data-Containers-Konfiguration formatiert werden sollen möchten.';
 $lang['formattedFields'][0]              = 'Formatierte Felder';

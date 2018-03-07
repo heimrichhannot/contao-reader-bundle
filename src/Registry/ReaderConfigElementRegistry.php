@@ -9,6 +9,7 @@
 namespace HeimrichHannot\ReaderBundle\Registry;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\System;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 
@@ -89,5 +90,26 @@ class ReaderConfigElementRegistry
         }
 
         return $this->readerConfigRegistry->getFilterByPk($readerConfigElement->pid);
+    }
+
+    /**
+     * Get the type class by given element name.
+     *
+     * @param $name
+     *
+     * @return string|null
+     */
+    public function getElementClassByName($name)
+    {
+        $config = System::getContainer()->getParameter('huh.reader');
+        $templates = $config['reader']['config_element_types'];
+
+        foreach ($templates as $template) {
+            if ($template['name'] == $name) {
+                return class_exists($template['class']) ? $template['class'] : null;
+            }
+        }
+
+        return null;
     }
 }

@@ -13,6 +13,7 @@ use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement;
+use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 
 class ImageConfigElementType implements ConfigElementType
@@ -27,16 +28,16 @@ class ImageConfigElementType implements ConfigElementType
         $this->framework = $framework;
     }
 
-    public function addToTemplateData(array $item, array &$templateData, ReaderConfigElementModel $readerConfigElement)
+    public function addToTemplateData(ItemInterface $item, array &$templateData, ReaderConfigElementModel $readerConfigElement)
     {
         $image = null;
 
-        if (isset($item['raw'][$readerConfigElement->imageSelectorField]) && $item['raw'][$readerConfigElement->imageSelectorField]
-            && isset($item['raw'][$readerConfigElement->imageField])
-            && $item['raw'][$readerConfigElement->imageField]
+        if (isset($item->getRaw()[$readerConfigElement->imageSelectorField]) && $item->getRaw()[$readerConfigElement->imageSelectorField]
+            && isset($item->getRaw()[$readerConfigElement->imageField])
+            && $item->getRaw()[$readerConfigElement->imageField]
         ) {
             $imageSelectorField = $readerConfigElement->imageSelectorField;
-            $image = $item['raw'][$readerConfigElement->imageField];
+            $image = $item->getRaw()[$readerConfigElement->imageField];
             $imageField = $readerConfigElement->imageField;
         } elseif ($readerConfigElement->placeholderImageMode) {
             $imageSelectorField = $readerConfigElement->imageSelectorField;
@@ -44,8 +45,8 @@ class ImageConfigElementType implements ConfigElementType
 
             switch ($readerConfigElement->placeholderImageMode) {
                 case ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED:
-                    if (isset($item['raw'][$readerConfigElement->genderField])
-                        && $item['raw'][$readerConfigElement->genderField] == 'female'
+                    if (isset($item->getRaw()[$readerConfigElement->genderField])
+                        && 'female' == $item->getRaw()[$readerConfigElement->genderField]
                     ) {
                         $image = $readerConfigElement->placeholderImageFemale;
                     } else {
@@ -68,7 +69,7 @@ class ImageConfigElementType implements ConfigElementType
         if (null !== $imageFile
             && file_exists(System::getContainer()->get('huh.utils.container')->getProjectDir().'/'.$imageFile->path)
         ) {
-            $imageArray = $item['raw'];
+            $imageArray = $item->getRaw();
 
             // Override the default image size
             if ('' != $readerConfigElement->imgSize) {

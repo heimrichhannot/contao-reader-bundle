@@ -86,7 +86,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'setPageTitleByField'
         ],
         'default'      => '{general_legend},title,parentReaderConfig;'
-            . '{config_legend},dataContainer,limitFormattedFields,itemRetrievalMode,hideUnpublishedItems;'
+            . '{config_legend},dataContainer,manager,item,limitFormattedFields,itemRetrievalMode,hideUnpublishedItems;'
             . '{security_legend},addShowConditions;' . '{jumpto_legend},addFieldDependentRedirect;'
             . '{misc_legend},setPageTitleByField;' . '{template_legend},itemTemplate;'
     ],
@@ -160,14 +160,42 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'exclude'          => true,
             'sql'              => "varchar(128) NOT NULL default ''",
         ],
-        'limitFormattedFields'                => [
+        'manager'                    => [
+            'inputType'        => 'select',
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config']['manager'],
+            'options_callback' => ['huh.reader.choice.manager', 'getChoices'],
+            'eval'             => [
+                'chosen'             => true,
+                'includeBlankOption' => true,
+                'tl_class'           => 'clr w50',
+                'mandatory'          => true,
+                'notOverridable'     => true
+            ],
+            'exclude'          => true,
+            'sql'              => "varchar(128) NOT NULL default 'default'",
+        ],
+        'item'                       => [
+            'inputType'        => 'select',
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config']['item'],
+            'options_callback' => ['huh.reader.choice.item', 'getChoices'],
+            'eval'             => [
+                'chosen'             => true,
+                'includeBlankOption' => true,
+                'mandatory'          => true,
+                'tl_class'           => 'w50',
+                'notOverridable'     => true
+            ],
+            'exclude'          => true,
+            'sql'              => "varchar(128) NOT NULL default 'default'",
+        ],
+        'limitFormattedFields'       => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['limitFormattedFields'],
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
             'sql'       => "char(1) NOT NULL default ''"
         ],
-        'formattedFields'                     => [
+        'formattedFields'            => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config']['formattedFields'],
             'inputType'        => 'checkboxWizard',
             'options_callback' => function (DataContainer $dc) {
