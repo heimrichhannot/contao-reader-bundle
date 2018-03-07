@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\ReaderBundle\Item;
 
+use Contao\DataContainer;
 use HeimrichHannot\ReaderBundle\Manager\ReaderManagerInterface;
 
 interface ItemInterface
@@ -70,4 +71,18 @@ interface ItemInterface
      * @return ReaderManagerInterface
      */
     public function getManager(): ReaderManagerInterface;
+
+    /**
+     * Get the reader config dataContainer name.
+     *
+     * @return string
+     */
+    public function getDataContainer(): string;
+
+    /**
+     * Get the current module data.
+     *
+     * @return array
+     */
+    public function getModule(): array;
 }

@@ -26,7 +26,7 @@ class ListConfigElementType implements ConfigElementType
         $this->framework = $framework;
     }
 
-    public function addToTemplateData(ItemInterface $item, array &$templateData, ReaderConfigElementModel $readerConfigElement)
+    public function addToTemplateData(ItemInterface $item, ReaderConfigElementModel $readerConfigElement)
     {
         $module = ModuleModel::findById($readerConfigElement->listModule);
 
@@ -44,6 +44,7 @@ class ListConfigElementType implements ConfigElementType
 
         $filterConfig->addContextualValue($filter[0]['filterElement'], $item->getRaw()[$filter[0]['selector']]);
         $filterConfig->initQueryBuilder();
-        $templateData['list'][$readerConfigElement->listName] = $listModule->generate();
+
+        $item->setFormattedValue('list', [$readerConfigElement->listName => $listModule->generate()]);
     }
 }

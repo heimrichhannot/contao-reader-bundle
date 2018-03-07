@@ -14,7 +14,7 @@ use HeimrichHannot\ReaderBundle\ConfigElementType\ConfigElementType;
 use HeimrichHannot\ReaderBundle\Manager\ReaderManagerInterface;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
 
-class DefaultItem implements ItemInterface
+class DefaultItem implements ItemInterface, \JsonSerializable
 {
     /**
      * Current Item Manager.
@@ -179,7 +179,9 @@ class DefaultItem implements ItemInterface
      */
     public function getFormatted(): array
     {
-        return $this->_formatted;
+        $data = $this->_formatted;
+
+        return $data;
     }
 
     /**
@@ -193,14 +195,25 @@ class DefaultItem implements ItemInterface
     /**
      * {@inheritdoc}
      */
+    public function getDataContainer(): string
+    {
+        return $this->_manager->getReaderConfig()->dataContainer;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getModule(): array
+    {
+        return $this->_manager->getModuleData();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function parse(): string
     {
         $readerConfig = $this->_manager->getReaderConfig();
-
-        $data = $this->getFormatted();
-        $data['raw'] = $this->getRaw();
-        $data['formatted'] = $this->getFormatted();
-        $data['dataContainer'] = $this->_manager->getReaderConfig()->dataContainer;
 
         // add reader config element data
         if (null !== ($readerConfigElements = $this->_manager->getReaderConfigElementRegistry()->findBy(['pid'], [$readerConfig->id]))) {
@@ -213,11 +226,9 @@ class DefaultItem implements ItemInterface
                  * @var ConfigElementType
                  */
                 $type = $this->_manager->getFrameWork()->createInstance($class, [$this->_manager->getFrameWork()]);
-                $type->addToTemplateData($this, $data, $readerConfigElement);
+                $type->addToTemplateData($this, $readerConfigElement);
             }
         }
-
-        $data['module'] = $this->_manager->getModuleData();
 
         $twig = $this->_manager->getTwig();
 
@@ -226,6 +237,35 @@ class DefaultItem implements ItemInterface
         $twig->hasExtension('\Twig_Extensions_Extension_Array') ?: $twig->addExtension(new \Twig_Extensions_Extension_Array());
         $twig->hasExtension('\Twig_Extensions_Extension_Date') ?: $twig->addExtension(new \Twig_Extensions_Extension_Date());
 
-        return $twig->render($this->_manager->getItemTemplateByName($readerConfig->itemTemplate ?: 'default'), $data);
+        return $twig->render($this->_manager->getItemTemplateByName($readerConfig->itemTemplate ?: 'default'), $this->jsonSerialize());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        $data = $this->getFormatted();
+
+        $rc = new \ReflectionClass($this);
+        $methods = $rc->getMethods(\ReflectionMethod::IS_PUBLIC);
+
+        // add all public getter Methods
+        foreach ($methods as $method) {
+            if (false === ('get' === substr($method->name, 0, strlen('get')))) {
+                continue;
+            }
+
+            // skip methods with parameters
+            $rm = new \ReflectionMethod(static::class, $method->name);
+            if (count($rm->getParameters()) > 0) {
+                continue;
+            }
+
+            $property = lcfirst(substr($method->name, 3));
+            $data[$property] = $this->{$method->name}();
+        }
+
+        return $data;
     }
 }

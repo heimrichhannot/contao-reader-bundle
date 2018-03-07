@@ -166,6 +166,10 @@ class ReaderManager implements ReaderManagerInterface
                 throw new \Exception(sprintf('Item class %s must implement %s', $itemClass, ItemInterface::class));
             }
 
+            if (!$reflection->implementsInterface(\JsonSerializable::class)) {
+                throw new \Exception(sprintf('Item class %s must implement %s', $itemClass, \JsonSerializable::class));
+            }
+
             $this->item = new $itemClass($this, $data);
         }
 

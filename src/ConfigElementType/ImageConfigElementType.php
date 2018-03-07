@@ -28,7 +28,7 @@ class ImageConfigElementType implements ConfigElementType
         $this->framework = $framework;
     }
 
-    public function addToTemplateData(ItemInterface $item, array &$templateData, ReaderConfigElementModel $readerConfigElement)
+    public function addToTemplateData(ItemInterface $item, ReaderConfigElementModel $readerConfigElement)
     {
         $image = null;
 
@@ -81,6 +81,8 @@ class ImageConfigElementType implements ConfigElementType
             }
 
             $imageArray[$imageField] = $imageFile->path;
+
+            $templateData['images'] = $item->images ?? [];
             $templateData['images'][$imageField] = [];
 
             System::getContainer()->get('huh.utils.image')->addToTemplateData(
@@ -93,6 +95,8 @@ class ImageConfigElementType implements ConfigElementType
                 null,
                 $imageFile
             );
+
+            $item->setFormattedValue('images', $templateData['images']);
         }
     }
 }
