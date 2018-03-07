@@ -27,7 +27,7 @@ class ManagerChoice extends AbstractChoice
         }
 
         foreach ($config['reader']['managers'] as $manager) {
-            $choices[$manager['name']] = $manager['class'];
+            $choices[$manager['name']] = $manager['id'];
         }
 
         asort($choices);
