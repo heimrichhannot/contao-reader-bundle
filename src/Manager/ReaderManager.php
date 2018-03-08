@@ -231,9 +231,11 @@ class ReaderManager implements ReaderManagerInterface
                     $readerConfig->dataContainer
                 );
 
-                $result = $this->database->prepare(
+                $statement = $this->database->prepare(
                     "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND $readerConfig->dataContainer.id=?"
-                )->execute($values, $this->item->id);
+                );
+
+                $result = call_user_func_array([$statement, 'execute'], array_merge($values, [$this->item->id]));
 
                 if ($result->numRows < 1) {
                     $allowed = false;
@@ -264,9 +266,11 @@ class ReaderManager implements ReaderManagerInterface
                 $readerConfig->dataContainer
             );
 
-            $result = $this->database->prepare(
+            $statement = $this->database->prepare(
                 "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND $readerConfig->dataContainer.id=?"
-            )->execute($values, $this->item->id);
+            );
+
+            $result = call_user_func_array([$statement, 'execute'], array_merge($values, [$this->item->id]));
 
             $redirect = $result->numRows > 0;
         }
@@ -494,9 +498,11 @@ class ReaderManager implements ReaderManagerInterface
                 $readerConfig->dataContainer
             );
 
-            $result = $this->database->prepare(
+            $statement = $this->database->prepare(
                 "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition)"
-            )->limit(1)->execute($values);
+            )->limit(1);
+
+            $result = call_user_func_array([$statement, 'execute'], $values);
 
             if ($result->numRows > 0) {
                 $item = $this->modelUtil->findModelInstanceByPk($readerConfig->dataContainer, $result->id);
