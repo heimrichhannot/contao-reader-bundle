@@ -225,7 +225,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
                 /**
                  * @var ConfigElementType
                  */
-                $type = $this->_manager->getFrameWork()->createInstance($class, [$this->_manager->getFrameWork()]);
+                $type = $this->_manager->getFramework()->createInstance($class, [$this->_manager->getFramework()]);
                 $type->addToTemplateData($this, $readerConfigElement);
             }
         }

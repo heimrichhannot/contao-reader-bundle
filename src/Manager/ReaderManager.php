@@ -422,7 +422,7 @@ class ReaderManager implements ReaderManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getFrameWork(): ContaoFrameworkInterface
+    public function getFramework(): ContaoFrameworkInterface
     {
         return $this->framework;
     }

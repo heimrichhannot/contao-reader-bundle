@@ -139,7 +139,7 @@ interface ReaderManagerInterface
      *
      * @return ContaoFrameworkInterface
      */
-    public function getFrameWork(): ContaoFrameworkInterface;
+    public function getFramework(): ContaoFrameworkInterface;
 
     /**
      * Get current form utils.
