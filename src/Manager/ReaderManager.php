@@ -326,6 +326,8 @@ class ReaderManager implements ReaderManagerInterface
             $readerConfigId
         );
 
+        $this->readerConfig = $readerConfig;
+
         return $readerConfig;
     }
 
