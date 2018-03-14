@@ -11,7 +11,6 @@ namespace HeimrichHannot\ReaderBundle\Module;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\DataContainer;
 use Contao\Environment;
 use Contao\Model;
 use Contao\ModuleModel;
@@ -56,10 +55,6 @@ class ModuleReader extends \Contao\Module
      * @var Model
      */
     protected $item;
-
-    /**
-     * @var DataContainer */
-    protected $dc;
 
     /**
      * ModuleReader constructor.
@@ -115,7 +110,7 @@ class ModuleReader extends \Contao\Module
 
     protected function compile()
     {
-        $readerConfig = $this->readerConfig;
+        $readerConfig = $this->manager->getReaderConfig();
 
         Controller::loadDataContainer($readerConfig->dataContainer);
         System::loadLanguageFile($readerConfig->dataContainer);

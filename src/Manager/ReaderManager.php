@@ -131,7 +131,7 @@ class ReaderManager implements ReaderManagerInterface
      */
     public function retrieveItem(): ?ItemInterface
     {
-        $readerConfig = $this->readerConfig;
+        $readerConfig = $this->getReaderConfig();
         $item = null;
 
         switch ($readerConfig->itemRetrievalMode) {

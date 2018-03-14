@@ -41,7 +41,7 @@ interface ItemInterface
      *
      * @return mixed
      */
-    public function getRawValue(string $name): mixed;
+    public function getRawValue(string $name);
 
     /**
      * Set a raw value for a given property.
@@ -72,7 +72,7 @@ interface ItemInterface
      *
      * @return mixed
      */
-    public function getFormattedValue(string $name): mixed;
+    public function getFormattedValue(string $name);
 
     /**
      * Set a formatted value for a given property.

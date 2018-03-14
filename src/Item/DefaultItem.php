@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\ReaderBundle\Item;
 
+use Contao\DataContainer;
 use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\ReaderBundle\ConfigElementType\ConfigElementType;
@@ -36,6 +37,11 @@ class DefaultItem implements ItemInterface, \JsonSerializable
      * @var array
      */
     protected $_formatted = [];
+
+    /**
+     * @var DataContainer
+     */
+    protected $_dc;
 
     /**
      * DefaultItem constructor.
@@ -78,12 +84,16 @@ class DefaultItem implements ItemInterface, \JsonSerializable
     public function __set(string $name, $value)
     {
         $dca = &$GLOBALS['TL_DCA'][$this->_manager->getReaderConfig()->dataContainer];
-        $dc = $this->getManager()->getDataContainer();
+
+        if (!$this->dc) {
+            $this->dc = DC_Table_Utils::createFromModelData($this->getRaw(), $this->getDataContainer());
+        }
 
         if (isset($dca['fields'][$name]['load_callback']) && is_array($dca['fields'][$name]['load_callback'])) {
             foreach ($dca['fields'][$name]['load_callback'] as $callback) {
+                $this->dc->field = $name;
                 $instance = System::importStatic($callback[0]);
-                $value = $instance->{$callback[1]}($value, $dc);
+                $value = $instance->{$callback[1]}($value, $this->dc);
             }
         }
 
@@ -123,7 +133,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function getRawValue(string $name): mixed
+    public function getRawValue(string $name)
     {
         if (!isset($this->_raw[$name])) {
             return null;
@@ -146,7 +156,10 @@ class DefaultItem implements ItemInterface, \JsonSerializable
     public function setFormattedValue(string $name, $value): void
     {
         $dca = &$GLOBALS['TL_DCA'][$this->_manager->getReaderConfig()->dataContainer];
-        $dc = $this->getManager()->getDataContainer();
+
+        if (!$this->dc) {
+            $this->dc = DC_Table_Utils::createFromModelData($this->getRaw(), $this->getDataContainer());
+        }
 
         $fields = $this->getManager()->getReaderConfig()->limitFormattedFields ? StringUtil::deserialize(
             $this->getManager()->getReaderConfig()->formattedFields,
@@ -154,12 +167,12 @@ class DefaultItem implements ItemInterface, \JsonSerializable
         ) : (isset($dca['fields']) && is_array($dca['fields']) ? array_keys($dca['fields']) : []);
 
         if (in_array($name, $fields, true)) {
-            $dc->field = $name;
+            $this->dc->field = $name;
 
             $value = $this->_manager->getFormUtil()->prepareSpecialValueForOutput(
                 $name,
                 $value,
-                $dc
+                $this->dc
             );
 
             // anti-xss: escape everything besides some tags
@@ -181,7 +194,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function getFormattedValue(string $name): mixed
+    public function getFormattedValue(string $name)
     {
         return $this->_formatted[$name];
     }
@@ -265,27 +278,6 @@ class DefaultItem implements ItemInterface, \JsonSerializable
      */
     public function jsonSerialize()
     {
-        $data = $this->getFormatted();
-
-        $rc = new \ReflectionClass($this);
-        $methods = $rc->getMethods(\ReflectionMethod::IS_PUBLIC);
-
-        // add all public getter Methods
-        foreach ($methods as $method) {
-            if (false === ('get' === substr($method->name, 0, strlen('get')))) {
-                continue;
-            }
-
-            // skip methods with parameters
-            $rm = new \ReflectionMethod(static::class, $method->name);
-            if (count($rm->getParameters()) > 0) {
-                continue;
-            }
-
-            $property = lcfirst(substr($method->name, 3));
-            $data[$property] = $this->{$method->name}();
-        }
-
-        return $data;
+        return System::getContainer()->get('huh.utils.class')->jsonSerialize(static::class, $this, $this->getFormatted());
     }
 }
