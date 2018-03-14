@@ -123,7 +123,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function getRawValue(string $name): array
+    public function getRawValue(string $name): mixed
     {
         if (!isset($this->_raw[$name])) {
             return null;
