@@ -310,11 +310,21 @@ class ReaderManager implements ReaderManagerInterface
      */
     public function getReaderConfig(): ReaderConfigModel
     {
+        // Caching
+        if (null !== $this->readerConfig) {
+            return $this->readerConfig;
+        }
+
         $readerConfigId = $this->moduleData['readerConfig'];
 
         if (!$readerConfigId || null === ($readerConfig = $this->readerConfigRegistry->findByPk($readerConfigId))) {
             throw new \Exception(sprintf('The module %s has no valid reader config. Please set one.', $this->moduleData['id']));
         }
+
+        // compute reader config respecting the inheritance hierarchy
+        $readerConfig = $this->readerConfigRegistry->computeReaderConfig(
+            $readerConfigId
+        );
 
         return $readerConfig;
     }

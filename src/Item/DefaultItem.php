@@ -123,6 +123,26 @@ class DefaultItem implements ItemInterface, \JsonSerializable
     /**
      * {@inheritdoc}
      */
+    public function getRawValue(string $name): array
+    {
+        if (!isset($this->_raw[$name])) {
+            return null;
+        }
+
+        return $this->_raw[$name];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setRawValue(string $name, $value): void
+    {
+        $this->_raw[$name] = $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function setFormattedValue(string $name, $value): void
     {
         $dca = &$GLOBALS['TL_DCA'][$this->_manager->getReaderConfig()->dataContainer];
@@ -226,7 +246,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
                  * @var ConfigElementType
                  */
                 $type = $this->_manager->getFramework()->createInstance($class, [$this->_manager->getFramework()]);
-                $type->addToTemplateData($this, $readerConfigElement);
+                $type->addToItemData($this, $readerConfigElement);
             }
         }
 

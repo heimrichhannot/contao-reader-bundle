@@ -27,25 +27,38 @@ class ModuleReader extends \Contao\Module
 {
     protected $strTemplate = 'mod_reader';
 
-    /** @var ContaoFramework */
+    /**
+     * @var ContaoFramework
+     */
     protected $framework;
 
-    /** @var ReaderManagerInterface */
+    /**
+     * @var ReaderManagerInterface
+     */
     protected $manager;
 
-    /** @var Translator */
+    /**
+     * @var Translator
+     */
     protected $translator;
 
-    /** @var ReaderConfigModel */
+    /**
+     * @var ReaderConfigModel
+     */
     protected $readerConfig;
 
-    /** @var ReaderConfigRegistry */
+    /**
+     * @var ReaderConfigRegistry
+     */
     protected $readerConfigRegistry;
 
-    /** @var Model */
+    /**
+     * @var Model
+     */
     protected $item;
 
-    /** @var DataContainer */
+    /**
+     * @var DataContainer */
     protected $dc;
 
     /**
@@ -59,10 +72,6 @@ class ModuleReader extends \Contao\Module
         $this->framework = System::getContainer()->get('contao.framework');
         $this->translator = System::getContainer()->get('translator');
         $this->readerConfigRegistry = System::getContainer()->get('huh.reader.reader-config-registry');
-
-        $this->readerConfig = $this->readerConfigRegistry->computeReaderConfig(
-            $objModule->readerConfig
-        );
 
         $this->manager = $this->getReaderManagerByName($this->readerConfig->manager ?: 'default');
 
@@ -86,11 +95,9 @@ class ModuleReader extends \Contao\Module
             return parent::generate();
         }
 
-        Controller::loadDataContainer('tl_reader_config');
+        $this->framework->getAdapter(Controller::class)->loadDataContainer('tl_reader_config');
 
         $this->manager->setModuleData($this->arrData);
-
-        $this->manager->setReaderConfig($this->readerConfig);
 
         $this->item = $this->manager->retrieveItem();
 

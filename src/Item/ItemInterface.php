@@ -35,6 +35,37 @@ interface ItemInterface
     public function setRaw(array $data = []): void;
 
     /**
+     * Get raw value for a given property.
+     *
+     * @param string $name The property name
+     *
+     * @return mixed
+     */
+    public function getRawValue(string $name): mixed;
+
+    /**
+     * Set a raw value for a given property.
+     *
+     * @param string $name  The property name
+     * @param mixed  $value The property value
+     */
+    public function setRawValue(string $name, $value): void;
+
+    /**
+     * Get the entire formatted data.
+     *
+     * @return array
+     */
+    public function getFormatted(): array;
+
+    /**
+     * Set entire formatted item data.
+     *
+     * @param array $data
+     */
+    public function setFormatted(array $data = []): void;
+
+    /**
      * Get formatted value for a given property.
      *
      * @param string $name The property name
@@ -50,20 +81,6 @@ interface ItemInterface
      * @param mixed  $value The property value
      */
     public function setFormattedValue(string $name, $value): void;
-
-    /**
-     * Set entire formatted item data.
-     *
-     * @param array $data
-     */
-    public function setFormatted(array $data = []): void;
-
-    /**
-     * Get the entire formatted data.
-     *
-     * @return array
-     */
-    public function getFormatted(): array;
 
     /**
      * Get the reader manager.

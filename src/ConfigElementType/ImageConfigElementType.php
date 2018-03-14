@@ -28,16 +28,13 @@ class ImageConfigElementType implements ConfigElementType
         $this->framework = $framework;
     }
 
-    public function addToTemplateData(ItemInterface $item, ReaderConfigElementModel $readerConfigElement)
+    public function addToItemData(ItemInterface $item, ReaderConfigElementModel $readerConfigElement)
     {
         $image = null;
 
-        if (isset($item->getRaw()[$readerConfigElement->imageSelectorField]) && $item->getRaw()[$readerConfigElement->imageSelectorField]
-            && isset($item->getRaw()[$readerConfigElement->imageField])
-            && $item->getRaw()[$readerConfigElement->imageField]
-        ) {
+        if ($item->getRawValue($readerConfigElement->imageSelectorField) && $item->getRawValue($readerConfigElement->imageField)) {
             $imageSelectorField = $readerConfigElement->imageSelectorField;
-            $image = $item->getRaw()[$readerConfigElement->imageField];
+            $image = $item->getRawValue($readerConfigElement->imageField);
             $imageField = $readerConfigElement->imageField;
         } elseif ($readerConfigElement->placeholderImageMode) {
             $imageSelectorField = $readerConfigElement->imageSelectorField;
@@ -45,8 +42,7 @@ class ImageConfigElementType implements ConfigElementType
 
             switch ($readerConfigElement->placeholderImageMode) {
                 case ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED:
-                    if (isset($item->getRaw()[$readerConfigElement->genderField])
-                        && 'female' == $item->getRaw()[$readerConfigElement->genderField]
+                    if ($item->getRawValue($readerConfigElement->genderField) && 'female' == $item->getRawValue($readerConfigElement->genderField)
                     ) {
                         $image = $readerConfigElement->placeholderImageFemale;
                     } else {

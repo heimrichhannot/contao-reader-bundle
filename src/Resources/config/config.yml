@@ -1,12 +1,12 @@
 huh:
     reader:
         managers:
-            - {name: default, id: huh.reader.manager.reader}
+            - { name: default, id: huh.reader.manager.reader }
         items:
-            - {name: default, class: HeimrichHannot\ReaderBundle\Item\DefaultItem}
+            - { name: default, class: HeimrichHannot\ReaderBundle\Item\DefaultItem }
         config_element_types:
-            - {name: image, class: HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType}
-            - {name: list, class: HeimrichHannot\ReaderBundle\ConfigElementType\ListConfigElementType}
+            - { name: image, class: HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType }
+            - { name: list, class: HeimrichHannot\ReaderBundle\ConfigElementType\ListConfigElementType }
         templates:
             item:
                 - { name: default, template: "@HeimrichHannotContaoReader/reader_item_default.html.twig" }

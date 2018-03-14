@@ -16,5 +16,5 @@ interface ConfigElementType
 {
     public function __construct(ContaoFrameworkInterface $framework);
 
-    public function addToTemplateData(ItemInterface $item, ReaderConfigElementModel $readerConfigElement);
+    public function addToItemData(ItemInterface $item, ReaderConfigElementModel $readerConfigElement);
 }
