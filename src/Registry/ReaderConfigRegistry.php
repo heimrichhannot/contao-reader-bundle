@@ -9,7 +9,7 @@
 namespace HeimrichHannot\ReaderBundle\Registry;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use HeimrichHannot\FilterBundle\Registry\FilterRegistry;
+use HeimrichHannot\FilterBundle\Manager\FilterManager;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\UtilsBundle\Dca\DcaUtil;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
@@ -19,8 +19,8 @@ class ReaderConfigRegistry
     /** @var ContaoFrameworkInterface */
     protected $framework;
 
-    /** @var FilterRegistry */
-    protected $filterRegistry;
+    /** @var FilterManager */
+    protected $filterManager;
 
     /** @var ModelUtil */
     protected $modelUtil;
@@ -28,10 +28,10 @@ class ReaderConfigRegistry
     /** @var DcaUtil */
     protected $dcaUtil;
 
-    public function __construct(ContaoFrameworkInterface $framework, FilterRegistry $filterRegistry, ModelUtil $modelUtil, DcaUtil $dcaUtil)
+    public function __construct(ContaoFrameworkInterface $framework, FilterManager $filterManager, ModelUtil $modelUtil, DcaUtil $dcaUtil)
     {
         $this->framework = $framework;
-        $this->filterRegistry = $filterRegistry;
+        $this->filterManager = $filterManager;
         $this->modelUtil = $modelUtil;
         $this->dcaUtil = $dcaUtil;
     }
@@ -105,7 +105,7 @@ class ReaderConfigRegistry
             return null;
         }
 
-        if (!$readerConfig->filter || null === ($filterConfig = $this->filterRegistry->findById($readerConfig->filter))) {
+        if (!$readerConfig->filter || null === ($filterConfig = $this->filterManager->findById($readerConfig->filter))) {
             return null;
         }
 

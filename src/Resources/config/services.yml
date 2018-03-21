@@ -44,7 +44,7 @@ services:
         class: HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry
         arguments:
             - "@contao.framework"
-            - "@huh.filter.registry"
+            - "@huh.filter.manager"
             - "@huh.utils.model"
             - "@huh.utils.dca"
     huh.reader.reader-config-element-registry:
