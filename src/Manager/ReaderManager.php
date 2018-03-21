@@ -311,7 +311,7 @@ class ReaderManager implements ReaderManagerInterface
     public function getReaderConfig(): ReaderConfigModel
     {
         // Caching
-        if (null !== $this->readerConfig) {
+        if (null !== $this->readerConfig && $this->readerConfig->id === $this->moduleData['readerConfig']) {
             return $this->readerConfig;
         }
 
