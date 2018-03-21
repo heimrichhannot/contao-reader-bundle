@@ -11,6 +11,7 @@ namespace HeimrichHannot\ReaderBundle\Tests\Manager;
 use Contao\Config;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\FilesModel;
@@ -30,11 +31,14 @@ use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry;
 use HeimrichHannot\ReaderBundle\Tests\TestCaseEnvironment;
 use HeimrichHannot\Request\Request;
+use HeimrichHannot\UtilsBundle\Classes\ClassUtil;
 use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
 use HeimrichHannot\UtilsBundle\Form\FormUtil;
 use HeimrichHannot\UtilsBundle\Image\ImageUtil;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 use HeimrichHannot\UtilsBundle\Url\UrlUtil;
+use Symfony\Component\HttpFoundation\RequestMatcher;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
@@ -315,6 +319,7 @@ class ReaderManagerTest extends TestCaseEnvironment
         $container->set('huh.utils.container', $this->containerUtil);
         $container->set('huh.utils.image', $this->imageUtil);
         $container->set('huh.utils.model', $this->modelUtil);
+        $container->set('huh.utils.class', new ClassUtil());
         $container->set('database_connection', $this->createMock(Connection::class));
         $container->set('request_stack', $this->createRequestStackMock());
         $container->set('router', $this->createRouterMock());
@@ -323,6 +328,11 @@ class ReaderManagerTest extends TestCaseEnvironment
         $dbalAdapter = $this->mockAdapter(['getParams']);
         $dbalAdapter->method('getParams')->willReturn([]);
         $container->set('doctrine.dbal.default_connection', $dbalAdapter);
+
+        $requestStack = new RequestStack();
+        $requestStack->push(new \Symfony\Component\HttpFoundation\Request());
+
+        $container->set('huh.request', new \HeimrichHannot\RequestBundle\Component\HttpFoundation\Request($this->mockContaoFramework(), $requestStack, $this->mockScopeMatcher()));
 
         $container->set('contao.framework', $this->mockContaoFramework());
 
@@ -456,11 +466,17 @@ class ReaderManagerTest extends TestCaseEnvironment
 
         $item = new DefaultItem($this->manager, $this->johnDoeModel->row());
 
-        $this->assertSame($item->getRaw(), $this->manager->retrieveItem()->getRaw());
+        $data = json_decode(json_encode($item));
+        $managerData = json_decode(json_encode($this->manager->retrieveItem()));
+
+        $this->assertSame($data->raw, $managerData->raw);
 
         Request::setGet('auto_item', '1');
 
-        $this->assertSame($item->getRaw(), $this->manager->retrieveItem()->getRaw());
+        $data = json_decode(json_encode($item));
+        $managerData = json_decode(json_encode($this->manager->retrieveItem()));
+
+        $this->assertSame($data->raw, $managerData->raw);
 
         // unpublished
         Request::setGet('auto_item', '2');
@@ -485,7 +501,11 @@ class ReaderManagerTest extends TestCaseEnvironment
             ]
         );
 
-        $this->assertSame($item->getRaw(), $this->manager->retrieveItem()->getRaw());
+        $data = json_decode(json_encode($item));
+
+        $managerData = json_decode(json_encode($this->manager->retrieveItem()));
+
+        $this->assertSame($data->raw, $managerData->raw);
     }
 
     public function testTriggerOnLoadCallbacks()
@@ -780,16 +800,18 @@ class ReaderManagerTest extends TestCaseEnvironment
 
         Config::set('dateFormat', 'd.m.Y');
 
+        $data = json_decode(json_encode($johnDoeItem));
+
         $this->assertSame(
             [
-                'raw' => [
+                'raw' => (object) [
                     'id' => '1',
                     'firstname' => 'John',
                     'lastname' => 'DoeModified',
                     'someDate' => 1520004293,
                     'published' => '1',
                 ],
-                'formatted' => [
+                'formatted' => (object) [
                     'id' => '1',
                     'firstname' => 'John',
                     'lastname' => 'DoeModified',
@@ -798,9 +820,22 @@ class ReaderManagerTest extends TestCaseEnvironment
                 ],
             ],
             [
-                'raw' => $johnDoeItem->getRaw(),
-                'formatted' => $johnDoeItem->getFormatted(),
+                'raw' => $data->raw,
+                'formatted' => $data->formatted,
             ]
+        );
+    }
+
+    /**
+     * Mocks a request scope matcher.
+     *
+     * @return ScopeMatcher
+     */
+    protected function mockScopeMatcher(): ScopeMatcher
+    {
+        return new ScopeMatcher(
+            new RequestMatcher(null, null, null, null, ['_scope' => 'backend']),
+            new RequestMatcher(null, null, null, null, ['_scope' => 'frontend'])
         );
     }
 
