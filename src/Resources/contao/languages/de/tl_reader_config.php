@@ -55,10 +55,17 @@ $lang['fieldDependentJumpTo'][0]      = 'Weiterleitungsseite';
 $lang['fieldDependentJumpTo'][1]      = 'Definieren Sie hier eine Weiterleitungsseite.';
 
 // misc
-$lang['setPageTitleByField'][0]   = 'Instanzfeld als Seitentitel setzen';
-$lang['setPageTitleByField'][1]   = 'Wählen Sie diese Option, wenn der Seitentitel dynamisch mit einem Instanzfeld ersetzt werden soll.';
-$lang['pageTitleFieldPattern'][0] = 'Instanzfeld-Muster';
-$lang['pageTitleFieldPattern'][1] = 'Geben Sie hier ein Text-Muster Seitentitel ein (Beispiel: "%somefield1% %somefield2%").';
+$lang['headTags'][0]         = '&lt;head&gt; Tags';
+$lang['headTags'][1]         = 'Legen Sie fest, welche Inhalte der Instanz in welchen &lt;head&gt; Tag (title, meta, og) überführt werden sollen.';
+$lang['headTags_service'][0] = 'Tag-Service';
+$lang['headTags_service'][1] = 'Wählen Sie einen verfügbaren Tag aus.';
+$lang['headTags_pattern'][0] = 'Pattern';
+$lang['headTags_pattern'][1] = 'Geben Sie hier ein Text-Muster ein (Beispiel: "%somefield1% %somefield2%").';
+
+$lang['setMetaDescriptionByField'][0]   = 'Instanzfeld als Meta-Description setzen';
+$lang['setMetaDescriptionByField'][1]   = 'Wählen Sie diese Option, wenn die Meta-Description dynamisch mit einem Instanzfeld ersetzt werden soll.';
+$lang['metaDescriptionFieldPattern'][0] = 'Instanzfeld-Muster';
+$lang['metaDescriptionFieldPattern'][1] = 'Geben Sie hier ein Text-Muster Meta-Description ein (Beispiel: "%somefield1% %somefield2%").';
 
 // template
 $lang['itemTemplate'][0] = 'Instanz-Template';

@@ -63,9 +63,9 @@ interface ReaderManagerInterface
     public function doFieldDependentRedirect(): void;
 
     /**
-     * Set the page title based on current item.
+     * Set the head tags.
      */
-    public function setPageTitle(): void;
+    public function setHeadTags(): void;
 
     /**
      * Check permission state.

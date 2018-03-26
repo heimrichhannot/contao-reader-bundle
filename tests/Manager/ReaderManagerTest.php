@@ -65,6 +65,11 @@ class ReaderManagerTest extends TestCaseEnvironment
     protected $janeDoeModel;
 
     /**
+     * @var ReaderConfigRegistry
+     */
+    protected $readerConfigRegistry;
+
+    /**
      * @var array
      */
     protected static $testArray = [];
@@ -73,26 +78,31 @@ class ReaderManagerTest extends TestCaseEnvironment
     {
         parent::setUp();
 
+        if (!defined('TL_ROOT')) {
+            \define('TL_ROOT', $this->getFixturesDir());
+        }
+
+        $GLOBALS['TL_LANGUAGE'] = 'en';
+        $GLOBALS['TL_LANG']['MSC'] = ['test' => 'bar'];
+
+        $GLOBALS['TL_DCA']['tl_reader_config'] = [
+            'config' => [
+                'dataContainer' => 'Table',
+                'sql' => [
+                    'keys' => [
+                    ],
+                ],
+            ],
+            'fields' => [
+            ],
+        ];
+
         $this->entityFilter = $this->createConfiguredMock(
             EntityFilter::class,
             ['computeSqlCondition' => ['firstname=?', ['John']]]
         );
 
         $this->readerConfigRegistry = $this->createMock(ReaderConfigRegistry::class);
-
-        $readerConfigMock = $this->mockClassWithProperties(ReaderConfigModel::class, ['id' => 1, 'dataContainer' => 'tl_test']);
-
-        $this->readerConfigRegistry->method('findByPk')->willReturnCallback(
-            function ($id) use ($readerConfigMock) {
-                switch ($id) {
-                    case 1:
-                        return $readerConfigMock;
-                        break;
-                    default:
-                        return null;
-                }
-            }
-        );
 
         $imageElement1 = $this->mockClassWithProperties(
             ReaderConfigElementModel::class,
@@ -436,16 +446,33 @@ class ReaderManagerTest extends TestCaseEnvironment
 
     public function prepareReaderConfig(array $attributes = [])
     {
-        $readerConfig = $this->mockClassWithProperties(
-            ReaderConfigModel::class,
-            array_merge(
-                [
-                    'dataContainer' => 'tl_test',
-                ],
-                $attributes
-            )
+        $readerConfig = new ReaderConfigModel();
+        $readerConfig->setRow(array_merge(
+            [
+                'dataContainer' => 'tl_test',
+            ],
+            $attributes
+        ));
+
+        $this->readerConfigRegistry = $this->createMock(ReaderConfigRegistry::class);
+
+        $this->readerConfigRegistry->method('findByPk')->willReturn($readerConfig);
+        $this->readerConfigRegistry->method('computeReaderConfig')->willReturn($readerConfig);
+
+        $this->manager = new ReaderManager(
+            $this->framework,
+            $this->entityFilter,
+            $this->readerConfigRegistry,
+            $this->readerConfigElementRegistry,
+            $this->modelUtil,
+            $this->urlUtil,
+            $this->containerUtil,
+            $this->imageUtil,
+            $this->formUtil,
+            $this->twig
         );
 
+        $this->manager->setModuleData(['id' => 1, 'readerConfig' => 1]);
         $this->manager->setReaderConfig($readerConfig);
     }
 
@@ -541,27 +568,6 @@ class ReaderManagerTest extends TestCaseEnvironment
         return $value;
     }
 
-    public function testSetPageTitle()
-    {
-        $this->prepareReaderConfig(
-            [
-                'setPageTitleByField' => true,
-                'pageTitleFieldPattern' => '%firstname% %lastname%',
-            ]
-        );
-
-        $item = new DefaultItem($this->manager, $this->johnDoeModel->row());
-        $this->manager->setItem($item);
-
-        global $objPage;
-
-        $objPage = $this->createMock(\stdClass::class);
-
-        $this->manager->setPageTitle();
-
-        $this->assertSame('John DoeModified', $objPage->pageTitle);
-    }
-
     public function testCheckPermission()
     {
         $this->prepareReaderConfig();
@@ -590,11 +596,11 @@ class ReaderManagerTest extends TestCaseEnvironment
             ]
         );
 
+        $this->manager->setItem($johnDoeItem);
+
         $this->assertTrue($this->manager->checkPermission());
 
         $janeDoeItem = new DefaultItem($this->manager, $this->janeDoeModel->row());
-        $this->manager->setItem($janeDoeItem);
-
         $this->manager->setItem($janeDoeItem);
         $this->assertFalse($this->manager->checkPermission());
     }
@@ -791,8 +797,6 @@ class ReaderManagerTest extends TestCaseEnvironment
                 ]
             )
         );
-
-        var_dump($this->manager->getReaderConfig()->dataContainer);
 
         $johnDoeItem = new DefaultItem($this->manager, $this->johnDoeModel->row());
 

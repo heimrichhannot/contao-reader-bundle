@@ -133,8 +133,7 @@ class ModuleReader extends \Contao\Module
         }
 
         $this->manager->doFieldDependentRedirect();
-
-        $this->manager->setPageTitle();
+        $this->manager->setHeadTags();
 
         $this->Template->item = $this->manager->getItem()->parse();
     }

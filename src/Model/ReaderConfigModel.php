@@ -29,8 +29,7 @@ namespace HeimrichHannot\ReaderBundle\Model;
  * @property bool   $addFieldDependentRedirect
  * @property int    $fieldDependentJumpTo
  * @property string $redirectFieldConditions
- * @property bool   $setPageTitleByField
- * @property string $pageTitleFieldPattern
+ * @property array  $headTags
  * @property string $itemTemplate
  */
 class ReaderConfigModel extends \Model

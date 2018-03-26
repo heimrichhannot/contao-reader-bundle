@@ -9,6 +9,7 @@
 namespace HeimrichHannot\ReaderBundle\Manager;
 
 use Contao\Config;
+use Contao\Controller;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Database;
@@ -302,6 +303,71 @@ class ReaderManager implements ReaderManagerInterface
             );
 
             $this->modifyPageTitle($pageTitle);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setMetaDescription(): void
+    {
+        $readerConfig = $this->readerConfig;
+        $item = $this->item;
+
+        if ($readerConfig->setMetaDescriptionByField && $readerConfig->metaDescriptionFieldPattern) {
+            $description = preg_replace_callback(
+                '@%([^%]+)%@i',
+                function (array $matches) use ($item) {
+                    return $item->{$matches[1]};
+                },
+                $readerConfig->metaDescriptionFieldPattern
+            );
+
+            $description = Controller::replaceInsertTags($description, false);
+            $description = strip_tags($description);
+            $description = str_replace("\n", ' ', $description);
+            $description = \StringUtil::substr($description, 320);
+
+            System::getContainer()->get('huh.head.tag.meta_description')->setContent(trim($description));
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setHeadTags(): void
+    {
+        $item = $this->item;
+        $tags = StringUtil::deserialize($this->readerConfig->headTags, true);
+
+        foreach ($tags as $config) {
+            if (!isset($config['service'])) {
+                continue;
+            }
+
+            $service = $config['service'];
+            $pattern = $config['pattern'] ?? '';
+
+            if (!System::getContainer()->has($service)) {
+                continue;
+            }
+
+            $value = preg_replace_callback(
+                '@%([^%]+)%@i',
+                function (array $matches) use ($item) {
+                    return System::getContainer()->get('huh.utils.form')->prepareSpecialValueForOutput($matches[1], $item->{$matches[1]}, $this->getDataContainer());
+                },
+                $pattern
+            );
+
+            switch ($service) {
+                case 'huh.head.tag.title':
+                    global $objPage;
+                    $objPage->pageTitle = $value;
+                    break;
+                default:
+                    System::getContainer()->get($service)->setContent($value);
+            }
         }
     }
 

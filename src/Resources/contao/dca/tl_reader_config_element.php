@@ -28,11 +28,11 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'format' => '%s',
         ],
         'sorting'           => [
-            'mode'                  => 1,
+            'mode'                  => 4,
             'fields'                => ['title'],
             'headerFields'          => ['title'],
             'panelLayout'           => 'filter;sort,search,limit',
-            'child_record_callback' => ['huh.reader.backend.reader-config-element', 'readerChildren'],
+            'child_record_callback' => ['huh.reader.backend.reader-config-element', 'listChildren'],
         ],
         'global_operations' => [
             'all' => [

@@ -83,12 +83,11 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'hideUnpublishedItems',
             'addShowConditions',
             'addFieldDependentRedirect',
-            'setPageTitleByField'
         ],
         'default'      => '{general_legend},title,parentReaderConfig;'
             . '{config_legend},dataContainer,manager,item,limitFormattedFields,itemRetrievalMode,hideUnpublishedItems;'
             . '{security_legend},addShowConditions;' . '{jumpto_legend},addFieldDependentRedirect;'
-            . '{misc_legend},setPageTitleByField;' . '{template_legend},itemTemplate;'
+            . '{misc_legend},headTags;' . '{template_legend},itemTemplate;'
     ],
     'subpalettes' => [
         'limitFormattedFields'                                                                    => 'formattedFields',
@@ -99,7 +98,6 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
         'hideUnpublishedItems'                                                                    => 'publishedField,invertPublishedField',
         'addShowConditions'                                                                       => 'showFieldConditions',
         'addFieldDependentRedirect'                                                               => 'fieldDependentJumpTo,redirectFieldConditions',
-        'setPageTitleByField'                                                                     => 'pageTitleFieldPattern'
     ],
     'fields'      => [
         'id'                         => [
@@ -276,20 +274,32 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'relation'   => ['type' => 'hasOne', 'load' => 'eager']
         ],
         // misc
-        'setPageTitleByField'        => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['setPageTitleByField'],
-            'exclude'   => true,
-            'inputType' => 'checkbox',
-            'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
-            'sql'       => "char(1) NOT NULL default ''"
-        ],
-        'pageTitleFieldPattern'      => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['pageTitleFieldPattern'],
-            'exclude'   => true,
-            'search'    => true,
-            'inputType' => 'text',
-            'eval'      => ['maxlength' => 255, 'tl_class' => 'w50', 'mandatory' => true],
-            'sql'       => "varchar(255) NOT NULL default ''"
+        'headTags'                   => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['headTags'],
+            'inputType' => 'multiColumnEditor',
+            'eval'      => [
+                'multiColumnEditor' => [
+                    // set to true if the rows should be sortable (backend only atm)
+                    'sortable' => false,
+                    // defaults to false
+                    'fields'   => [
+                        // place your fields here as you would normally in your DCA
+                        // (sql is not required)
+                        'service' => [
+                            'label'     => $GLOBALS['TL_LANG']['tl_reader_config']['headTags_service'],
+                            'inputType' => 'select',
+                            'options'   => \Contao\System::getContainer()->getParameter('huh.head.tags'),
+                            'eval'      => ['groupStyle' => 'width:20%', 'includeBlankOption' => true]
+                        ],
+                        'pattern' => [
+                            'label'     => $GLOBALS['TL_LANG']['tl_reader_config']['headTags_pattern'],
+                            'inputType' => 'text',
+                            'eval'      => ['groupStyle' => 'width:70%']
+                        ]
+                    ]
+                ]
+            ],
+            'sql'       => "blob NULL"
         ],
         // template
         'itemTemplate'               => [
