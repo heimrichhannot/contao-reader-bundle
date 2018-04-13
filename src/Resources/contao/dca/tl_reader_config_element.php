@@ -112,7 +112,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'exclude'   => true,
             'filter'    => true,
             'inputType' => 'select',
-            'options'   => \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPES,
+            'options'   => System::getContainer()->get('huh.reader.util.reader-config-element-util')->getConfigElementTypes(),
             'reference' => &$GLOBALS['TL_LANG']['tl_reader_config_element']['reference'],
             'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'submitOnChange' => true],
             'sql'       => "varchar(64) NOT NULL default ''",
@@ -178,68 +178,62 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
 $dca = &$GLOBALS['TL_DCA']['tl_reader_config_element'];
 
 // list type
-if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('HeimrichHannot\ListBundle\HeimrichHannotContaoListBundle'))
-{
-    $dca['palettes'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_LIST]  = '{title_type_legend},title,type;{config_legend},listName,listModule,initialFilter;';
+if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('HeimrichHannot\ListBundle\HeimrichHannotContaoListBundle')) {
+    $dca['palettes'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_LIST] = '{title_type_legend},title,type;{config_legend},listName,listModule,initialFilter;';
 
-    $dca['fields'] = array_merge(
-        $dca['fields'],
-        [
-            'listModule'             => [
-                'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['listModule'],
-                'inputType'        => 'select',
-                'exclude'          => true,
-                'options_callback' => function () {
-                    return \Contao\System::getContainer()->get('huh.list.backend.module')->getAllListModules();
-                },
-                'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight', 'submitOnChange' => true],
-                'sql'              => "varchar(64) NOT NULL default ''",
-            ],
-            'listName'               => [
-                'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['listName'],
-                'exclude'   => true,
-                'search'    => true,
-                'inputType' => 'text',
-                'eval'      => ['maxlength' => 255, 'tl_class' => 'w50', 'mandatory' => true],
-                'sql'       => "varchar(255) NOT NULL default ''",
-            ],
-            'initialFilter'          => [
-                'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['initialFilter'],
-                'inputType' => 'multiColumnEditor',
-                'eval'      => [
-                    'tl_class'          => 'clr',
-                    'multiColumnEditor' => [
-                        'sortable'            => false,
-                        'minRowCount'         => 1,
-                        'maxRowCount'         => 5,
-                        'skipCopyValuesOnAdd' => false,
-                        'fields'              => [
-                            'selector'      => [
-                                'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['selector'],
-                                'inputType'        => 'select',
-                                'filter'           => true,
-                                'options_callback' => function (DataContainer $dc) {
-                                    return System::getContainer()->get('huh.reader.util.reader-config-element-util')->getFields($dc);
-                                },
-                                'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'mandatory' => true, 'groupStyle' => 'width:250px'],
-                            ],
-                            'filterElement' => [
-                                'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['filterElement'],
-                                'inputType'        => 'select',
-                                'options_callback' => function (DataContainer $dc) {
-                                    return \Contao\System::getContainer()->get('huh.list.backend.module')->getFieldsByListModule($dc);
-                                },
-                                'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'mandatory' => true, 'groupStyle' => 'width:250px'],
-                            ],
+    $dca['fields'] = array_merge($dca['fields'], [
+        'listModule'    => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['listModule'],
+            'inputType'        => 'select',
+            'exclude'          => true,
+            'options_callback' => function () {
+                return \Contao\System::getContainer()->get('huh.list.backend.module')->getAllListModules();
+            },
+            'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight', 'submitOnChange' => true],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'listName'      => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['listName'],
+            'exclude'   => true,
+            'search'    => true,
+            'inputType' => 'text',
+            'eval'      => ['maxlength' => 255, 'tl_class' => 'w50', 'mandatory' => true],
+            'sql'       => "varchar(255) NOT NULL default ''",
+        ],
+        'initialFilter' => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['initialFilter'],
+            'inputType' => 'multiColumnEditor',
+            'eval'      => [
+                'tl_class'          => 'clr',
+                'multiColumnEditor' => [
+                    'sortable'            => false,
+                    'minRowCount'         => 1,
+                    'maxRowCount'         => 5,
+                    'skipCopyValuesOnAdd' => false,
+                    'fields'              => [
+                        'selector'      => [
+                            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['selector'],
+                            'inputType'        => 'select',
+                            'filter'           => true,
+                            'options_callback' => function (DataContainer $dc) {
+                                return System::getContainer()->get('huh.reader.util.reader-config-element-util')->getFields($dc);
+                            },
+                            'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'mandatory' => true, 'groupStyle' => 'width:250px'],
+                        ],
+                        'filterElement' => [
+                            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['filterElement'],
+                            'inputType'        => 'select',
+                            'options_callback' => function (DataContainer $dc) {
+                                return \Contao\System::getContainer()->get('huh.list.backend.module')->getFieldsByListModule($dc);
+                            },
+                            'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'mandatory' => true, 'groupStyle' => 'width:250px'],
                         ],
                     ],
                 ],
-                'sql'       => "blob NULL",
             ],
-        ]
-    );
-}
-else
-{
+            'sql'       => "blob NULL",
+        ],
+    ]);
+} else {
     $dca['fields']['type']['options'] = array_diff($dca['fields']['type']['options'], [\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_LIST]);
 }
