@@ -14,6 +14,8 @@ use Contao\System;
 use HeimrichHannot\ReaderBundle\ConfigElementType\ConfigElementType;
 use HeimrichHannot\ReaderBundle\Manager\ReaderManagerInterface;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
+use Urodoz\Truncate\Bridge\Twig\TruncateExtension;
+use Urodoz\Truncate\TruncateService;
 
 class DefaultItem implements ItemInterface, \JsonSerializable
 {
@@ -269,6 +271,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
         $twig->hasExtension('\Twig_Extensions_Extension_Intl') ?: $twig->addExtension(new \Twig_Extensions_Extension_Intl());
         $twig->hasExtension('\Twig_Extensions_Extension_Array') ?: $twig->addExtension(new \Twig_Extensions_Extension_Array());
         $twig->hasExtension('\Twig_Extensions_Extension_Date') ?: $twig->addExtension(new \Twig_Extensions_Extension_Date());
+        $twig->hasExtension('Urodoz\Truncate\Bridge\Twig\TruncateExtension') ?: $twig->addExtension(new TruncateExtension(TruncateService::create()));
 
         return $twig->render($this->_manager->getItemTemplateByName($readerConfig->itemTemplate ?: 'default'), $this->jsonSerialize());
     }
