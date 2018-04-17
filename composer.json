@@ -11,7 +11,8 @@
     "heimrichhannot/contao-utils-bundle": "^2.0.16",
     "heimrichhannot/contao-status_messages": "^1.0",
     "heimrichhannot/contao-entity-filter-bundle": "^1.0",
-    "twig/extensions": "^1.5"
+    "twig/extensions": "^1.5",
+    "urodoz/truncate-html": "^1.0"
   },
   "require-dev": {
     "contao/test-case": "^1.1",
