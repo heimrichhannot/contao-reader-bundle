@@ -9,6 +9,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         'enableVersioning'  => true,
         'onload_callback'   => [
             ['huh.reader.backend.reader-config-element', 'checkPermission'],
+            ['huh.reader.backend.reader-config-element', 'modifyPalette'],
         ],
         'onsubmit_callback' => [
             ['huh.utils.dca', 'setDateAdded'],
@@ -67,17 +68,21 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         ],
     ],
     'palettes'    => [
-        '__selector__'                                                       => [
+        '__selector__'                                                             => [
             'type',
             'placeholderImageMode',
+            'addRedirectConditions',
+            'addRedirectParam',
         ],
-        'default'                                                            => '{type_legend},title,type;',
-        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_IMAGE => '{title_type_legend},title,type;{config_legend},imageSelectorField,imageField,imgSize,placeholderImageMode;',
-
+        'default'                                                                  => '{type_legend},title,type;',
+        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_IMAGE       => '{title_type_legend},title,type;{config_legend},imageSelectorField,imageField,imgSize,placeholderImageMode;',
+        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_REDIRECTION => '{title_type_legend},title,type;{config_legend},name,redirection,addRedirectConditions,addRedirectParam',
     ],
     'subpalettes' => [
         'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE   => 'placeholderImage',
         'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED => 'genderField,placeholderImage,placeholderImageFemale',
+        'addRedirectConditions'                                                                                             => 'showRedirectConditions',
+        'addRedirectParam'                                                                                                  => 'redirectParams',
     ],
     'fields'      => [
         'id'                     => [
@@ -172,8 +177,64 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
+        // security
+        'addRedirectConditions'  => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['addRedirectConditions'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'name'                   => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['name'],
+            'exclude'   => true,
+            'search'    => true,
+            'sorting'   => true,
+            'flag'      => 1,
+            'inputType' => 'text',
+            'eval'      => ['mandatory' => true, 'tl_class' => 'w50', 'notOverridable' => true],
+            'sql'       => "varchar(255) NOT NULL default ''",
+        ],
+        'redirection'            => [
+            'label'      => &$GLOBALS['TL_LANG']['tl_reader_config_element']['redirection'],
+            'exclude'    => true,
+            'inputType'  => 'pageTree',
+            'foreignKey' => 'tl_page.title',
+            'eval'       => ['fieldType' => 'radio', 'mandatory' => true, 'tl_class' => 'w50'],
+            'sql'        => "int(10) unsigned NOT NULL default '0'",
+            'relation'   => ['type' => 'hasOne', 'load' => 'eager'],
+        ],
+        'addRedirectParam'       => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['addRedirectParam'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'redirectParams'         => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['redirectParams'],
+            'exclude'   => true,
+            'inputType' => 'multiColumnEditor',
+            'eval'      => [
+                'multiColumnEditor' => [
+                    'class'  => 'redirect-params',
+                    'fields' => [
+                        'field' => [
+                            'label'            => &$GLOBALS['TL_LANG']['tl_entity_filter']['field'],
+                            'inputType'        => 'select',
+                            'options_callback' => ['huh.reader.backend.reader-config-element', 'getFieldsAsOptions'],
+                            'eval'             => ['tl_class' => 'w50', 'chosen' => true, 'includeBlankOption' => true, 'mandatory' => true, 'groupStyle' => 'width: 350px'],
+                        ],
+                    ],
+                    'table'  => '',
+                ],
+            ],
+            'sql'       => 'blob NULL',
+        ],
     ],
 ];
+
+\Contao\System::getContainer()->get('huh.entity_filter.manager')->addFilterToDca('showRedirectConditions', 'tl_reader_config_element', '');
 
 $dca = &$GLOBALS['TL_DCA']['tl_reader_config_element'];
 

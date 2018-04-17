@@ -31,13 +31,26 @@ $lang['selector']      = ['Selektor', 'Wählen Sie ein Feld aus, von dem der Wer
 $lang['filterElement'] = ['Filterelement', 'Wählen Sie ein Feld aus, nachdem gefiltert werden soll.'];
 $lang['listName']      = ['Listenname', 'Vergeben Sie einen einamligen Namen für Ihre Liste.'];
 
+$lang['name']             = ['Name', 'Vergeben Sie einen einamligen Namen für Ihre Weiterleitung, welcher im Template als Variable ausgegeben wird.'];
+$lang['redirection']      = ['Weiterleitungsseite', 'Wählen Sie eine Seite aus.'];
+$lang['addRedirectParam'] = ['Parameter hinzufügen', 'Wählen Sie diese Option um an die entsprechende Weiterleitungsurl Parameter hinzuzufügen.'];
+$lang['redirectParams']   = ['Weiterleitungsparameter', 'Wählen Sie Parameter aus, welche an die Url angehängt werden sollen.'];
+
+
+// security
+$lang['addRedirectConditions'][0]  = 'Bedingungen für die Anzeige hinzufügen';
+$lang['addRedirectConditions'][1]  = 'Wählen Sie diese Option, wenn Datensätze nur unter bestimmten Bedingungen angezeigt werden dürfen.';
+$lang['showRedirectConditions'][0] = 'Instanzbedingungen';
+$lang['showRedirectConditions'][1] = 'Definieren Sie hier Bedingungen, die eine Instanz erfüllen muss, damit sie angezeigt wird.';
+
 /**
  * Reference
  */
 $lang['reference'] = [
-    \HeimrichHannot\ListBundle\Backend\ListConfigElement::TYPE_IMAGE                      => 'Bild',
+    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_IMAGE                  => 'Bild',
     \HeimrichHannot\ListBundle\Backend\ListConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE   => 'einfach',
     \HeimrichHannot\ListBundle\Backend\ListConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED => 'geschlechtsspezifisch',
+    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_REDIRECTION            => 'Weiterleitung',
 ];
 
 /**

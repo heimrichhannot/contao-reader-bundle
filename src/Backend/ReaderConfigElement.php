@@ -9,9 +9,11 @@
 namespace HeimrichHannot\ReaderBundle\Backend;
 
 use Contao\BackendUser;
+use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Database;
+use Contao\DataContainer;
 use Contao\Input;
 use Contao\System;
 
@@ -19,10 +21,12 @@ class ReaderConfigElement
 {
     const TYPE_IMAGE = 'image';
     const TYPE_LIST = 'list';
+    const TYPE_REDIRECTION = 'redirection';
 
     const TYPES = [
         self::TYPE_IMAGE,
         self::TYPE_LIST,
+        self::TYPE_REDIRECTION,
     ];
 
     const PLACEHOLDER_IMAGE_MODE_NONE = 'none';
@@ -132,5 +136,44 @@ class ReaderConfigElement
                 }
                 break;
         }
+    }
+
+    public function modifyPalette(DataContainer $dc)
+    {
+        if (null !== ($readerConfigElement = System::getContainer()->get('huh.reader.reader-config-element-registry')->findByPk($dc->id))) {
+            if (null !== ($readerConfig = System::getContainer()->get('huh.reader.reader-config-registry')->findByPk($readerConfigElement->pid))) {
+                $dca = &$GLOBALS['TL_DCA']['tl_reader_config_element'];
+
+                $readerConfig = System::getContainer()->get('huh.utils.model')->findRootParentRecursively('parentReaderConfig', 'tl_reader_config', $readerConfig);
+
+                if ($readerConfig->dataContainer) {
+                    foreach (['showRedirectConditions', 'redirectParams'] as $field) {
+                        $dca['fields'][$field]['eval']['multiColumnEditor']['table'] = $readerConfig->dataContainer;
+                    }
+                }
+            }
+        }
+    }
+
+    public function getFieldsAsOptions(DataContainer $dc)
+    {
+        if (!($table = $dc->table)) {
+            return [];
+        }
+
+        Controller::loadDataContainer($table);
+
+        if (isset($GLOBALS['TL_DCA'][$table]['fields'][$dc->field]['eval']['multiColumnEditor']['table'])) {
+            $childTable = $GLOBALS['TL_DCA'][$table]['fields'][$dc->field]['eval']['multiColumnEditor']['table'];
+
+            if (!$childTable) {
+                return [];
+            }
+
+            $fields = System::getContainer()->get('huh.utils.dca')->getFields($childTable);
+
+            return array_keys($fields);
+        }
+        throw new \Exception("No 'table' set in $dc->table.$dc->field's eval array.");
     }
 }
