@@ -608,7 +608,7 @@ class ReaderManager implements ReaderManagerInterface
 
             $queryBuilder->where($orX);
             $queryBuilder->setParameter(':autoItem', $autoItem);
-            $item = $queryBuilder->execute()->fetch();
+            $item = $queryBuilder->execute()->fetch() ?: null;
         }
 
         return $item;
@@ -634,7 +634,7 @@ class ReaderManager implements ReaderManagerInterface
                 $readerConfig->dataContainer
             );
 
-            $item = $queryBuilder->execute()->fetch();
+            $item = $queryBuilder->execute()->fetch() ?: null;
         }
 
         return $item;
