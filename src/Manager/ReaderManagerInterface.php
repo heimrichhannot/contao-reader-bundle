@@ -10,6 +10,8 @@ namespace HeimrichHannot\ReaderBundle\Manager;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\DataContainer;
+use Doctrine\DBAL\Query\QueryBuilder;
+use HeimrichHannot\FilterBundle\Config\FilterConfig;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
@@ -37,6 +39,20 @@ interface ReaderManagerInterface
      * @return ReaderConfigModel
      */
     public function getReaderConfig(): ReaderConfigModel;
+
+    /**
+     * Get the reader config.
+     *
+     * @return FilterConfig
+     */
+    public function getFilterConfig(): ?FilterConfig;
+
+    /**
+     * Get the query builder.
+     *
+     * @return QueryBuilder
+     */
+    public function getQueryBuilder(): QueryBuilder;
 
     /**
      * Set the current reader config model.

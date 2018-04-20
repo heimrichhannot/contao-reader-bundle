@@ -13,6 +13,10 @@ $lang['title'][1]              = 'Geben Sie hier bitte den Titel ein.';
 $lang['parentReaderConfig'][0] = 'Eltern-Leserkonfiguration';
 $lang['parentReaderConfig'][1] = 'Wählen Sie hier eine Leserkonfiguration aus, von der geerbt werden soll. Sie können dann punktuell einzelne Eigenschaften überschreiben.';
 
+// filter
+$lang['filter'][0] = 'Filter';
+$lang['filter'][1] = 'Bitte wählen Sie hier bei Bedarf einen Filter aus.';
+
 // config
 $lang['dataContainer'][0]                = 'Data-Container';
 $lang['dataContainer'][1]                = 'Wählen Sie hier bitte den Data-Container aus, dem die anzuzeigenden Entitäten angehören.';

@@ -67,6 +67,7 @@ class ModuleReader extends \Contao\Module
         $this->framework = System::getContainer()->get('contao.framework');
         $this->translator = System::getContainer()->get('translator');
         $this->readerConfigRegistry = System::getContainer()->get('huh.reader.reader-config-registry');
+        $this->readerConfig = $this->readerConfigRegistry->findByPk($objModule->readerConfig);
 
         $this->manager = $this->getReaderManagerByName($this->readerConfig->manager ?: 'default');
 

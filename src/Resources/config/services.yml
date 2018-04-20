@@ -22,6 +22,10 @@ services:
         class: HeimrichHannot\ReaderBundle\Choice\ItemChoice
         arguments:
             - "@contao.framework"
+    huh.reader.choice.filter:
+        class: HeimrichHannot\ReaderBundle\Choice\FilterChoice
+        arguments:
+            - "@contao.framework"
     huh.reader.choice.parent-reader-config:
         class: HeimrichHannot\ReaderBundle\Choice\ParentReaderConfigChoice
         arguments:
@@ -31,6 +35,7 @@ services:
         class: HeimrichHannot\ReaderBundle\Manager\ReaderManager
         arguments:
             - "@contao.framework"
+            - "@huh.filter.manager"
             - "@huh.entity_filter.backend.entity_filter"
             - "@huh.reader.reader-config-registry"
             - "@huh.reader.reader-config-element-registry"
@@ -70,3 +75,10 @@ services:
             - "@huh.utils.dca"
     huh.reader.backend.module:
         class: HeimrichHannot\ReaderBundle\Backend\Module
+    huh.reader.query_builder:
+        class: HeimrichHannot\ReaderBundle\QueryBuilder\ReaderQueryBuilder
+        shared: false
+        public: false
+        arguments:
+          - "@contao.framework"
+          - "@doctrine.dbal.default_connection"

@@ -14,9 +14,13 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Database;
 use Contao\DataContainer;
+use Contao\Model;
 use Contao\StringUtil;
 use Contao\System;
+use Doctrine\DBAL\Query\QueryBuilder;
 use HeimrichHannot\EntityFilterBundle\Backend\EntityFilter;
+use HeimrichHannot\FilterBundle\Config\FilterConfig;
+use HeimrichHannot\FilterBundle\Manager\FilterManager;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfig;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
@@ -36,6 +40,16 @@ class ReaderManager implements ReaderManagerInterface
      * @var ContaoFrameworkInterface
      */
     protected $framework;
+
+    /**
+     * @var FilterManager
+     */
+    protected $filterManager;
+
+    /**
+     * @var FilterConfig
+     */
+    protected $filterConfig;
 
     /**
      * @var ReaderConfigModel
@@ -104,6 +118,7 @@ class ReaderManager implements ReaderManagerInterface
 
     public function __construct(
         ContaoFrameworkInterface $framework,
+        FilterManager $filterManager,
         EntityFilter $entityFilter,
         ReaderConfigRegistry $readerConfigRegistry,
         ReaderConfigElementRegistry $readerConfigElementRegistry,
@@ -115,6 +130,7 @@ class ReaderManager implements ReaderManagerInterface
         \Twig_Environment $twig
     ) {
         $this->framework = $framework;
+        $this->filterManager = $filterManager;
         $this->entityFilter = $entityFilter;
         $this->readerConfigRegistry = $readerConfigRegistry;
         $this->readerConfigElementRegistry = $readerConfigElementRegistry;
@@ -133,6 +149,7 @@ class ReaderManager implements ReaderManagerInterface
     public function retrieveItem(): ?ItemInterface
     {
         $readerConfig = $this->getReaderConfig();
+
         $item = null;
 
         switch ($readerConfig->itemRetrievalMode) {
@@ -150,15 +167,14 @@ class ReaderManager implements ReaderManagerInterface
 
         // hide unpublished items?
         if (null !== $item && $readerConfig->hideUnpublishedItems) {
-            if (!$readerConfig->invertPublishedField && !$item->{$readerConfig->publishedField}
-                || $readerConfig->invertPublishedField && $item->{$readerConfig->publishedField}
+            if (!$readerConfig->invertPublishedField && !$item[$readerConfig->publishedField]
+                || $readerConfig->invertPublishedField && $item[$readerConfig->publishedField]
             ) {
                 return null;
             }
         }
 
-        $data = $item->row();
-        $this->dc = DC_Table_Utils::createFromModelData($data, $this->readerConfig->dataContainer);
+        $this->dc = DC_Table_Utils::createFromModelData($item, $this->readerConfig->dataContainer);
 
         if (null !== ($itemClass = $this->getItemClassByName($this->readerConfig->item ?: 'default'))) {
             $reflection = new \ReflectionClass($itemClass);
@@ -171,7 +187,7 @@ class ReaderManager implements ReaderManagerInterface
                 throw new \Exception(sprintf('Item class %s must implement %s', $itemClass, \JsonSerializable::class));
             }
 
-            $this->item = new $itemClass($this, $data);
+            $this->item = new $itemClass($this, $item);
         }
 
         return $this->item;
@@ -374,6 +390,33 @@ class ReaderManager implements ReaderManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function getFilterConfig(): ?FilterConfig
+    {
+        // Caching
+        if (null !== $this->filterConfig && $this->filterConfig->getFilter()['id'] === $this->readerConfig->filter) {
+            return $this->filterConfig;
+        }
+
+        if ($this->readerConfig->filter > 0) {
+            $this->filterConfig = $this->filterManager->findById($this->readerConfig->filter);
+        }
+
+        return $this->filterConfig;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getQueryBuilder(): QueryBuilder
+    {
+        $filterConfig = $this->getFilterConfig();
+
+        return null !== $filterConfig ? $filterConfig->getQueryBuilder() : System::getContainer()->get('huh.reader.query_builder');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getReaderConfig(): ReaderConfigModel
     {
         // Caching
@@ -533,26 +576,31 @@ class ReaderManager implements ReaderManagerInterface
     protected function retrieveItemByAutoItem()
     {
         $readerConfig = $this->readerConfig;
+        $queryBuilder = $this->getQueryBuilder()->select('*')->from($readerConfig->dataContainer)->setMaxResults(1);
         $item = null;
 
         if (Config::get('useAutoItem') && ($autoItem = Request::getGet('auto_item'))) {
             $field = $readerConfig->itemRetrievalAutoItemField;
 
-            // try to find by a certain field (likely alias)
-            $item = $this->modelUtil->findOneModelInstanceBy(
-                $readerConfig->dataContainer,
-                [
-                    $readerConfig->dataContainer.'.'.$field.'=?',
-                ],
-                [
-                    $autoItem,
-                ]
+            /* @var Model $adapter */
+            $adapter = $this->framework->getAdapter(Model::class);
+            if (!($modelClass = $adapter->getClassFromTable($readerConfig->dataContainer))) {
+                return $item;
+            }
+
+            /* @var Model $model */
+            if (null === ($model = $this->framework->getAdapter($modelClass))) {
+                return $item;
+            }
+
+            $orX = $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->eq($readerConfig->dataContainer.'.'.$field, ':autoItem'),
+                $queryBuilder->expr()->eq($readerConfig->dataContainer.'.'.$model->getPk(), ':autoItem')
             );
 
-            // fallback: ID
-            if (null === $item) {
-                $item = $this->modelUtil->findModelInstanceByPk($readerConfig->dataContainer, $autoItem);
-            }
+            $queryBuilder->where($orX);
+            $queryBuilder->setParameter(':autoItem', $autoItem);
+            $item = $queryBuilder->execute()->fetch();
         }
 
         return $item;
@@ -566,6 +614,7 @@ class ReaderManager implements ReaderManagerInterface
     protected function retrieveItemByFieldConditions()
     {
         $readerConfig = $this->readerConfig;
+        $queryBuilder = $this->getQueryBuilder()->select('*')->from($readerConfig->dataContainer)->setMaxResults(1);
         $item = null;
 
         $itemConditions = StringUtil::deserialize($readerConfig->itemRetrievalFieldConditions, true);
@@ -576,15 +625,8 @@ class ReaderManager implements ReaderManagerInterface
                 $readerConfig->dataContainer
             );
 
-            $statement = $this->database->prepare(
-                "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition)"
-            )->limit(1);
-
-            $result = call_user_func_array([$statement, 'execute'], $values);
-
-            if ($result->numRows > 0) {
-                $item = $this->modelUtil->findModelInstanceByPk($readerConfig->dataContainer, $result->id);
-            }
+            $queryBuilder->andWhere($whereCondition);
+            $item = $queryBuilder->execute()->fetch();
         }
 
         return $item;

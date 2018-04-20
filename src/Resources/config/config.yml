@@ -10,3 +10,5 @@ huh:
         templates:
             item:
                 - { name: default, template: "@HeimrichHannotContaoReader/reader_item_default.html.twig" }
+            item_prefixes:
+                - news_

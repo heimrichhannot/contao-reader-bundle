@@ -22,12 +22,14 @@ class ReaderItemTemplateChoice extends AbstractChoice
 
         $config = System::getContainer()->getParameter('huh.reader');
 
-        if (!isset($config['reader']['templates']['item'])) {
-            return $choices;
+        if (isset($config['reader']['templates']['item_prefixes'])) {
+            $choices = System::getContainer()->get('huh.utils.choice.twig_template')->setContext($config['reader']['templates']['item_prefixes'])->getCachedChoices();
         }
 
-        foreach ($config['reader']['templates']['item'] as $template) {
-            $choices[$template['name']] = $template['template'];
+        if (isset($config['reader']['templates']['item'])) {
+            foreach ($config['reader']['templates']['item'] as $template) {
+                $choices[$template['name']] = $template['template'];
+            }
         }
 
         asort($choices);

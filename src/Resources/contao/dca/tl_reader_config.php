@@ -85,7 +85,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'addFieldDependentRedirect',
         ],
         'default'      => '{general_legend},title,parentReaderConfig;'
-            . '{config_legend},dataContainer,manager,item,limitFormattedFields,itemRetrievalMode,hideUnpublishedItems;'
+            . '{config_legend},dataContainer,filter,manager,item,limitFormattedFields,itemRetrievalMode,hideUnpublishedItems;'
             . '{security_legend},addShowConditions;' . '{jumpto_legend},addFieldDependentRedirect;'
             . '{misc_legend},headTags;' . '{template_legend},itemTemplate;'
     ],
@@ -157,6 +157,20 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             ],
             'exclude'          => true,
             'sql'              => "varchar(128) NOT NULL default ''",
+        ],
+        // filter
+        'filter'                     => [
+            'label'      => &$GLOBALS['TL_LANG']['tl_reader_config']['filter'],
+            'exclude'    => true,
+            'inputType'  => 'select',
+            'options_callback' => function (\Contao\DataContainer $dc){
+                return \Contao\System::getContainer()->get('huh.reader.choice.filter')->setContext($dc->activeRecord->dataContainer)->getChoices();
+            }
+            ,
+            'foreignKey' => 'tl_filter_config.title',
+            'relation'   => ['type' => 'belongsTo', 'load' => 'eager'],
+            'eval'       => ['tl_class' => 'w50', 'includeBlankOption' => true, 'chosen' => true, 'notOverridable' => true],
+            'sql'        => "int(10) NOT NULL default '0'",
         ],
         'manager'                    => [
             'inputType'        => 'select',
