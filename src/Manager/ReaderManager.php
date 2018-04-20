@@ -24,6 +24,7 @@ use HeimrichHannot\FilterBundle\Manager\FilterManager;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfig;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
+use HeimrichHannot\ReaderBundle\QueryBuilder\ReaderQueryBuilder;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry;
 use HeimrichHannot\Request\Request;
@@ -55,6 +56,11 @@ class ReaderManager implements ReaderManagerInterface
      * @var ReaderConfigModel
      */
     protected $readerConfig;
+
+    /**
+     * @var ReaderQueryBuilder
+     */
+    protected $readerQueryBuilder;
 
     /**
      * @var EntityFilter
@@ -119,6 +125,7 @@ class ReaderManager implements ReaderManagerInterface
     public function __construct(
         ContaoFrameworkInterface $framework,
         FilterManager $filterManager,
+        ReaderQueryBuilder $readerQueryBuilder,
         EntityFilter $entityFilter,
         ReaderConfigRegistry $readerConfigRegistry,
         ReaderConfigElementRegistry $readerConfigElementRegistry,
@@ -131,6 +138,7 @@ class ReaderManager implements ReaderManagerInterface
     ) {
         $this->framework = $framework;
         $this->filterManager = $filterManager;
+        $this->readerQueryBuilder = $readerQueryBuilder;
         $this->entityFilter = $entityFilter;
         $this->readerConfigRegistry = $readerConfigRegistry;
         $this->readerConfigElementRegistry = $readerConfigElementRegistry;
@@ -411,7 +419,7 @@ class ReaderManager implements ReaderManagerInterface
     {
         $filterConfig = $this->getFilterConfig();
 
-        return null !== $filterConfig ? $filterConfig->getQueryBuilder() : System::getContainer()->get('huh.reader.query_builder');
+        return null !== $filterConfig ? $filterConfig->getQueryBuilder() : $this->readerQueryBuilder;
     }
 
     /**
@@ -620,12 +628,12 @@ class ReaderManager implements ReaderManagerInterface
         $itemConditions = StringUtil::deserialize($readerConfig->itemRetrievalFieldConditions, true);
 
         if (!empty($itemConditions)) {
-            list($whereCondition, $values) = $this->entityFilter->computeSqlCondition(
+            $queryBuilder = $this->entityFilter->computeQueryBuilderCondition(
+                $queryBuilder,
                 $itemConditions,
                 $readerConfig->dataContainer
             );
 
-            $queryBuilder->andWhere($whereCondition);
             $item = $queryBuilder->execute()->fetch();
         }
 

@@ -36,6 +36,7 @@ services:
         arguments:
             - "@contao.framework"
             - "@huh.filter.manager"
+            - "@huh.reader.query_builder"
             - "@huh.entity_filter.backend.entity_filter"
             - "@huh.reader.reader-config-registry"
             - "@huh.reader.reader-config-element-registry"
@@ -78,7 +79,6 @@ services:
     huh.reader.query_builder:
         class: HeimrichHannot\ReaderBundle\QueryBuilder\ReaderQueryBuilder
         shared: false
-        public: false
         arguments:
           - "@contao.framework"
           - "@doctrine.dbal.default_connection"

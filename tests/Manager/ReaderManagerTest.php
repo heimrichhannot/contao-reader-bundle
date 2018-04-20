@@ -19,6 +19,7 @@ use Contao\Model;
 use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Driver\Mysqli\Driver;
 use HeimrichHannot\EntityFilterBundle\Backend\EntityFilter;
 use HeimrichHannot\FilterBundle\Manager\FilterManager;
 use HeimrichHannot\FilterBundle\Session\FilterSession;
@@ -29,6 +30,7 @@ use HeimrichHannot\ReaderBundle\Item\DefaultItem;
 use HeimrichHannot\ReaderBundle\Manager\ReaderManager;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
+use HeimrichHannot\ReaderBundle\QueryBuilder\ReaderQueryBuilder;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry;
 use HeimrichHannot\ReaderBundle\Tests\TestCaseEnvironment;
@@ -70,6 +72,11 @@ class ReaderManagerTest extends TestCaseEnvironment
      * @var ReaderConfigRegistry
      */
     protected $readerConfigRegistry;
+
+    /**
+     * @var ReaderQueryBuilder
+     */
+    protected $readerQueryBuilder;
 
     /**
      * @var FilterManager
@@ -414,9 +421,12 @@ class ReaderManagerTest extends TestCaseEnvironment
 
         $this->filterManager = new FilterManager($this->framework, $filterSession);
 
+        $this->readerQueryBuilder = new ReaderQueryBuilder($this->framework, new \Doctrine\DBAL\Connection([], new Driver()));
+
         $this->manager = new ReaderManager(
             $this->framework,
             $this->filterManager,
+            $this->readerQueryBuilder,
             $this->entityFilter,
             $this->readerConfigRegistry,
             $this->readerConfigElementRegistry,
@@ -471,6 +481,7 @@ class ReaderManagerTest extends TestCaseEnvironment
         $this->manager = new ReaderManager(
             $this->framework,
             $this->filterManager,
+            $this->readerQueryBuilder,
             $this->entityFilter,
             $this->readerConfigRegistry,
             $this->readerConfigElementRegistry,
