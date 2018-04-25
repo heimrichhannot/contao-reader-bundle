@@ -28,7 +28,12 @@ class ReaderItemTemplateChoice extends AbstractChoice
 
         if (isset($config['reader']['templates']['item'])) {
             foreach ($config['reader']['templates']['item'] as $template) {
-                $choices[$template['name']] = $template['template'];
+                // remove duplicates returned by `huh.utils.choice.twig_template`
+                if (false !== ($idx = array_search($template['template'], $choices, true))) {
+                    unset($choices[$idx]);
+                }
+
+                $choices[$template['name']] = $template['template'].' (Yaml)';
             }
         }
 

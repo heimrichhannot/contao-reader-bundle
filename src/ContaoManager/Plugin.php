@@ -38,7 +38,7 @@ class Plugin implements BundlePluginInterface, ExtensionPluginInterface
             'huh_reader',
             $extensionName,
             $extensionConfigs,
-            $container->getParameter('kernel.project_dir').'/vendor/heimrichhannot/contao-reader-bundle/src/Resources/config/config.yml'
+            __DIR__.'/../Resources/config/config.yml'
         );
     }
 }

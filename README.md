@@ -40,3 +40,65 @@ Currently available reader config element types:
 Type  | Description
 ------|------------
 image | Configure the output of one or more image fields separately (image size, placeholder handling, ...)
+
+### Templates
+
+There are two ways to define your templates. 
+
+#### 1. By Prefix
+
+The first one is to simply deploy twig templates inside any `templates` or bundles `views` directory with the following prefixes:
+
+- `reader_item_`
+- `item_`
+- `news_`
+- `event_`
+
+**More prefixes can be defined, see 2nd way.**
+
+#### 2. By config.yml
+
+The second on is to extend the `config.yml` and define a strict template:
+
+**Plugin.php**
+```
+<?php
+
+class Plugin implements BundlePluginInterface, ExtensionPluginInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getBundles(ParserInterface $parser)
+    {
+        …
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtensionConfig($extensionName, array $extensionConfigs, ContainerBuilder $container)
+    {
+        return ContainerUtil::mergeConfigFile(
+            'huh_reader',
+            $extensionName,
+            $extensionConfigs,
+            __DIR__ .'/../Resources/config/config.yml'
+        );
+    }
+}
+```
+
+**config.yml**
+```
+huh:
+    reader:
+        templates:
+            item:
+                - { name: default, template: "@HeimrichHannotContaoReader/reader_item_default.html.twig" }
+            item_prefixes:
+                - reader_item_
+                - item_
+                - news_
+                - event_
+```
