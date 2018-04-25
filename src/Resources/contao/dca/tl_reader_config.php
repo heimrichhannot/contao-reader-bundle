@@ -233,7 +233,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'filter'           => true,
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
-                return System::getContainer()->get('huh.reader.util.reader-config-util')->getTextFields($dc);
+                return System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc);
             },
             'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
             'sql'              => "varchar(64) NOT NULL default ''"

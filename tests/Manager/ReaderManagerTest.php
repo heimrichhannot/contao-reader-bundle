@@ -40,6 +40,7 @@ use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
 use HeimrichHannot\UtilsBundle\Form\FormUtil;
 use HeimrichHannot\UtilsBundle\Image\ImageUtil;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
+use HeimrichHannot\UtilsBundle\Template\TemplateUtil;
 use HeimrichHannot\UtilsBundle\Url\UrlUtil;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -356,6 +357,8 @@ class ReaderManagerTest extends TestCaseEnvironment
 
         $container->set('contao.framework', $this->mockContaoFramework());
 
+        $container->set('huh.utils.template', new TemplateUtil($this->mockContaoFramework()));
+
         System::setContainer($container);
 
         $filesAdapter = $this->mockAdapter(
@@ -670,11 +673,26 @@ class ReaderManagerTest extends TestCaseEnvironment
 
     public function testGetItemTemplateByName()
     {
+        if (!defined('TL_MODE')) {
+            define('TL_MODE', 'FE');
+        }
+
+        global $objPage;
+
+        $objPage = new \stdClass();
+
+        $objPage->templateGroup = '';
+
         $function = self::getMethod(ReaderManager::class, 'getItemTemplateByName');
 
         $this->assertSame('template.twig', $function->invokeArgs($this->manager, ['my_item_template']));
 
-        $this->assertNull($function->invokeArgs($this->manager, ['notexisting']));
+        try {
+            $function->invokeArgs($this->manager, ['notexisting']); //if this method not throw exception it must be fail too.
+            $this->fail("Expected exception 'Could not find template \"notexisting\"' not thrown");
+        } catch (\Exception $e) { //Not catching a generic Exception or the fail function is also catched
+            $this->assertEquals('Could not find template "notexisting"', $e->getMessage());
+        }
     }
 
     public function testDoFieldDependentRedirect()

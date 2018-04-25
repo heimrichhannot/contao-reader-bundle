@@ -518,7 +518,7 @@ class ReaderManager implements ReaderManagerInterface
         $config = System::getContainer()->getParameter('huh.reader');
 
         if (!isset($config['reader']['templates']['item'])) {
-            return null;
+            return System::getContainer()->get('huh.utils.template')->getTemplate($name);
         }
 
         $templates = $config['reader']['templates']['item'];
@@ -529,7 +529,7 @@ class ReaderManager implements ReaderManagerInterface
             }
         }
 
-        return null;
+        return System::getContainer()->get('huh.utils.template')->getTemplate($name);
     }
 
     /**
