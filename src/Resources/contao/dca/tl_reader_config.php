@@ -208,7 +208,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config']['formattedFields'],
             'inputType'        => 'checkboxWizard',
             'options_callback' => function (DataContainer $dc) {
-                return System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->id);
+                return $dc->activeRecord->id > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->id) : [];
             },
             'exclude'          => true,
             'eval'             => ['multiple' => true, 'includeBlankOption' => true, 'tl_class' => 'w50 clr autoheight'],
@@ -230,7 +230,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'filter'           => true,
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
-                return System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->id);
+                return $dc->activeRecord->id > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->id) : [];
             },
             'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
             'sql'              => "varchar(64) NOT NULL default ''"
