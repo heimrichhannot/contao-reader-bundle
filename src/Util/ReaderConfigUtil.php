@@ -51,9 +51,9 @@ class ReaderConfigUtil
      *
      * @return array
      */
-    public function getFields(int $id)
+    public function getFields(int $id = 0)
     {
-        if (null === ($readerConfig = $this->readerConfigRegistry->findByPk($id))) {
+        if (0 === $id || null === ($readerConfig = $this->readerConfigRegistry->findByPk($id))) {
             return [];
         }
 

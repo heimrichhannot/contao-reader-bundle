@@ -139,7 +139,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['imageField'],
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
-                return System::getContainer()->get('huh.reader.util.reader-config-element-util')->getFields($dc);
+                return $dc->activeRecord->id > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->id) : [];
             },
             'exclude'          => true,
             'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
@@ -174,7 +174,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['genderField'],
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
-                return System::getContainer()->get('huh.reader.util.reader-config-element-util')->getFields($dc);
+                return $dc->activeRecord->id > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->id) : [];
             },
             'exclude'          => true,
             'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
@@ -305,7 +305,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'filter'           => true,
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
-                return System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->pid);
+                return $dc->activeRecord->pid > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->pid) : [];
             },
             'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
             'sql'              => "varchar(64) NOT NULL default ''",
