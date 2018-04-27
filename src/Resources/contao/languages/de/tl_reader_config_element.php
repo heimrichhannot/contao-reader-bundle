@@ -71,6 +71,10 @@ $lang['sortingDirection'][1] = 'Wählen Sie eine Reihenfolge für die Sortierung
 $lang['listConfig'][0] = 'Listen-Konfiguration';
 $lang['listConfig'][1] = 'Wählen Sie eine individuelle Listen-Konfigration aus.';
 
+$lang['infiniteNavigation'][0] = 'Endlosnavigation aktivieren';
+$lang['infiniteNavigation'][1] = 'Endloses klicken durch die Nachrichtennavigation aktivieren.';
+
+
 /**
  * Reference
  */

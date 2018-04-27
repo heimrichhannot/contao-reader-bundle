@@ -78,7 +78,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         'default'                                                                  => '{type_legend},title,type;',
         \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_IMAGE       => '{title_type_legend},title,type;{config_legend},imageSelectorField,imageField,imgSize,placeholderImageMode;',
         \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_REDIRECTION => '{title_type_legend},title,type;{config_legend},name,redirection,addRedirectConditions,addRedirectParam;',
-        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_NAVIGATION  => '{title_type_legend},title,type;{config_legend},name,navigationTemplate,previousLabel,nextLabel,previousTitle,nextTitle,sortingField,sortingDirection,listConfig;',
+        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_NAVIGATION  => '{title_type_legend},title,type;{config_legend},name,navigationTemplate,previousLabel,nextLabel,previousTitle,nextTitle,sortingField,sortingDirection,listConfig,infiniteNavigation;',
 
     ],
     'subpalettes' => [
@@ -320,6 +320,14 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'reference' => &$GLOBALS['TL_LANG']['tl_list_config']['reference'],
             'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true],
             'sql'       => "varchar(16) NOT NULL default ''",
+        ],
+        // security
+        'infiniteNavigation'               => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['infiniteNavigation'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''",
         ],
     ],
 ];

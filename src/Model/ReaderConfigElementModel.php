@@ -39,6 +39,7 @@ namespace HeimrichHannot\ReaderBundle\Model;
  * @property int    $listConfig
  * @property string $sortingDirection
  * @property string $sortingField
+ * @property string $infiniteNavigation
  */
 class ReaderConfigElementModel extends \Model
 {

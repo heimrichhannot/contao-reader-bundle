@@ -130,7 +130,6 @@ class NavigationConfigElementType implements ConfigElementType
 
         // previous
         $queryBuilderPrev = clone $queryBuilder;
-        $queryBuilderPrev->select('*');
         $queryBuilderPrev->andWhere($queryBuilderPrev->expr()->neq($item->getDataContainer().'.'.$pk, ':entityId'));
         $queryBuilderPrev->setParameter('entityId', $item->{$pk});
 
@@ -145,7 +144,6 @@ class NavigationConfigElementType implements ConfigElementType
 
         // next
         $queryBuilderNext = clone $queryBuilder;
-        $queryBuilderNext->select('*');
         $queryBuilderNext->andWhere($queryBuilderNext->expr()->neq($item->getDataContainer().'.'.$pk, ':entityId'));
         $queryBuilderNext->setParameter('entityId', $item->{$pk});
 
@@ -158,7 +156,18 @@ class NavigationConfigElementType implements ConfigElementType
 
         $queryBuilderNext->setParameter('sortingValue', $item->{$sortingField});
 
-        if (false !== ($previous = $queryBuilderPrev->select('*')->setMaxResults(1)->execute()->fetch())) {
+        if (false === ($previous = $queryBuilderPrev->select('*')->setMaxResults(1)->execute()->fetch()) && $readerConfigElement->infiniteNavigation) {
+            // previous infinite
+            $queryBuilderPrev = clone $queryBuilder;
+            $queryBuilderPrev->select('*');
+            $queryBuilderPrev->andWhere($queryBuilderPrev->expr()->neq($item->getDataContainer().'.'.$pk, ':entityId'));
+            $queryBuilderPrev->setParameter('entityId', $item->{$pk});
+            $queryBuilderPrev->orderBy($item->getDataContainer().'.'.$sortingField, \HeimrichHannot\ListBundle\Backend\ListConfig::SORTING_DIRECTION_DESC == $sortingDirection ? \HeimrichHannot\ListBundle\Backend\ListConfig::SORTING_DIRECTION_ASC : \HeimrichHannot\ListBundle\Backend\ListConfig::SORTING_DIRECTION_DESC);
+            $queryBuilderPrev->setParameter('sortingValue', $item->{$sortingField});
+            $previous = $queryBuilderPrev->select('*')->setMaxResults(1)->execute()->fetch();
+        }
+
+        if (false !== $previous) {
             $prevItem = clone $item;
             $prevItem->setRaw($previous);
             $items['previous'] = [
@@ -170,7 +179,17 @@ class NavigationConfigElementType implements ConfigElementType
             ];
         }
 
-        if (false !== ($next = $queryBuilderNext->select('*')->setMaxResults(1)->execute()->fetch())) {
+        if (false === ($next = $queryBuilderNext->select('*')->setMaxResults(1)->execute()->fetch()) && $readerConfigElement->infiniteNavigation) {
+            // next infinite
+            $queryBuilderNext = clone $queryBuilder;
+            $queryBuilderNext->andWhere($queryBuilderNext->expr()->neq($item->getDataContainer().'.'.$pk, ':entityId'));
+            $queryBuilderNext->setParameter('entityId', $item->{$pk});
+            $queryBuilderNext->orderBy($item->getDataContainer().'.'.$sortingField, $sortingDirection);
+            $queryBuilderNext->setParameter('sortingValue', $item->{$sortingField});
+            $next = $queryBuilderNext->select('*')->setMaxResults(1)->execute()->fetch();
+        }
+
+        if (false !== $next) {
             $nextItem = clone $item;
             $nextItem->setRaw($next);
             $items['next'] = [
