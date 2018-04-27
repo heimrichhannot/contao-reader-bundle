@@ -69,7 +69,7 @@ class ModuleReader extends \Contao\Module
         $this->readerConfigRegistry = System::getContainer()->get('huh.reader.reader-config-registry');
         $this->readerConfig = $this->readerConfigRegistry->findByPk($objModule->readerConfig);
 
-        $this->manager = $this->getReaderManagerByName($this->readerConfig->manager ?: 'default');
+        $this->manager = $this->readerConfigRegistry->getReaderManagerByName($this->readerConfig->manager ?: 'default');
 
         parent::__construct($objModule, $strColumn);
     }
@@ -137,45 +137,5 @@ class ModuleReader extends \Contao\Module
         $this->manager->setHeadTags();
 
         $this->Template->item = $this->manager->getItem()->parse();
-    }
-
-    /**
-     * Get the reader manager.
-     *
-     * @param string $name
-     *
-     * @throws \Exception
-     *
-     * @return null|ReaderManagerInterface
-     */
-    protected function getReaderManagerByName(string $name): ?ReaderManagerInterface
-    {
-        $config = System::getContainer()->getParameter('huh.reader');
-
-        if (!isset($config['reader']['managers'])) {
-            return null;
-        }
-
-        $managers = $config['reader']['managers'];
-
-        foreach ($managers as $manager) {
-            if ($manager['name'] == $name) {
-                if (!System::getContainer()->has($manager['id'])) {
-                    return null;
-                }
-
-                /** @var ReaderManagerInterface $manager */
-                $manager = System::getContainer()->get($manager['id']);
-                $interfaces = class_implements($manager);
-
-                if (!is_array($interfaces) || !in_array(ReaderManagerInterface::class, $interfaces, true)) {
-                    throw new \Exception(sprintf('Reader manager service %s must implement %s', $manager['id'], ReaderManagerInterface::class));
-                }
-
-                return $manager;
-            }
-        }
-
-        return null;
     }
 }

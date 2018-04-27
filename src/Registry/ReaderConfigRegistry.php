@@ -9,7 +9,9 @@
 namespace HeimrichHannot\ReaderBundle\Registry;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\System;
 use HeimrichHannot\FilterBundle\Manager\FilterManager;
+use HeimrichHannot\ReaderBundle\Manager\ReaderManagerInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\UtilsBundle\Dca\DcaUtil;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
@@ -173,5 +175,45 @@ class ReaderConfigRegistry
         }
 
         return $computedReaderConfig;
+    }
+
+    /**
+     * Get the reader manager.
+     *
+     * @param string $name
+     *
+     * @throws \Exception
+     *
+     * @return null|ReaderManagerInterface
+     */
+    public function getReaderManagerByName(string $name): ?ReaderManagerInterface
+    {
+        $config = System::getContainer()->getParameter('huh.reader');
+
+        if (!isset($config['reader']['managers'])) {
+            return null;
+        }
+
+        $managers = $config['reader']['managers'];
+
+        foreach ($managers as $manager) {
+            if ($manager['name'] == $name) {
+                if (!System::getContainer()->has($manager['id'])) {
+                    return null;
+                }
+
+                /** @var ReaderManagerInterface $manager */
+                $manager = System::getContainer()->get($manager['id']);
+                $interfaces = class_implements($manager);
+
+                if (!is_array($interfaces) || !in_array(ReaderManagerInterface::class, $interfaces, true)) {
+                    throw new \Exception(sprintf('Reader manager service %s must implement %s', $manager['id'], ReaderManagerInterface::class));
+                }
+
+                return $manager;
+            }
+        }
+
+        return null;
     }
 }

@@ -102,4 +102,11 @@ interface ItemInterface
      * @return array
      */
     public function getModule(): array;
+
+    /**
+     * Get the details url if available.
+     *
+     * @return null|string
+     */
+    public function getDetailsUrl(): ?string;
 }

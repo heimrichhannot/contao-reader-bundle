@@ -1,2 +1,10 @@
 # messages
 huh.reader.messages.permissionDenied: Der Zugriff auf den von Ihnen angeforderten Datensatz wurde verweigert.
+
+# Config element labels
+huh.reader.element.label.previous.default: Vorheriger Artikel
+huh.reader.element.label.next.default: Nächster Artikel
+
+# Config element titles
+huh.reader.element.title.previous.default: Zum vorherigen Artikel wechseln
+huh.reader.element.title.next.default: Zum nächsten Artikel wechseln

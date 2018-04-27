@@ -43,6 +43,34 @@ $lang['addRedirectConditions'][1]  = 'Wählen Sie diese Option, wenn Datensätze
 $lang['showRedirectConditions'][0] = 'Instanzbedingungen';
 $lang['showRedirectConditions'][1] = 'Definieren Sie hier Bedingungen, die eine Instanz erfüllen muss, damit sie angezeigt wird.';
 
+// navigation
+$lang['navigationTemplate'][0] = 'Navigations-Template';
+$lang['navigationTemplate'][1] = 'Wählen Sie hier ein individuelles Navigations-Template, dessen Dateiname mit `readernavigation_` beginnen muss.';
+
+$lang['previousLabel'][0] = 'Navigations-Template';
+$lang['previousLabel'][1] = 'Navigations-Template';
+
+$lang['nextLabel'][0] = 'Label (nächstes Element)';
+$lang['nextLabel'][1] = 'Wählen Sie ein individuelles Label für die Beschriftung des nächsten Element-Links.';
+
+$lang['previousLabel'][0] = 'Label (vorheriges Element)';
+$lang['previousLabel'][1] = 'Wählen Sie ein individuelles Label für die Beschriftung des vorherigen Element-Links.';
+
+$lang['nextTitle'][0] = 'Titel/Tooltip (nächstes Element)';
+$lang['nextTitle'][1] = 'Wählen Sie ein individuellen Titel für den Tooltip des nächsten Element-Links.';
+
+$lang['previousTitle'][0] = 'Titel/Tooltip (vorheriges Element)';
+$lang['previousTitle'][1] = 'Wählen Sie ein individuellen Titel für den Tooltip des vorherigen Element-Links.';
+
+$lang['sortingField'][0] = 'Sortierfeld';
+$lang['sortingField'][1] = 'Wählen Sie hier ein Sortierfeld aus.';
+
+$lang['sortingDirection'][0] = 'Sortierreihenfolge';
+$lang['sortingDirection'][1] = 'Wählen Sie eine Reihenfolge für die Sortierung aus.';
+
+$lang['listConfig'][0] = 'Listen-Konfiguration';
+$lang['listConfig'][1] = 'Wählen Sie eine individuelle Listen-Konfigration aus.';
+
 /**
  * Reference
  */

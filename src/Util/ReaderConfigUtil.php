@@ -46,9 +46,14 @@ class ReaderConfigUtil
         $this->dcaUtil = $dcaUtil;
     }
 
-    public function getFields(DataContainer $dc)
+    /**
+     * @param int $id Reader config id
+     *
+     * @return array
+     */
+    public function getFields(int $id)
     {
-        if (!$dc->id || null === ($readerConfig = $this->readerConfigRegistry->findByPk($dc->id))) {
+        if (null === ($readerConfig = $this->readerConfigRegistry->findByPk($id))) {
             return [];
         }
 

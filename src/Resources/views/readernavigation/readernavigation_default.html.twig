@@ -1,0 +1,11 @@
+<!-- indexer::stop -->
+<nav class="reader-navigation article-navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
+    <ul class="nav">
+        {% for item in items %}
+            <li class="nav-item">
+                <a href="{{ item.url }}" class="{{ 'nav-item '~ item.class|trim }}" itemprop="url"><span itemprop="name">{{ item.label|trans }}</span></a>
+            </li>
+        {% endfor %}
+    </ul>
+</nav>
+<!-- indexer::continue -->

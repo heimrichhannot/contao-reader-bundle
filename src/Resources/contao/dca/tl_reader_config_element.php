@@ -1,6 +1,7 @@
 <?php
 
 \Contao\Controller::loadDataContainer('tl_module');
+\Contao\Controller::loadLanguageFile('tl_list_config');
 
 $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
     'config'      => [
@@ -76,7 +77,9 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         ],
         'default'                                                                  => '{type_legend},title,type;',
         \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_IMAGE       => '{title_type_legend},title,type;{config_legend},imageSelectorField,imageField,imgSize,placeholderImageMode;',
-        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_REDIRECTION => '{title_type_legend},title,type;{config_legend},name,redirection,addRedirectConditions,addRedirectParam',
+        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_REDIRECTION => '{title_type_legend},title,type;{config_legend},name,redirection,addRedirectConditions,addRedirectParam;',
+        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_NAVIGATION  => '{title_type_legend},title,type;{config_legend},name,navigationTemplate,previousLabel,nextLabel,previousTitle,nextTitle,sortingField,sortingDirection,listConfig;',
+
     ],
     'subpalettes' => [
         'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE   => 'placeholderImage',
@@ -192,8 +195,8 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'sorting'   => true,
             'flag'      => 1,
             'inputType' => 'text',
-            'eval'      => ['mandatory' => true, 'tl_class' => 'w50', 'notOverridable' => true],
-            'sql'       => "varchar(255) NOT NULL default ''",
+            'eval'      => ['mandatory' => true, 'tl_class' => 'w50', 'notOverridable' => true, 'maxlength' => 128],
+            'sql'       => "varchar(128) NOT NULL default ''",
         ],
         'redirection'            => [
             'label'      => &$GLOBALS['TL_LANG']['tl_reader_config_element']['redirection'],
@@ -231,6 +234,93 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             ],
             'sql'       => 'blob NULL',
         ],
+        'navigationTemplate'     => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['navigationTemplate'],
+            'exclude'          => true,
+            'inputType'        => 'select',
+            'default'          => 'readernavigation_default',
+            'options_callback' => function (\Contao\DataContainer $dc) {
+                return \Contao\System::getContainer()->get('huh.utils.choice.twig_template')->getCachedChoices(['readernavigation_']);
+            },
+            'eval'             => ['tl_class' => 'w50', 'includeBlankOption' => true, 'mandatory' => true],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'listConfig'             => [
+            'label'      => &$GLOBALS['TL_LANG']['tl_reader_config_element']['listConfig'],
+            'exclude'    => true,
+            'filter'     => true,
+            'inputType'  => 'select',
+            'foreignKey' => 'tl_list_config.title',
+            'relation'   => ['type' => 'belongsTo', 'load' => 'lazy'],
+            'eval'       => ['tl_class' => 'long clr', 'includeBlankOption' => true, 'chosen' => true],
+            'sql'        => "int(10) unsigned NOT NULL default '0'"
+        ],
+        'previousLabel'          => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['previousLabel'],
+            'exclude'          => true,
+            'inputType'        => 'select',
+            'default'          => 'huh.reader.element.label.previous.default',
+            'options_callback' => function (\DataContainer $dc) {
+                return \Contao\System::getContainer()->get('huh.utils.choice.message')->getCachedChoices('huh.reader.element.label.previous');
+            },
+            'eval'             => ['chosen' => true, 'mandatory' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'nextLabel'              => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['nextLabel'],
+            'exclude'          => true,
+            'inputType'        => 'select',
+            'default'          => 'huh.reader.element.label.next.default',
+            'options_callback' => function (\DataContainer $dc) {
+                return \Contao\System::getContainer()->get('huh.utils.choice.message')->getCachedChoices('huh.reader.element.label.next');
+            },
+            'eval'             => ['chosen' => true, 'mandatory' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'previousTitle'          => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['previousTitle'],
+            'exclude'          => true,
+            'inputType'        => 'select',
+            'default'          => 'huh.reader.element.title.previous.default',
+            'options_callback' => function (\DataContainer $dc) {
+                return \Contao\System::getContainer()->get('huh.utils.choice.message')->getCachedChoices('huh.reader.element.title.previous');
+            },
+            'eval'             => ['chosen' => true, 'mandatory' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'nextTitle'              => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['nextTitle'],
+            'exclude'          => true,
+            'inputType'        => 'select',
+            'default'          => 'huh.reader.element.title.next.default',
+            'options_callback' => function (\DataContainer $dc) {
+                return \Contao\System::getContainer()->get('huh.utils.choice.message')->getCachedChoices('huh.reader.element.title.next');
+            },
+            'eval'             => ['chosen' => true, 'mandatory' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'sortingField'           => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['sortingField'],
+            'exclude'          => true,
+            'filter'           => true,
+            'inputType'        => 'select',
+            'options_callback' => function (DataContainer $dc) {
+                return System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->pid);
+            },
+            'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'sortingDirection'       => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['sortingDirection'],
+            'exclude'   => true,
+            'filter'    => true,
+            'default'   => \HeimrichHannot\ListBundle\Backend\ListConfig::SORTING_DIRECTION_DESC,
+            'inputType' => 'select',
+            'options'   => \HeimrichHannot\ListBundle\Backend\ListConfig::SORTING_DIRECTIONS,
+            'reference' => &$GLOBALS['TL_LANG']['tl_list_config']['reference'],
+            'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true],
+            'sql'       => "varchar(16) NOT NULL default ''",
+        ],
     ],
 ];
 
@@ -251,15 +341,15 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
                 return \Contao\System::getContainer()->get('huh.list.backend.module')->getAllListModules();
             },
             'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight', 'submitOnChange' => true],
-            'sql'              => "varchar(64) NOT NULL default ''",
+            'sql'              => "int(10) unsigned NOT NULL default '0'",
         ],
         'listName'      => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['listName'],
             'exclude'   => true,
             'search'    => true,
             'inputType' => 'text',
-            'eval'      => ['maxlength' => 255, 'tl_class' => 'w50', 'mandatory' => true],
-            'sql'       => "varchar(255) NOT NULL default ''",
+            'eval'      => ['maxlength' => 128, 'tl_class' => 'w50', 'mandatory' => true],
+            'sql'       => "varchar(128) NOT NULL default ''",
         ],
         'initialFilter' => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['initialFilter'],

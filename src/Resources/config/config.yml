@@ -7,6 +7,7 @@ huh:
         config_element_types:
             - { name: image, class: HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType }
             - { name: list, class: HeimrichHannot\ReaderBundle\ConfigElementType\ListConfigElementType }
+            - { name: navigation, class: HeimrichHannot\ReaderBundle\ConfigElementType\NavigationConfigElementType }
         templates:
             item:
                 - { name: default, template: "@HeimrichHannotContaoReader/reader_item_default.html.twig" }
