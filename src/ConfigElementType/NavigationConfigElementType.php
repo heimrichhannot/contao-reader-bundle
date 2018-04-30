@@ -174,7 +174,7 @@ class NavigationConfigElementType implements ConfigElementType
                 'item' => $prevItem,
                 'label' => $readerConfigElement->previousLabel,
                 'title' => $readerConfigElement->previousTitle,
-                'class' => 'next',
+                'class' => 'prev',
                 'url' => $prevItem->getDetailsUrl(),
             ];
         }
