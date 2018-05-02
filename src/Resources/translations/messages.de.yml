@@ -8,3 +8,22 @@ huh.reader.element.label.next.default: Nächster Artikel
 # Config element titles
 huh.reader.element.title.previous.default: Zum vorherigen Artikel wechseln
 huh.reader.element.title.next.default: Zum nächsten Artikel wechseln
+huh.reader.element.title.facebook: auf Facebook teilen
+huh.reader.element.title.twitter: auf Twitter teilen
+huh.reader.element.title.googleplus: auf Google+ teilen
+huh.reader.element.title.linkedin: auf LinkedIn teilen
+huh.reader.element.title.xing: auf Xing teilen
+huh.reader.element.title.tumblr: auf tumblr teilen
+huh.reader.element.title.pinterest: auf Pinterest teilen
+huh.reader.element.title.reddit: auf Reddit teilen
+huh.reader.element.title.whatsapp: über WhatsApp teilen
+huh.reader.element.title.mail: per E-Mail teilen
+huh.reader.element.title.pdf: als PDF-herunterladen
+huh.reader.element.title.print: Drucken
+
+
+# Config element mail subject labels
+huh.reader.element.mail.subject.syndication.default: 'Artikel Empfehlung: %title%'
+
+# Config element mail subject labels
+huh.reader.element.mail.body.syndication.default: 'Schau dir diesen interessanten Artikel an: %url%'

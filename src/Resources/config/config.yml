@@ -8,6 +8,7 @@ huh:
             - { name: image, class: HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType }
             - { name: list, class: HeimrichHannot\ReaderBundle\ConfigElementType\ListConfigElementType }
             - { name: navigation, class: HeimrichHannot\ReaderBundle\ConfigElementType\NavigationConfigElementType }
+            - { name: syndication, class: HeimrichHannot\ReaderBundle\ConfigElementType\SyndicationConfigElementType }
         templates:
             item:
                 - { name: default, template: "@HeimrichHannotContaoReader/reader_item_default.html.twig" }
@@ -16,3 +17,14 @@ huh:
                 - item_
                 - news_
                 - event_
+        syndications:
+            - { name: facebook, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Facebook }
+            - { name: twitter, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Twitter }
+            - { name: googleplus, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\GooglePlus }
+            - { name: linkedin, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\LinkedIn }
+            - { name: xing, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Xing }
+            - { name: mail, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Mail }
+            - { name: tumblr, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Tumblr }
+            - { name: pinterest, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Pinterest }
+            - { name: reddit, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Reddit }
+            - { name: whatsapp, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\WhatsApp }

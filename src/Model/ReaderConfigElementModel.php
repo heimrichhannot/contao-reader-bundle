@@ -40,6 +40,20 @@ namespace HeimrichHannot\ReaderBundle\Model;
  * @property string $sortingDirection
  * @property string $sortingField
  * @property string $infiniteNavigation
+ * @property string $syndicationTemplate
+ * @property bool   $syndicationFacebook
+ * @property bool   $syndicationTwitter
+ * @property bool   $syndicationGooglePlus
+ * @property bool   $syndicationLinkedIn
+ * @property bool   $syndicationXing
+ * @property bool   $syndicationMail
+ * @property string $mailSubjectLabel
+ * @property string $mailBodyLabel
+ * @property bool   $syndicationPDF
+ * @property bool   $syndicationTumblr
+ * @property bool   $syndicationPinterest
+ * @property bool   $syndicationReddit
+ * @property bool   $syndicationWhatsApp
  */
 class ReaderConfigElementModel extends \Model
 {

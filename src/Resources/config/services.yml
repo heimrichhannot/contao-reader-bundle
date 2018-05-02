@@ -31,6 +31,10 @@ services:
         arguments:
             - "@contao.framework"
             - "@huh.reader.reader-config-registry"
+    huh.reader.choice.syndication:
+        class: HeimrichHannot\ReaderBundle\Choice\SyndicationChoice
+        arguments:
+            - "@contao.framework"
     huh.reader.manager.reader:
         class: HeimrichHannot\ReaderBundle\Manager\ReaderManager
         arguments:

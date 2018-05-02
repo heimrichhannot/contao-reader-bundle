@@ -47,9 +47,6 @@ $lang['showRedirectConditions'][1] = 'Definieren Sie hier Bedingungen, die eine 
 $lang['navigationTemplate'][0] = 'Navigations-Template';
 $lang['navigationTemplate'][1] = 'Wählen Sie hier ein individuelles Navigations-Template, dessen Dateiname mit `readernavigation_` beginnen muss.';
 
-$lang['previousLabel'][0] = 'Navigations-Template';
-$lang['previousLabel'][1] = 'Navigations-Template';
-
 $lang['nextLabel'][0] = 'Label (nächstes Element)';
 $lang['nextLabel'][1] = 'Wählen Sie ein individuelles Label für die Beschriftung des nächsten Element-Links.';
 
@@ -74,6 +71,50 @@ $lang['listConfig'][1] = 'Wählen Sie eine individuelle Listen-Konfigration aus.
 $lang['infiniteNavigation'][0] = 'Endlosnavigation aktivieren';
 $lang['infiniteNavigation'][1] = 'Endloses klicken durch die Nachrichtennavigation aktivieren.';
 
+$lang['syndicationTemplate'][0] = 'Syndikationen-Template';
+$lang['syndicationTemplate'][1] = 'Wählen Sie hier ein individuelles Syndikationen-Template, dessen Dateiname mit `readersyndication_` beginnen muss.';
+
+$lang['syndicationFacebook'][0] = 'Facebook-Syndikation aktivieren';
+$lang['syndicationFacebook'][1] = 'Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf Facebook.';
+
+$lang['syndicationTwitter'][0] = 'Twitter-Syndikation aktivieren';
+$lang['syndicationTwitter'][1] = 'Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf Twitter.';
+
+$lang['syndicationGooglePlus'][0] = 'Google+-Syndikation aktivieren';
+$lang['syndicationGooglePlus'][1] = 'Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf Google+.';
+
+$lang['syndicationLinkedIn'][0] = 'LinkedIn-Syndikation aktivieren';
+$lang['syndicationLinkedIn'][1] = 'Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf LinkedIn.';
+
+$lang['syndicationXing'][0] = 'Xing-Syndikation aktivieren';
+$lang['syndicationXing'][1] = 'Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf Xing.';
+
+$lang['syndicationMail'][0] = 'E-Mail-Syndikation aktivieren';
+$lang['syndicationMail'][1] = 'Aktivieren Sie die Syndikation zur Verbreitung des Beitrags per E-Mail.';
+
+$lang['mailSubjectLabel'][0] = 'Label E-Mail Betreff';
+$lang['mailSubjectLabel'][1] = 'Wählen Sie ein individuelles Label für die Verwendung im Betreff der E-Mail.';
+
+$lang['mailBodyLabel'][0] = 'Label E-Mail Inhalt';
+$lang['mailBodyLabel'][1] = 'Wählen Sie ein individuelles Label für die Verwendung im Inhalt der E-Mail.';
+
+$lang['syndicationPDF'][0] = 'PDF-Syndikation aktivieren';
+$lang['syndicationPDF'][1] = 'Aktivieren Sie die Syndikation und ermöglichen den Download des Beitrags als PDF-Dokument.';
+
+$lang['syndicationPrint'][0] = 'Druck-Syndikation aktivieren';
+$lang['syndicationPrint'][1] = 'Aktivieren Sie die Syndikation und ermöglichen das Drucken des Beitrags.';
+
+$lang['syndicationTumblr'][0] = 'Tumblr-Syndikation aktivieren';
+$lang['syndicationTumblr'][1] = 'Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf Tumblr.';
+
+$lang['syndicationPinterest'][0] = 'Pinterest-Syndikation aktivieren';
+$lang['syndicationPinterest'][1] = 'Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf Pinterest.';
+
+$lang['syndicationReddit'][0] = 'Reddit-Syndikation aktivieren';
+$lang['syndicationReddit'][1] = 'Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf Reddit.';
+
+$lang['syndicationWhatsApp'][0] = 'WhatsApp-Syndikation aktivieren';
+$lang['syndicationWhatsApp'][1] = 'Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf WhatsApp.';
 
 /**
  * Reference

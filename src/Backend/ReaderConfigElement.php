@@ -23,12 +23,14 @@ class ReaderConfigElement
     const TYPE_LIST = 'list';
     const TYPE_REDIRECTION = 'redirection';
     const TYPE_NAVIGATION = 'navigation';
+    const TYPE_SYNDICATION = 'syndication';
 
     const TYPES = [
         self::TYPE_IMAGE,
         self::TYPE_LIST,
         self::TYPE_REDIRECTION,
         self::TYPE_NAVIGATION,
+        self::TYPE_SYNDICATION,
     ];
 
     const PLACEHOLDER_IMAGE_MODE_NONE = 'none';

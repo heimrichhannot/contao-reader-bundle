@@ -74,11 +74,14 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'placeholderImageMode',
             'addRedirectConditions',
             'addRedirectParam',
+            'syndicationMail',
+            'syndicationPinterest'
         ],
         'default'                                                                  => '{type_legend},title,type;',
         \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_IMAGE       => '{title_type_legend},title,type;{config_legend},imageSelectorField,imageField,imgSize,placeholderImageMode;',
         \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_REDIRECTION => '{title_type_legend},title,type;{config_legend},name,redirection,addRedirectConditions,addRedirectParam;',
         \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_NAVIGATION  => '{title_type_legend},title,type;{config_legend},name,navigationTemplate,previousLabel,nextLabel,previousTitle,nextTitle,sortingField,sortingDirection,listConfig,infiniteNavigation;',
+        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_SYNDICATION => '{title_type_legend},title,type;{config_legend},name,syndicationTemplate,syndicationFacebook,syndicationTwitter,syndicationGooglePlus,syndicationLinkedIn,syndicationXing,syndicationMail,syndicationPDF,syndicationPrint,syndicationTumblr,syndicationPinterest,syndicationReddit,syndicationWhatsApp;',
 
     ],
     'subpalettes' => [
@@ -86,6 +89,8 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED => 'genderField,placeholderImage,placeholderImageFemale',
         'addRedirectConditions'                                                                                             => 'showRedirectConditions',
         'addRedirectParam'                                                                                                  => 'redirectParams',
+        'syndicationMail'                                                                                                   => 'mailSubjectLabel,mailBodyLabel',
+        'syndicationPinterest'                                                                                              => 'imageSelectorField,imageField,imgSize'
     ],
     'fields'      => [
         'id'                     => [
@@ -322,13 +327,128 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'sql'       => "varchar(16) NOT NULL default ''",
         ],
         // security
-        'infiniteNavigation'               => [
+        'infiniteNavigation'     => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['infiniteNavigation'],
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => ['tl_class' => 'w50'],
             'sql'       => "char(1) NOT NULL default ''",
         ],
+        'syndicationTemplate'    => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationTemplate'],
+            'exclude'          => true,
+            'inputType'        => 'select',
+            'default'          => 'readersyndication_default',
+            'options_callback' => function (\Contao\DataContainer $dc) {
+                return \Contao\System::getContainer()->get('huh.utils.choice.twig_template')->getCachedChoices(['readersyndication_']);
+            },
+            'eval'             => ['tl_class' => 'w50', 'includeBlankOption' => true, 'mandatory' => true],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'syndicationFacebook'    => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationFacebook'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50 clr'],
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'syndicationTwitter'     => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationTwitter'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'syndicationGooglePlus'  => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationGooglePlus'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'syndicationLinkedIn'    => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationLinkedIn'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'syndicationXing'        => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationXing'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'syndicationMail'        => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationMail'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'mailSubjectLabel'       => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['mailSubjectLabel'],
+            'exclude'          => true,
+            'inputType'        => 'select',
+            'options_callback' => function (\DataContainer $dc) {
+                return \Contao\System::getContainer()->get('huh.utils.choice.message')->getCachedChoices('huh.reader.element.mail.subject');
+            },
+            'eval'             => ['chosen' => true, 'mandatory' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'mailBodyLabel'          => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['mailBodyLabel'],
+            'exclude'          => true,
+            'inputType'        => 'select',
+            'options_callback' => function (\DataContainer $dc) {
+                return \Contao\System::getContainer()->get('huh.utils.choice.message')->getCachedChoices('huh.reader.element.mail.body');
+            },
+            'eval'             => ['chosen' => true, 'mandatory' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'syndicationPDF'         => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationPDF'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'syndicationPrint'       => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationPrint'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'syndicationTumblr'      => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationTumblr'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'syndicationPinterest'   => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationPinterest'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'syndicationReddit'      => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationReddit'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'syndicationWhatsApp'    => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationWhatsApp'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''",
+        ]
     ],
 ];
 
