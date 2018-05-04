@@ -102,3 +102,40 @@ huh:
                 - news_
                 - event_
 ```
+
+### Syndications
+
+Syndications as links that share the artile with other social networks or provide print or pdf export.
+
+#### PDF-Syndication
+
+##### Use custom fonts  
+
+Inside each tl_reader_config_element.syndicationPdfFontDirectories you can provide multiple paths to a directory containing additional fonts.
+The directory **must contain** a `mpdf-config.php` file, that must return an array with the additional mpdf font-configuration.
+
+**Example:**
+
+You declare for instance the direcory `files/pdf-fonts/` that contains the `.ttf` or `.otf` or `.ttc` font files and the `mpdf-config.php`, than the following configuration should be made. 
+
+```
+<?php
+
+$defaultFontConfig = (new Mpdf\Config\FontVariables())->getDefaults();
+$fontData          = $defaultFontConfig['fontdata'];
+
+return [
+    'fontdata'     => $fontData +[
+        'roboto'      => [
+            'R' => 'Roboto-Regular.ttf'
+        ],
+        'fontawesome' => [
+            'R' => 'fontawesome-webfont.ttf'
+        ]
+    ],
+    'default_font' => 'roboto'
+];
+``` 
+*Example: mpdf-config.php*
+
+More Information: https://mpdf.github.io/fonts-languages/fonts-in-mpdf-7-x.html

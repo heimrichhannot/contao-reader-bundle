@@ -109,4 +109,9 @@ interface ItemInterface
      * @return null|string
      */
     public function getDetailsUrl(): ?string;
+
+    /**
+     * @return mixed
+     */
+    public function jsonSerialize();
 }

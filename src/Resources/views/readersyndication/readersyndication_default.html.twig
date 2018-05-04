@@ -1,9 +1,9 @@
 {% if links|default() %}
-    <ul class="syndication-list">
+    <ul class="{{ listBaseClass|default('syndication-list') }}">
         {% for key,link in links %}
-            <li class="{{ 'syndication-item ' ~ link.cssClass|trim }}">
+            <li class="{{ listItemBaseClass|default('syndication-item') ~ ' ' ~ link.cssClass|trim }}">
                 <a href="{{ link.href }}"
-                   class="{{ ('syndication-link ' ~ link.cssClass)|trim }}"{% if link.target|default() %} target="{{ link.target }}"{% endif %}{% if link.name|default() %} name="{{ link.name }}"{% endif %}{% if link.rel|default() %} rel="{{ link.rel }}"{% endif %}{% if link.title|default() %} title="{{ link.title|trans }}"{% endif %}{% if link.onclick|default() %} onclick="{{ link.onclick }}"{% endif %}{% for key,attribute in link.attributes %}{{ ' ' ~ key ~ '=' ~ attribute }}{% endfor %}><span>{{ link.content|trans }}</span></a>
+                   class="{{ (linkBaseClass|default('syndication-link') ~ ' ' ~ link.cssClass ~ ' ' ~ (useIcons|default(false) and iconClass[key]|default({}) ? iconClass[key] :  ''))|trim }}"{% if link.target|default() %} target="{{ link.target }}"{% endif %}{% if link.name|default() %} name="{{ link.name }}"{% endif %}{% if link.rel|default() %} rel="{{ link.rel }}"{% endif %}{% if link.title|default() %} title="{{ link.title|trans }}"{% endif %}{% if link.onclick|default() %} onclick="{{ link.onclick }}"{% endif %}{% for key,attribute in link.attributes %}{{ ' ' ~ key ~ '=' ~ attribute }}{% endfor %}><span>{{ (useIcons|default() and iconClass[key]|default({}) ? '' :  link.content|trans) }}</span></a>
             </li>
         {% endfor %}
     </ul>

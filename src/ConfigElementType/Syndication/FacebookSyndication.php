@@ -11,7 +11,7 @@ namespace HeimrichHannot\ReaderBundle\ConfigElementType\Syndication;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\DefaultLink;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\LinkInterface;
 
-class Facebook extends AbstractSyndication
+class FacebookSyndication extends AbstractSyndication
 {
     /**
      * {@inheritdoc}

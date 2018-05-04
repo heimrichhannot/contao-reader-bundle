@@ -18,13 +18,17 @@ huh:
                 - news_
                 - event_
         syndications:
-            - { name: facebook, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Facebook }
-            - { name: twitter, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Twitter }
-            - { name: googleplus, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\GooglePlus }
-            - { name: linkedin, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\LinkedIn }
-            - { name: xing, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Xing }
-            - { name: mail, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Mail }
-            - { name: tumblr, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Tumblr }
-            - { name: pinterest, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Pinterest }
-            - { name: reddit, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Reddit }
-            - { name: whatsapp, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\WhatsApp }
+            - { name: facebook, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\FacebookSyndication }
+            - { name: twitter, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\TwitterSyndication }
+            - { name: googleplus, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\GooglePlusSyndication }
+            - { name: linkedin, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\LinkedInSyndication }
+            - { name: xing, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\XingSyndication }
+            - { name: pdf, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\PdfSyndication }
+            - { name: mail, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\MailSyndication }
+            - { name: print, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\PrintSyndication }
+            - { name: tumblr, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\TumblrSyndication }
+            - { name: pinterest, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\PinterestSyndication }
+            - { name: reddit, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\RedditSyndication }
+            - { name: whatsapp, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\WhatsAppSyndication }
+        syndication_pdf_readers:
+            - { name: default, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\PdfReader\DefaultPdfReader }

@@ -11,7 +11,7 @@ namespace HeimrichHannot\ReaderBundle\ConfigElementType\Syndication;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\DefaultLink;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\LinkInterface;
 
-class Tumblr extends AbstractSyndication
+class RedditSyndication extends AbstractSyndication
 {
     /**
      * {@inheritdoc}
@@ -19,13 +19,13 @@ class Tumblr extends AbstractSyndication
     public function generate(): LinkInterface
     {
         $link = new DefaultLink();
-        $link->setCssClass('tumblr');
+        $link->setCssClass('reddit');
         $link->setRel('nofollow');
-        $link->setTitle('huh.reader.element.title.tumblr');
-        $link->setContent('huh.reader.element.title.tumblr');
+        $link->setTitle('huh.reader.element.title.reddit');
+        $link->setContent('huh.reader.element.title.reddit');
         $link->setTarget('_blank');
-        $link->setOnClick('window.open(this.href,\'\',\'width=800,height=450,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false');
-        $link->setHref(sprintf('http://www.tumblr.com/share?v=3&amp;u=%s&amp;t=%s&amp;s=%s', $this->getUrl(), $this->getTitle(), $this->getDescription()));
+        $link->setOnClick('window.open(this.href,\'\',\'width=855,height=900,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false');
+        $link->setHref(sprintf('http://www.reddit.com/submit?url=%s&amp;title=%s', $this->getUrl(), $this->getTitle()));
 
         return $link;
     }
@@ -35,6 +35,6 @@ class Tumblr extends AbstractSyndication
      */
     public function isEnabled(): bool
     {
-        return true === (bool) $this->readerConfigElement->syndicationTumblr;
+        return true === (bool) $this->readerConfigElement->syndicationReddit;
     }
 }

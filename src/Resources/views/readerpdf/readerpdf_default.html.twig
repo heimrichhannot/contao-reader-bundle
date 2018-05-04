@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="{{ language }}" {% if isRTL %} dir="rtl"{% endif %}>
+<head>
+    <meta charset="{{ charset }}">
+    <title>{{ title }}</title>
+    <base href="{{ base }}">
+</head>
+<body class="pdf">
+<div class="item">
+    {% for field, value in formatted %}
+        <div class="{{ field|lower }}">
+            {{ field }}: {{ value }}
+        </div>
+    {% endfor %}
+</div>
+</body>
+</html>

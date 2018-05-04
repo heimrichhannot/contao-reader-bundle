@@ -11,7 +11,7 @@ namespace HeimrichHannot\ReaderBundle\ConfigElementType\Syndication;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\DefaultLink;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\LinkInterface;
 
-class Xing extends AbstractSyndication
+class LinkedInSyndication extends AbstractSyndication
 {
     /**
      * {@inheritdoc}
@@ -19,13 +19,13 @@ class Xing extends AbstractSyndication
     public function generate(): LinkInterface
     {
         $link = new DefaultLink();
-        $link->setCssClass('xing');
+        $link->setCssClass('linkedin');
         $link->setRel('nofollow');
-        $link->setTitle('huh.reader.element.title.xing');
-        $link->setContent('huh.reader.element.title.xing');
+        $link->setTitle('huh.reader.element.title.linkedin');
+        $link->setContent('huh.reader.element.title.linkedin');
         $link->setTarget('_blank');
-        $link->setOnClick('window.open(this.href,\'\',\'width=460,height=460,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false');
-        $link->setHref(sprintf('https://www.xing.com/social_plugins/share/new?sc_p=xing-share&amp;h=1&amp;url=%s&amp', $this->getUrl()));
+        $link->setOnClick('window.open(this.href,\'\',\'width=520,height=570,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false');
+        $link->setHref(sprintf('http://www.linkedin.com/shareArticle?mini=true&amp;url=%s&amp;title=%s', $this->getUrl(), $this->getTitle()));
 
         return $link;
     }
@@ -35,6 +35,6 @@ class Xing extends AbstractSyndication
      */
     public function isEnabled(): bool
     {
-        return true === (bool) $this->readerConfigElement->syndicationXing;
+        return true === (bool) $this->readerConfigElement->syndicationLinkedIn;
     }
 }

@@ -13,7 +13,7 @@ use Contao\System;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\DefaultLink;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\LinkInterface;
 
-class Mail extends AbstractSyndication
+class MailSyndication extends AbstractSyndication
 {
     /**
      * {@inheritdoc}

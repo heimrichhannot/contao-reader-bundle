@@ -8,6 +8,6 @@
 
 namespace HeimrichHannot\ReaderBundle\Exception;
 
-class InvalidReaderAndListFilterDataContainerExeption extends \InvalidArgumentException
+class InvalidReaderAndListFilterDataContainerException extends \InvalidArgumentException
 {
 }

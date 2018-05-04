@@ -49,7 +49,14 @@ namespace HeimrichHannot\ReaderBundle\Model;
  * @property bool   $syndicationMail
  * @property string $mailSubjectLabel
  * @property string $mailBodyLabel
- * @property bool   $syndicationPDF
+ * @property bool   $syndicationPdf
+ * @property string $syndicationPdfTemplate
+ * @property string $syndicationPdfReader
+ * @property string $syndicationPdfFontDirectories
+ * @property string $syndicationPdfMasterTemplate
+ * @property string $syndicationPdfPageMargin
+ * @property bool   $syndicationPrint
+ * @property string $syndicationPrintTemplate
  * @property bool   $syndicationTumblr
  * @property bool   $syndicationPinterest
  * @property bool   $syndicationReddit

@@ -12,7 +12,7 @@ use Contao\Environment;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\DefaultLink;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\LinkInterface;
 
-class WhatsApp extends AbstractSyndication
+class WhatsAppSyndication extends AbstractSyndication
 {
     /**
      * {@inheritdoc}

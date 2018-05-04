@@ -1,21 +1,17 @@
-{% if links|default() %}
-    {% set iconClass = {
-        'facebook' : 'fa fa-facebook-square',
-        'twitter' : 'fa fa-twitter-square',
-        'googleplus' : 'fa fa-google-plus-square',
-        'linkedin' : 'fa fa-linkedin-square',
-        'xing' : 'fa fa-xing-square',
-        'mail' : 'fa fa-envelope',
-        'tumblr' : 'fa fa-tumblr-square',
-        'pinterest' : 'fa fa-pinterest-square',
-        'reddit' : 'fa fa-reddit-square',
-        'whatsapp' : 'fa fa-whatsapp',
-    } %}
-    <ul class="syndication-list font-awesome-square">
-        {% for key,link in links %}
-            <li class="{{ 'syndication-item ' ~ link.cssClass|trim }}">
-                <a href="{{ link.href }}" class="{{ ('syndication-link ' ~ link.cssClass ~ ' ' ~ (iconClass[key]|default() ? iconClass[key] :  ''))|trim }}"{% if link.target|default() %} target="{{ link.target }}"{% endif %}{% if link.name|default() %} name="{{ link.name }}"{% endif %}{% if link.rel|default() %} rel="{{ link.rel }}"{% endif %}{% if link.title|default() %} title="{{ link.title|trans }}"{% endif %}{% if link.onclick|default() %} onclick="{{ link.onclick }}"{% endif %}{% for key,attribute in link.attributes %}{{ ' ' ~ key ~ '=' ~ attribute  }}{% endfor %}><span class>{{ (iconClass[key]|default() ? '' :  link.content|trans) }}</span></a>
-            </li>
-        {% endfor %}
-    </ul>
-{% endif %}
+{% extends "@HeimrichHannotContaoReader/readersyndication/readersyndication_default.html.twig" %}
+
+{% set useIcons = true %}
+{% set iconClass = {
+'facebook' : 'fa fa-facebook-square',
+'twitter' : 'fa fa-twitter-square',
+'googleplus' : 'fa fa-google-plus-square',
+'linkedin' : 'fa fa-linkedin-square',
+'xing' : 'fa fa-xing-square',
+'mail' : 'fa fa-envelope',
+'print' : 'fa fa-print',
+'pdf': 'fa fa-file-pdf-o',
+'tumblr' : 'fa fa-tumblr-square',
+'pinterest' : 'fa fa-pinterest-square',
+'reddit' : 'fa fa-reddit-square',
+'whatsapp' : 'fa fa-whatsapp',
+} %}

@@ -35,6 +35,10 @@ services:
         class: HeimrichHannot\ReaderBundle\Choice\SyndicationChoice
         arguments:
             - "@contao.framework"
+    huh.reader.choice.syndication-pdf-reader:
+        class: HeimrichHannot\ReaderBundle\Choice\SyndicationPdfReaderChoice
+        arguments:
+            - "@contao.framework"
     huh.reader.manager.reader:
         class: HeimrichHannot\ReaderBundle\Manager\ReaderManager
         arguments:

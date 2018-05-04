@@ -14,7 +14,7 @@ use Contao\System;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\DefaultLink;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\LinkInterface;
 
-class Pinterest extends AbstractSyndication
+class PinterestSyndication extends AbstractSyndication
 {
     /**
      * {@inheritdoc}

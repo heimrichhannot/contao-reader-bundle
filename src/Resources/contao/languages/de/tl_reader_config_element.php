@@ -98,11 +98,29 @@ $lang['mailSubjectLabel'][1] = 'Wählen Sie ein individuelles Label für die Ver
 $lang['mailBodyLabel'][0] = 'Label E-Mail Inhalt';
 $lang['mailBodyLabel'][1] = 'Wählen Sie ein individuelles Label für die Verwendung im Inhalt der E-Mail.';
 
-$lang['syndicationPDF'][0] = 'PDF-Syndikation aktivieren';
-$lang['syndicationPDF'][1] = 'Aktivieren Sie die Syndikation und ermöglichen den Download des Beitrags als PDF-Dokument.';
+$lang['syndicationPdf'][0] = 'Pdf-Syndikation aktivieren';
+$lang['syndicationPdf'][1] = 'Aktivieren Sie die Syndikation und ermöglichen den Download des Beitrags als Pdf-Dokument.';
+
+$lang['syndicationPdfReader'][0] = 'PDF-Reader';
+$lang['syndicationPdfReader'][1] = 'Wählen Sie hier einen individuellen PDF-Reader für die Erzeugung des PDF-Dokuments.';
+
+$lang['syndicationPdfTemplate'][0] = 'PDF-Template';
+$lang['syndicationPdfTemplate'][1] = 'Wählen Sie hier ein individuelles PDF-Template, dessen Dateiname mit `readerprint_` beginnen muss.';
+
+$lang['syndicationPdfFontDirectories'][0] = 'PDF-Schriften-Verzeichnis (muss mpdf-config.php enthalten)';
+$lang['syndicationPdfFontDirectories'][1] = 'Relative Projektverzeichnis-Pfade (mehrere durch Komma getrennt) zu den Schriftenkonfigurationen (z.B. "files/pdf-fonts, web/build/fonts") welche in einer "mpdf-config.php" im Verzeichnis konfiguriert werden können, <strong>siehe: <a target="_blank" href="https://mpdf.github.io/fonts-languages/fonts-in-mpdf-7-x.html">MPDF-Referenz</a></strong>. Ein Beispiel hierzu findest du in der README.md des contao-reader-bundles.';
+
+$lang['syndicationPdfMasterTemplate'][0] = 'PDF-Vorlage (Master)';
+$lang['syndicationPdfMasterTemplate'][1] = 'Wählen Sie hier eine individuelle PDF-Vorlage (Master) aus der Dateiverwaltung aus, jeder Seite als Vorlage dienen soll.';
+
+$lang['syndicationPdfPageMargin'][0] = 'PDF-Seitenränder';
+$lang['syndicationPdfPageMargin'][1] = 'Geben Sie hier die gewünschten Seitenränder ein. Wenn Sie einen Wert offen lassen, wird der Standardwert genutzt.';
 
 $lang['syndicationPrint'][0] = 'Druck-Syndikation aktivieren';
 $lang['syndicationPrint'][1] = 'Aktivieren Sie die Syndikation und ermöglichen das Drucken des Beitrags.';
+
+$lang['syndicationPrintTemplate'][0] = 'Drucken-Template';
+$lang['syndicationPrintTemplate'][1] = 'Wählen Sie hier ein individuelles Drucken-Template, dessen Dateiname mit `readerprint_` beginnen muss.';
 
 $lang['syndicationTumblr'][0] = 'Tumblr-Syndikation aktivieren';
 $lang['syndicationTumblr'][1] = 'Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf Tumblr.';

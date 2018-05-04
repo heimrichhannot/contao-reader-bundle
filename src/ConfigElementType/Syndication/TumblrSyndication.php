@@ -11,7 +11,7 @@ namespace HeimrichHannot\ReaderBundle\ConfigElementType\Syndication;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\DefaultLink;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\LinkInterface;
 
-class LinkedIn extends AbstractSyndication
+class TumblrSyndication extends AbstractSyndication
 {
     /**
      * {@inheritdoc}
@@ -19,13 +19,13 @@ class LinkedIn extends AbstractSyndication
     public function generate(): LinkInterface
     {
         $link = new DefaultLink();
-        $link->setCssClass('linkedin');
+        $link->setCssClass('tumblr');
         $link->setRel('nofollow');
-        $link->setTitle('huh.reader.element.title.linkedin');
-        $link->setContent('huh.reader.element.title.linkedin');
+        $link->setTitle('huh.reader.element.title.tumblr');
+        $link->setContent('huh.reader.element.title.tumblr');
         $link->setTarget('_blank');
-        $link->setOnClick('window.open(this.href,\'\',\'width=520,height=570,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false');
-        $link->setHref(sprintf('http://www.linkedin.com/shareArticle?mini=true&amp;url=%s&amp;title=%s', $this->getUrl(), $this->getTitle()));
+        $link->setOnClick('window.open(this.href,\'\',\'width=800,height=450,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false');
+        $link->setHref(sprintf('http://www.tumblr.com/share?v=3&amp;u=%s&amp;t=%s&amp;s=%s', $this->getUrl(), $this->getTitle(), $this->getDescription()));
 
         return $link;
     }
@@ -35,6 +35,6 @@ class LinkedIn extends AbstractSyndication
      */
     public function isEnabled(): bool
     {
-        return true === (bool) $this->readerConfigElement->syndicationLinkedIn;
+        return true === (bool) $this->readerConfigElement->syndicationTumblr;
     }
 }

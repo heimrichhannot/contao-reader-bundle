@@ -11,7 +11,7 @@ namespace HeimrichHannot\ReaderBundle\ConfigElementType\Syndication;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\DefaultLink;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\LinkInterface;
 
-class Twitter extends AbstractSyndication
+class TwitterSyndication extends AbstractSyndication
 {
     /**
      * {@inheritdoc}
