@@ -30,12 +30,24 @@ class SyndicationConfigElementType implements ConfigElementType
     {
         $syndications = [];
 
-        foreach (System::getContainer()->get('huh.reader.choice.syndication')->getCachedChoices() as $key => $class) {
-            if (!class_exists($class)) {
+        $config = System::getContainer()->getParameter('huh.reader');
+
+        if (!isset($config['reader']['syndications'])) {
+            return $syndications;
+        }
+
+        $types = $config['reader']['syndications'];
+
+        usort($types, function ($a, $b) {
+            return (!isset($a['sort']) || !isset($b['sort'])) ? 0 : $a['sort'] - $b['sort'];
+        });
+
+        foreach ($types as $type) {
+            if (!isset($type['name']) || !isset($type['class']) || !class_exists($type['class'])) {
                 continue;
             }
 
-            $r = new \ReflectionClass($class);
+            $r = new \ReflectionClass($type['class']);
 
             if (!$r->isSubclassOf(AbstractSyndication::class)) {
                 continue;
@@ -44,13 +56,13 @@ class SyndicationConfigElementType implements ConfigElementType
             /**
              * @var AbstractSyndication
              */
-            $syndication = new $class($item, $readerConfigElement);
+            $syndication = new $type['class']($item, $readerConfigElement);
 
             if (!$syndication->isEnabled()) {
                 continue;
             }
 
-            $syndications[$key] = $syndication->generate();
+            $syndications[$type['name']] = $syndication->generate();
         }
 
         $item->setFormattedValue(
