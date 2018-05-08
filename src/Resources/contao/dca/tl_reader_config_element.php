@@ -395,6 +395,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['mailSubjectLabel'],
             'exclude'          => true,
             'inputType'        => 'select',
+            'default'          => 'huh.reader.element.mail.subject.syndication.default',
             'options_callback' => function (\DataContainer $dc) {
                 return \Contao\System::getContainer()->get('huh.utils.choice.message')->getCachedChoices('huh.reader.element.mail.subject');
             },
@@ -405,6 +406,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['mailBodyLabel'],
             'exclude'          => true,
             'inputType'        => 'select',
+            'default'          => 'huh.reader.element.mail.body.syndication.default',
             'options_callback' => function (\DataContainer $dc) {
                 return \Contao\System::getContainer()->get('huh.utils.choice.message')->getCachedChoices('huh.reader.element.mail.body');
             },
@@ -464,10 +466,10 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'exclude'   => true,
             'inputType' => 'trbl',
             'default'   => [
-                'bottom' => '16',
+                'bottom' => '15',
                 'left'   => '15',
                 'right'  => '15',
-                'top'    => '16',
+                'top'    => '15',
                 'unit'   => 'mm',
             ],
             'options'   => [
@@ -558,7 +560,7 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
             'eval'      => [
                 'tl_class'          => 'clr',
                 'multiColumnEditor' => [
-                    'sortable'            => false,
+                    'sortable'            => true,
                     'minRowCount'         => 1,
                     'maxRowCount'         => 5,
                     'skipCopyValuesOnAdd' => false,
