@@ -9,6 +9,7 @@ huh:
             - { name: list, class: HeimrichHannot\ReaderBundle\ConfigElementType\ListConfigElementType }
             - { name: navigation, class: HeimrichHannot\ReaderBundle\ConfigElementType\NavigationConfigElementType }
             - { name: syndication, class: HeimrichHannot\ReaderBundle\ConfigElementType\SyndicationConfigElementType }
+            - { name: redirection, class: HeimrichHannot\ReaderBundle\ConfigElementType\RedirectionConfigElementType }
         templates:
             item:
                 - { name: default, template: "@HeimrichHannotContaoReader/reader_item_default.html.twig" }
