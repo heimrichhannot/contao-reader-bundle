@@ -30,18 +30,36 @@ $lang['initialFilter'] = ['Initialer Filter', ''];
 $lang['selector']      = ['Selektor', 'Wählen Sie ein Feld aus, von dem der Wert übergeben werden soll.'];
 $lang['filterElement'] = ['Filterelement', 'Wählen Sie ein Feld aus, nachdem gefiltert werden soll.'];
 $lang['listName']      = ['Listenname', 'Vergeben Sie einen einamligen Namen für Ihre Liste.'];
+$lang['deleteClass']   = ['Lösch-Klasse', 'Wählen Sie hier eine individuelle Lösch-Klasse aus.'];
+$lang['deleteParam']   = ['Lösch-Parameter', 'Parameter auswählen, anhand der Datensatz gelöscht wird.'];
 
 $lang['name']             = ['Name', 'Vergeben Sie einen einamligen Namen für Ihre Weiterleitung, welcher im Template als Variable ausgegeben wird.'];
-$lang['redirection']      = ['Weiterleitungsseite', 'Wählen Sie eine Seite aus.'];
+$lang['jumpTo']           = ['Weiterleitungsseite', 'Wählen Sie eine Seite aus.'];
 $lang['addRedirectParam'] = ['Parameter hinzufügen', 'Wählen Sie diese Option um an die entsprechende Weiterleitungsurl Parameter hinzuzufügen.'];
 $lang['redirectParams']   = ['Weiterleitungsparameter', 'Wählen Sie Parameter aus, welche an die Url angehängt werden sollen.'];
+$lang['parameterType']    = ['Parametertyp', 'Wählen Sie einen Parametertype aus.'];
+$lang['name']             = ['Name', 'Wählen Sie den Namen des Parameters aus, welche an die Url angehängt werden sollen.'];
+$lang['defaultValue']     = ['Standardwert', 'Wählen Sie Parameter aus, welche an die Url angehängt werden sollen.'];
+$lang['addAutoItem']      = ['Auto Item hinzufügen', 'Das Auto Item an die Url anhängen.'];
+$lang['deleteJumpTo']     = ['Weiterleitungsseite nach dem Löschen', 'Wählen Sie eine Seite aus.'];
+$lang['field']            = ['Feldwert', 'Wählen Sie ein Feld aus.'];
 
 
 // security
-$lang['addRedirectConditions'][0]  = 'Bedingungen für die Anzeige hinzufügen';
-$lang['addRedirectConditions'][1]  = 'Wählen Sie diese Option, wenn Datensätze nur unter bestimmten Bedingungen angezeigt werden dürfen.';
-$lang['showRedirectConditions'][0] = 'Instanzbedingungen';
-$lang['showRedirectConditions'][1] = 'Definieren Sie hier Bedingungen, die eine Instanz erfüllen muss, damit sie angezeigt wird.';
+$lang['addRedirectConditions'][0] = 'Bedingungen für die Anzeige hinzufügen';
+$lang['addRedirectConditions'][1] = 'Wählen Sie diese Option, wenn Datensätze nur unter bestimmten Bedingungen angezeigt werden dürfen.';
+$lang['redirectConditions'][0]    = 'Instanzbedingungen';
+$lang['redirectConditions'][1]    = 'Definieren Sie hier Bedingungen, die eine Instanz erfüllen muss, damit sie angezeigt wird.';
+
+$lang['addDeleteConditions'][0] = 'Bedingungen für die Anzeige hinzufügen';
+$lang['addDeleteConditions'][1] = 'Wählen Sie diese Option, wenn Datensätze nur unter bestimmten Bedingungen angezeigt werden dürfen.';
+$lang['deleteConditions'][0]    = 'Löschbedingungen';
+$lang['deleteConditions'][1]    = 'Definieren Sie hier Bedingungen, die eine Instanz erfüllen muss, damit sie angezeigt wird.';
+
+$lang['addMemberGroups'][0] = 'Löschen nur bestimmten Mitgliedergruppen erlauben.';
+$lang['addMemberGroups'][1] = 'Wählen Sie diese Option, wenn Datensätze nur von bestimmten Mitgliedergruppen gelöscht werden dürfen.';
+$lang['memberGroups'][0]    = 'Mitgliedergruppen';
+$lang['memberGroups'][1]    = 'Wählen Sie hier die Mitgliedergruppen aus, welche Datensätze löschen dürfen.';
 
 // navigation
 $lang['navigationTemplate'][0] = 'Navigations-Template';
@@ -108,7 +126,8 @@ $lang['syndicationPdfTemplate'][0] = 'PDF-Template';
 $lang['syndicationPdfTemplate'][1] = 'Wählen Sie hier ein individuelles PDF-Template, dessen Dateiname mit `readerprint_` beginnen muss.';
 
 $lang['syndicationPdfFontDirectories'][0] = 'PDF-Schriften-Verzeichnis (muss mpdf-config.php enthalten)';
-$lang['syndicationPdfFontDirectories'][1] = 'Relative Projektverzeichnis-Pfade (mehrere durch Komma getrennt) zu den Schriftenkonfigurationen (z.B. "files/pdf-fonts, web/build/fonts") welche in einer "mpdf-config.php" im Verzeichnis konfiguriert werden können, <strong>siehe: <a target="_blank" href="https://mpdf.github.io/fonts-languages/fonts-in-mpdf-7-x.html">MPDF-Referenz</a></strong>. Ein Beispiel hierzu findest du in der README.md des contao-reader-bundles.';
+$lang['syndicationPdfFontDirectories'][1] =
+    'Relative Projektverzeichnis-Pfade (mehrere durch Komma getrennt) zu den Schriftenkonfigurationen (z.B. "files/pdf-fonts, web/build/fonts") welche in einer "mpdf-config.php" im Verzeichnis konfiguriert werden können, <strong>siehe: <a target="_blank" href="https://mpdf.github.io/fonts-languages/fonts-in-mpdf-7-x.html">MPDF-Referenz</a></strong>. Ein Beispiel hierzu findest du in der README.md des contao-reader-bundles.';
 
 $lang['syndicationPdfMasterTemplate'][0] = 'PDF-Vorlage (Master)';
 $lang['syndicationPdfMasterTemplate'][1] = 'Wählen Sie hier eine individuelle PDF-Vorlage (Master) aus der Dateiverwaltung aus, jeder Seite als Vorlage dienen soll.';
@@ -145,6 +164,7 @@ $lang['reference'] = [
     \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_NAVIGATION             => 'Navigation',
     \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_SYNDICATION            => 'Syndikationen',
     \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_LIST                   => 'Liste',
+    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_DELETE                 => 'Löschen',
 ];
 
 /**

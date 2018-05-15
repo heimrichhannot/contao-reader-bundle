@@ -13,6 +13,7 @@ use Contao\Database;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
+use HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 
@@ -36,17 +37,26 @@ class RedirectionConfigElementType implements ConfigElementType
             return;
         }
         /** @var PageModel $pageModel */
-        $pageModel = $this->framework->getAdapter(PageModel::class)->findPublishedById($readerConfigElement->redirection);
+        $pageModel = $this->framework->getAdapter(PageModel::class)->findPublishedById($readerConfigElement->jumpTo);
         if (null === $pageModel) {
             return;
         }
-        $url = $pageModel->getFrontendUrl();
+
+        if ($readerConfigElement->addAutoItem && System::getContainer()->get('huh.request')->hasGet('auto_item')) {
+            $url = $pageModel->getFrontendUrl('/'.System::getContainer()->get('huh.request')->getGet('auto_item'));
+        } else {
+            $url = $pageModel->getFrontendUrl();
+        }
 
         if ($readerConfigElement->addRedirectParam) {
             $redirectParams = StringUtil::deserialize($readerConfigElement->redirectParams, true);
             foreach ($redirectParams as $redirectParam) {
-                $param = $redirectParam['field'];
-                $url = System::getContainer()->get('huh.utils.url')->addQueryString($param.'='.$item->{$param}, $url);
+                if (ReaderConfigElement::REDIRECTION_PARAM_TYPE_FIELD_VALUE === $redirectParam['parameterType']) {
+                    $param = $redirectParam['field'];
+                    $url = System::getContainer()->get('huh.utils.url')->addQueryString($redirectParam['name'].'='.$item->{$param}, $url);
+                } elseif (ReaderConfigElement::REDIRECTION_PARAM_TYPE_DEFAULT_VALUE === $redirectParam['parameterType']) {
+                    $url = System::getContainer()->get('huh.utils.url')->addQueryString($redirectParam['name'].'='.$redirectParam['defaultValue'], $url);
+                }
             }
         }
 
@@ -58,7 +68,7 @@ class RedirectionConfigElementType implements ConfigElementType
         $allowed = true;
 
         if ($readerConfigElement->addRedirectConditions) {
-            $itemConditions = StringUtil::deserialize($readerConfigElement->showRedirectConditions, true);
+            $itemConditions = StringUtil::deserialize($readerConfigElement->redirectConditions, true);
 
             if (empty($itemConditions)) {
                 return false;

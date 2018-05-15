@@ -74,6 +74,11 @@ class ReaderConfigElementUtil
         ]);
     }
 
+    /**
+     * get all config element types from config.
+     *
+     * @return array
+     */
     public function getConfigElementTypes()
     {
         $types = [];
@@ -90,5 +95,28 @@ class ReaderConfigElementUtil
         }
 
         return $types;
+    }
+
+    /**
+     * get all delete classes from config.
+     *
+     * @return array
+     */
+    public function getDeleteClasses()
+    {
+        $classes = [];
+
+        $readerConfig = System::getContainer()->getParameter('huh.reader');
+        $deleteClasses = $readerConfig['reader']['delete_classes'];
+
+        if (empty($deleteClasses)) {
+            return $classes;
+        }
+
+        foreach ($deleteClasses as $deleteClass) {
+            $classes[] = $deleteClass['name'];
+        }
+
+        return $classes;
     }
 }

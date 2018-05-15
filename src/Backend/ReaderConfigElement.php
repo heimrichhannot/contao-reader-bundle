@@ -24,6 +24,7 @@ class ReaderConfigElement
     const TYPE_REDIRECTION = 'redirection';
     const TYPE_NAVIGATION = 'navigation';
     const TYPE_SYNDICATION = 'syndication';
+    const TYPE_DELETE = 'delete';
 
     const TYPES = [
         self::TYPE_IMAGE,
@@ -31,6 +32,15 @@ class ReaderConfigElement
         self::TYPE_REDIRECTION,
         self::TYPE_NAVIGATION,
         self::TYPE_SYNDICATION,
+        self::TYPE_DELETE,
+    ];
+
+    const REDIRECTION_PARAM_TYPE_DEFAULT_VALUE = 'default_value';
+    const REDIRECTION_PARAM_TYPE_FIELD_VALUE = 'field_value';
+
+    const REDIRECTION_PARAM_TYPES = [
+        self::REDIRECTION_PARAM_TYPE_FIELD_VALUE,
+        self::REDIRECTION_PARAM_TYPE_DEFAULT_VALUE,
     ];
 
     const PLACEHOLDER_IMAGE_MODE_NONE = 'none';
@@ -151,7 +161,7 @@ class ReaderConfigElement
                 $readerConfig = System::getContainer()->get('huh.utils.model')->findRootParentRecursively('parentReaderConfig', 'tl_reader_config', $readerConfig);
 
                 if ($readerConfig->dataContainer) {
-                    foreach (['showRedirectConditions', 'redirectParams'] as $field) {
+                    foreach (['redirectConditions', 'redirectParams'] as $field) {
                         $dca['fields'][$field]['eval']['multiColumnEditor']['table'] = $readerConfig->dataContainer;
                     }
                 }

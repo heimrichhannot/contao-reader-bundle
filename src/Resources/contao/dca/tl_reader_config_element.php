@@ -74,27 +74,30 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'placeholderImageMode',
             'addRedirectConditions',
             'addRedirectParam',
+            'addMemberGroups',
             'syndicationMail',
             'syndicationPinterest',
             'syndicationPrint',
-            'syndicationPdf'
+            'syndicationPdf',
         ],
         'default'                                                                  => '{type_legend},title,type;',
         \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_IMAGE       => '{title_type_legend},title,type;{config_legend},imageSelectorField,imageField,imgSize,placeholderImageMode;',
-        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_REDIRECTION => '{title_type_legend},title,type;{config_legend},name,redirection,addRedirectConditions,addRedirectParam;',
+        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_REDIRECTION => '{title_type_legend},title,type;{config_legend},name,jumpTo,addRedirectConditions,addRedirectParam,addAutoItem;',
         \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_NAVIGATION  => '{title_type_legend},title,type;{config_legend},name,navigationTemplate,previousLabel,nextLabel,previousTitle,nextTitle,sortingField,sortingDirection,listConfig,infiniteNavigation;',
         \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_SYNDICATION => '{title_type_legend},title,type;{config_legend},name,syndicationTemplate,syndicationFacebook,syndicationTwitter,syndicationGooglePlus,syndicationLinkedIn,syndicationXing,syndicationMail,syndicationPdf,syndicationPrint,syndicationTumblr,syndicationPinterest,syndicationReddit,syndicationWhatsApp;',
-
+        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_DELETE      => '{title_type_legend},title,type;{config_legend},name,jumpTo,addRedirectConditions,addRedirectParam,addAutoItem,addMemberGroups,deleteClass,deleteJumpTo;',
     ],
     'subpalettes' => [
         'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE   => 'placeholderImage',
         'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED => 'genderField,placeholderImage,placeholderImageFemale',
-        'addRedirectConditions'                                                                                             => 'showRedirectConditions',
+        'addRedirectConditions'                                                                                             => 'redirectConditions',
         'addRedirectParam'                                                                                                  => 'redirectParams',
         'syndicationMail'                                                                                                   => 'mailSubjectLabel,mailBodyLabel',
         'syndicationPinterest'                                                                                              => 'imageSelectorField,imageField,imgSize',
         'syndicationPrint'                                                                                                  => 'syndicationPrintTemplate',
-        'syndicationPdf'                                                                                                    => 'syndicationPdfReader,syndicationPdfTemplate,syndicationPdfFontDirectories,syndicationPdfMasterTemplate,syndicationPdfPageMargin'
+        'syndicationPdf'                                                                                                    => 'syndicationPdfReader,syndicationPdfTemplate,syndicationPdfFontDirectories,syndicationPdfMasterTemplate,syndicationPdfPageMargin',
+        'addMemberGroups'                                                                                                   => 'memberGroups',
+
     ],
     'fields'      => [
         'id'                            => [
@@ -207,8 +210,8 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'eval'      => ['mandatory' => true, 'tl_class' => 'w50', 'notOverridable' => true, 'maxlength' => 128],
             'sql'       => "varchar(128) NOT NULL default ''",
         ],
-        'redirection'                   => [
-            'label'      => &$GLOBALS['TL_LANG']['tl_reader_config_element']['redirection'],
+        'jumpTo'                        => [
+            'label'      => &$GLOBALS['TL_LANG']['tl_reader_config_element']['jumpTo'],
             'exclude'    => true,
             'inputType'  => 'pageTree',
             'foreignKey' => 'tl_page.title',
@@ -225,20 +228,39 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         ],
         'redirectParams'                => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['redirectParams'],
-            'exclude'   => true,
             'inputType' => 'multiColumnEditor',
             'eval'      => [
+                'tl_class'          => 'clr',
                 'multiColumnEditor' => [
-                    'class'  => 'redirect-params',
-                    'fields' => [
-                        'field' => [
-                            'label'            => &$GLOBALS['TL_LANG']['tl_entity_filter']['field'],
+                    'sortable'            => true,
+                    'minRowCount'         => 1,
+                    'maxRowCount'         => 5,
+                    'skipCopyValuesOnAdd' => false,
+                    'fields'              => [
+                        'parameterType' => [
+                            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['parameterType'],
+                            'filter'    => true,
+                            'inputType' => 'select',
+                            'options'   => \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::REDIRECTION_PARAM_TYPES,
+                            'eval'      => ['tl_class' => 'w50', 'chosen' => true, 'includeBlankOption' => true, 'groupStyle' => 'width: 250px'],
+                        ],
+                        'name'          => [
+                            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['name'],
+                            'inputType' => 'text',
+                            'eval'      => ['tl_class' => 'w50', 'chosen' => true, 'includeBlankOption' => true, 'groupStyle' => 'width: 250px'],
+                        ],
+                        'defaultValue'  => [
+                            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['defaultValue'],
+                            'inputType' => 'text',
+                            'eval'      => ['tl_class' => 'w50', 'chosen' => true, 'includeBlankOption' => true, 'groupStyle' => 'width: 250px'],
+                        ],
+                        'field'         => [
+                            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['field'],
                             'inputType'        => 'select',
                             'options_callback' => ['huh.reader.backend.reader-config-element', 'getFieldsAsOptions'],
-                            'eval'             => ['tl_class' => 'w50', 'chosen' => true, 'includeBlankOption' => true, 'mandatory' => true, 'groupStyle' => 'width: 350px'],
+                            'eval'             => ['tl_class' => 'w50', 'chosen' => true, 'includeBlankOption' => true, 'groupStyle' => 'width: 250px'],
                         ],
                     ],
-                    'table'  => '',
                 ],
             ],
             'sql'       => 'blob NULL',
@@ -262,7 +284,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'foreignKey' => 'tl_list_config.title',
             'relation'   => ['type' => 'belongsTo', 'load' => 'lazy'],
             'eval'       => ['tl_class' => 'long clr', 'includeBlankOption' => true, 'chosen' => true],
-            'sql'        => "int(10) unsigned NOT NULL default '0'"
+            'sql'        => "int(10) unsigned NOT NULL default '0'",
         ],
         'previousLabel'                 => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['previousLabel'],
@@ -457,9 +479,9 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
                 'filesOnly'  => true,
                 'extensions' => 'pdf',
                 'fieldType'  => 'radio',
-                'tl_class'   => 'w50 clr'
+                'tl_class'   => 'w50 clr',
             ],
-            'sql'       => "binary(16) NULL"
+            'sql'       => "binary(16) NULL",
         ],
         'syndicationPdfPageMargin'      => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationPdfPageMargin'],
@@ -473,10 +495,10 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
                 'unit'   => 'mm',
             ],
             'options'   => [
-                'mm'
+                'mm',
             ],
             'eval'      => ['includeBlankOption' => true, 'tl_class' => 'w50'],
-            'sql'       => "varchar(128) NOT NULL default ''"
+            'sql'       => "varchar(128) NOT NULL default ''",
         ],
         'syndicationPrint'              => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationPrint'],
@@ -523,11 +545,51 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'inputType' => 'checkbox',
             'eval'      => ['tl_class' => 'w50'],
             'sql'       => "char(1) NOT NULL default ''",
-        ]
+        ],
+        'addMemberGroups'               => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['addMemberGroups'],
+            'exclude'   => true,
+            'eval'      => ['tl_class' => 'w50 clr', 'submitOnChange' => true],
+            'inputType' => 'checkbox',
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'memberGroups'                  => [
+            'label'      => &$GLOBALS['TL_LANG']['tl_reader_config_element']['memberGroups'],
+            'exclude'    => true,
+            'inputType'  => 'checkbox',
+            'foreignKey' => 'tl_member_group.name',
+            'eval'       => ['mandatory' => true, 'multiple' => true],
+            'sql'        => "blob NULL",
+            'relation'   => ['type' => 'hasMany', 'load' => 'lazy'],
+        ],
+        'deleteClass'                   => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['deleteClass'],
+            'exclude'   => true,
+            'inputType' => 'select',
+            'options'   => System::getContainer()->get('huh.reader.util.reader-config-element-util')->getDeleteClasses(),
+            'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true],
+            'sql'       => "varchar(64) NOT NULL default ''",
+        ],
+        'addAutoItem'                   => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['addAutoItem'],
+            'exclude'   => true,
+            'eval'      => ['tl_class' => 'w50'],
+            'inputType' => 'checkbox',
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'deleteJumpTo'                  => [
+            'label'      => &$GLOBALS['TL_LANG']['tl_reader_config_element']['deleteJumpTo'],
+            'exclude'    => true,
+            'inputType'  => 'pageTree',
+            'foreignKey' => 'tl_page.title',
+            'eval'       => ['fieldType' => 'radio', 'mandatory' => true, 'tl_class' => 'w50'],
+            'sql'        => "int(10) unsigned NOT NULL default '0'",
+            'relation'   => ['type' => 'hasOne', 'load' => 'eager'],
+        ],
     ],
 ];
 
-\Contao\System::getContainer()->get('huh.entity_filter.manager')->addFilterToDca('showRedirectConditions', 'tl_reader_config_element', '');
+\Contao\System::getContainer()->get('huh.entity_filter.manager')->addFilterToDca('redirectConditions', 'tl_reader_config_element', '');
 
 $dca = &$GLOBALS['TL_DCA']['tl_reader_config_element'];
 
