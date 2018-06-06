@@ -173,6 +173,16 @@ class ReaderManager implements ReaderManagerInterface
             return null;
         }
 
+        // add fields without sql key in DCA (could have a value by load_callback)
+        Controller::loadDataContainer($readerConfig->dataContainer);
+        $itemFields = array_keys($item);
+
+        foreach (array_keys($GLOBALS['TL_DCA'][$readerConfig->dataContainer]['fields']) as $field) {
+            if (!in_array($field, $itemFields, true)) {
+                $item[$field] = null;
+            }
+        }
+
         // hide unpublished items?
         if (null !== $item && $readerConfig->hideUnpublishedItems) {
             if (!$readerConfig->invertPublishedField && !$item[$readerConfig->publishedField]
