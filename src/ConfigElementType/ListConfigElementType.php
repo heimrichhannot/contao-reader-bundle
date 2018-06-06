@@ -45,6 +45,8 @@ class ListConfigElementType implements ConfigElementType
         $filterConfig->addContextualValue($filter[0]['filterElement'], $item->getRawValue($filter[0]['selector']));
         $filterConfig->initQueryBuilder();
 
-        $item->setFormattedValue('list', [$readerConfigElement->listName => $listModule->generate()]);
+        $lists = $item->getFormattedValue('list');
+
+        $item->setFormattedValue('list', array_merge(is_array($lists) ? $lists : [], [$readerConfigElement->listName => $listModule->generate()]));
     }
 }
