@@ -13,6 +13,7 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Environment;
 use Contao\Model;
+use Contao\Module;
 use Contao\ModuleModel;
 use Contao\System;
 use HeimrichHannot\ReaderBundle\Manager\ReaderManagerInterface;
@@ -22,8 +23,10 @@ use HeimrichHannot\StatusMessages\StatusMessage;
 use Patchwork\Utf8;
 use Symfony\Component\Translation\Translator;
 
-class ModuleReader extends \Contao\Module
+class ModuleReader extends Module
 {
+    const TYPE = 'huhreader';
+
     protected $strTemplate = 'mod_reader';
 
     /**
