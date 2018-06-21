@@ -106,9 +106,11 @@ interface ItemInterface
     /**
      * Get the details url if available.
      *
+     * @param bool $external Determine if external urls should be returned as well (required by search index)
+     *
      * @return null|string
      */
-    public function getDetailsUrl(): ?string;
+    public function getDetailsUrl(bool $external = true): ?string;
 
     /**
      * @return mixed

@@ -244,7 +244,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function getDetailsUrl(): ?string
+    public function getDetailsUrl(bool $external = true): ?string
     {
         return null;
     }
