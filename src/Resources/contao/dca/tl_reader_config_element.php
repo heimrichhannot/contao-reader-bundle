@@ -139,7 +139,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'sql'       => "varchar(64) NOT NULL default ''",
         ],
         'typeSelectorField'     => [
-            'label'            => &$GLOBALS['TL_LANG']['tl_list_config_element']['typeSelectorField'],
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['typeSelectorField'],
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
                 return System::getContainer()->get('huh.reader.util.reader-config-element-util')->getCheckboxFields($dc);
@@ -149,7 +149,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
         'typeField'             => [
-            'label'            => &$GLOBALS['TL_LANG']['tl_list_config_element']['typeField'],
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['typeField'],
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
                 return $dc->activeRecord->pid > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->pid) : [];
