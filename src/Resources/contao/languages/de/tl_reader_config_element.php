@@ -5,11 +5,15 @@ $lang = &$GLOBALS['TL_LANG']['tl_reader_config_element'];
 /**
  * Fields
  */
-$lang['tstamp'][0] = 'Änderungsdatum';
-$lang['title'][0]  = 'Titel';
-$lang['title'][1]  = 'Geben Sie hier einen Titel ein.';
-$lang['type'][0]   = 'Typ';
-$lang['type'][1]   = 'Wählen Sie hier den Typ des Elements aus.';
+$lang['tstamp'][0]            = 'Änderungsdatum';
+$lang['title'][0]             = 'Titel';
+$lang['title'][1]             = 'Geben Sie hier einen Titel ein.';
+$lang['type'][0]              = 'Typ';
+$lang['type'][1]              = 'Wählen Sie hier den Typ des Elements aus.';
+$lang['typeSelectorField'][0] = 'Selektor-Feld';
+$lang['typeSelectorField'][1] = 'Wählen Sie hier das Feld aus, das den boolschen Selektor für den Typ enthält.';
+$lang['typeField'][0]         = 'Feld';
+$lang['typeField'][1]         = 'Wählen Sie hier das Feld aus, das die Referenz zum Typ enthält.';
 
 // image
 $lang['imageSelectorField'][0]     = 'Selektor-Feld';

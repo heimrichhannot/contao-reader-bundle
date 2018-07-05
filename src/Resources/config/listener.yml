@@ -1,0 +1,4 @@
+services:
+  huh.reader.listener.callback.readerconfigelement:
+    class: HeimrichHannot\ReaderBundle\EventListener\ReaderConfigCallbackListener
+    arguments: ['@contao.framework', '@translator', '@huh.utils.model']

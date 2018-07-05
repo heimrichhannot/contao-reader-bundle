@@ -5,8 +5,16 @@ $lang = &$GLOBALS['TL_LANG']['tl_reader_config_element'];
 /**
  * Fields
  */
-$lang['title']  = ['Title', 'Please enter a title.'];
-$lang['tstamp'] = ['Revision date', ''];
+$lang['tstamp'][0]            = 'Revision date';
+$lang['tstamp'][1]            = 'Revision date';
+$lang['title'][0]             = 'Title';
+$lang['title'][1]             = 'Please enter a title.';
+$lang['type'][0]              = 'Type';
+$lang['type'][1]              = 'Choose the element type.';
+$lang['typeSelectorField'][0]     = 'Selector-Field';
+$lang['typeSelectorField'][1]     = 'Choose the field, which contains the boolean selector for the type.';
+$lang['typeField'][0]             = 'Field';
+$lang['typeField'][1]             = 'Choose the field containing the reference for the type.';
 
 /**
  * Legends

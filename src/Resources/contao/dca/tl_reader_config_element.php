@@ -11,6 +11,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         'onload_callback'   => [
             ['huh.reader.backend.reader-config-element', 'checkPermission'],
             ['huh.reader.backend.reader-config-element', 'modifyPalette'],
+            ['huh.reader.listener.callback.readerconfigelement','updateLabel']
         ],
         'onsubmit_callback' => [
             ['huh.utils.dca', 'setDateAdded'],
@@ -136,6 +137,26 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'reference' => &$GLOBALS['TL_LANG']['tl_reader_config_element']['reference'],
             'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'submitOnChange' => true],
             'sql'       => "varchar(64) NOT NULL default ''",
+        ],
+        'typeSelectorField'     => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_list_config_element']['typeSelectorField'],
+            'inputType'        => 'select',
+            'options_callback' => function (DataContainer $dc) {
+                return System::getContainer()->get('huh.reader.util.reader-config-element-util')->getCheckboxFields($dc);
+            },
+            'exclude'          => true,
+            'eval'             => ['includeBlankOption' => true, 'tl_class' => 'w50 autoheight'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'typeField'             => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_list_config_element']['typeField'],
+            'inputType'        => 'select',
+            'options_callback' => function (DataContainer $dc) {
+                return $dc->activeRecord->pid > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->pid) : [];
+            },
+            'exclude'          => true,
+            'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
+            'sql'              => "varchar(64) NOT NULL default ''",
         ],
         'imageSelectorField'            => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['imageSelectorField'],
