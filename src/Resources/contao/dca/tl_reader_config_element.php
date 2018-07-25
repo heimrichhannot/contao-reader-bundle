@@ -341,17 +341,6 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
-        'sortingDirection'              => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['sortingDirection'],
-            'exclude'   => true,
-            'filter'    => true,
-            'default'   => \HeimrichHannot\ListBundle\Backend\ListConfig::SORTING_DIRECTION_DESC,
-            'inputType' => 'select',
-            'options'   => \HeimrichHannot\ListBundle\Backend\ListConfig::SORTING_DIRECTIONS,
-            'reference' => &$GLOBALS['TL_LANG']['tl_list_config']['reference'],
-            'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true],
-            'sql'       => "varchar(16) NOT NULL default ''",
-        ],
         // security
         'infiniteNavigation'            => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['infiniteNavigation'],
@@ -598,6 +587,17 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
     $dca['palettes'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_LIST] = '{title_type_legend},title,type;{config_legend},listName,listModule,initialFilter;';
 
     $dca['fields'] = array_merge($dca['fields'], [
+        'sortingDirection'              => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['sortingDirection'],
+            'exclude'   => true,
+            'filter'    => true,
+            'default'   => \HeimrichHannot\ListBundle\Backend\ListConfig::SORTING_DIRECTION_DESC,
+            'inputType' => 'select',
+            'options'   => \HeimrichHannot\ListBundle\Backend\ListConfig::SORTING_DIRECTIONS,
+            'reference' => &$GLOBALS['TL_LANG']['tl_list_config']['reference'],
+            'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true],
+            'sql'       => "varchar(16) NOT NULL default ''",
+        ],
         'listModule'    => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['listModule'],
             'inputType'        => 'select',
