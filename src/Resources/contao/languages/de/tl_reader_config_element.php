@@ -162,14 +162,18 @@ $lang['syndicationWhatsApp'][1] = 'Aktivieren Sie die Syndikation zur Verbreitun
  */
 $lang['reference'] = [
     \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_IMAGE                  => 'Bild',
-    \HeimrichHannot\ListBundle\Backend\ListConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE   => 'einfach',
-    \HeimrichHannot\ListBundle\Backend\ListConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED => 'geschlechtsspezifisch',
     \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_REDIRECTION            => 'Weiterleitung',
     \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_NAVIGATION             => 'Navigation',
     \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_SYNDICATION            => 'Syndikationen',
     \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_LIST                   => 'Liste',
     \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_DELETE                 => 'Löschen',
 ];
+
+if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('HeimrichHannot\ListBundle\HeimrichHannotContaoListBundle'))
+{
+    $lang['reference'][\HeimrichHannot\ListBundle\Backend\ListConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE] = 'einfach';
+    $lang['reference'][\HeimrichHannot\ListBundle\Backend\ListConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED] = 'geschlechtsspezifisch';
+}
 
 /**
  * Legends
