@@ -25,7 +25,7 @@ class PinterestSyndication extends AbstractSyndication
          * @var Image
          */
         $imgSize = StringUtil::deserialize($this->readerConfigElement->imgSize, true);
-        $imgPath = System::getContainer()->get('huh.utils.file')->getPathFromUuid($this->item->{$this->readerConfigElement->imageField});
+        $imgPath = TL_ROOT.'/'.System::getContainer()->get('huh.utils.file')->getPathFromUuid($this->item->{$this->readerConfigElement->imageField});
 
         if (!empty(array_filter($imgSize))) {
             $imgPath = System::getContainer()->get('contao.image.image_factory')->create(
