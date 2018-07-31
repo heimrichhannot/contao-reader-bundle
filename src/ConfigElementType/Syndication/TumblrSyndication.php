@@ -25,7 +25,7 @@ class TumblrSyndication extends AbstractSyndication
         $link->setContent('huh.reader.element.title.tumblr');
         $link->setTarget('_blank');
         $link->setOnClick('window.open(this.href,\'\',\'width=800,height=450,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false');
-        $link->setHref(sprintf('http://www.tumblr.com/share?v=3&amp;u=%s&amp;t=%s&amp;s=%s', $this->getUrl(), $this->getTitle(), $this->getDescription()));
+        $link->setHref(sprintf('http://www.tumblr.com/share?v=3&u=%s&t=%s&s=%s', rawurlencode($this->getUrl()), rawurlencode($this->getTitle()), rawurlencode($this->getDescription())));
 
         return $link;
     }

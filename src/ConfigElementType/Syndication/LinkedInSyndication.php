@@ -25,7 +25,7 @@ class LinkedInSyndication extends AbstractSyndication
         $link->setContent('huh.reader.element.title.linkedin');
         $link->setTarget('_blank');
         $link->setOnClick('window.open(this.href,\'\',\'width=520,height=570,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false');
-        $link->setHref(sprintf('http://www.linkedin.com/shareArticle?mini=true&amp;url=%s&amp;title=%s', $this->getUrl(), $this->getTitle()));
+        $link->setHref(sprintf('http://www.linkedin.com/shareArticle?mini=true&url=%s&title=%s', rawurlencode($this->getUrl()), rawurlencode($this->getTitle())));
 
         return $link;
     }

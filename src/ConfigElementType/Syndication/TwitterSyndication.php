@@ -25,7 +25,7 @@ class TwitterSyndication extends AbstractSyndication
         $link->setContent('huh.reader.element.title.twitter');
         $link->setTarget('_blank');
         $link->setOnClick('window.open(this.href,\'\',\'width=500,height=260,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false');
-        $link->setHref(sprintf('https://twitter.com/intent/tweet?url=%s&amp;text=%s', $this->getUrl(), $this->getTitle()));
+        $link->setHref(sprintf('https://twitter.com/intent/tweet?url=%s&text=%s', rawurlencode($this->getUrl()), rawurlencode($this->getTitle())));
 
         return $link;
     }

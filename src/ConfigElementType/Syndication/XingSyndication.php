@@ -25,7 +25,7 @@ class XingSyndication extends AbstractSyndication
         $link->setContent('huh.reader.element.title.xing');
         $link->setTarget('_blank');
         $link->setOnClick('window.open(this.href,\'\',\'width=460,height=460,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false');
-        $link->setHref(sprintf('https://www.xing.com/social_plugins/share/new?sc_p=xing-share&amp;h=1&amp;url=%s&amp', $this->getUrl()));
+        $link->setHref(sprintf('https://www.xing.com/social_plugins/share/new?sc_p=xing-share&h=1&contao-defas-bundle.es6.jsurl=%s', rawurlencode($this->getUrl())));
 
         return $link;
     }

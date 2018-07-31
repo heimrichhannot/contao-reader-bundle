@@ -25,7 +25,7 @@ class GooglePlusSyndication extends AbstractSyndication
         $link->setContent('huh.reader.element.title.googleplus');
         $link->setTarget('_blank');
         $link->setOnClick('window.open(this.href,\'\',\'width=520,height=450,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false');
-        $link->setHref(sprintf('https://plus.google.com/share?url=%s&amp', $this->getUrl()));
+        $link->setHref(sprintf('https://plus.google.com/share?url=%s', rawurlencode($this->getUrl())));
 
         return $link;
     }

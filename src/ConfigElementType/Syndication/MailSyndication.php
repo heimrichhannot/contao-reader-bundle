@@ -26,8 +26,8 @@ class MailSyndication extends AbstractSyndication
         $link->setContent('huh.reader.element.title.mail');
         $link->setHref(
             sprintf('mailto:?subject=%s&body=%s',
-                rawurlencode(StringUtil::decodeEntities(System::getContainer()->get('translator')->trans($this->readerConfigElement->mailSubjectLabel, ['%title%' => $this->getTitle(), '%url' => $this->getUrl()]))),
-                rawurlencode(StringUtil::decodeEntities(System::getContainer()->get('translator')->trans($this->readerConfigElement->mailBodyLabel, ['%title%' => $this->getTitle(), '%url%' => $this->getUrl()])))
+                rawurlencode(StringUtil::decodeEntities(System::getContainer()->get('translator')->trans($this->readerConfigElement->mailSubjectLabel, ['%title%' => rawurlencode($this->getTitle()), '%url' => rawurlencode($this->getUrl())]))),
+                rawurlencode(StringUtil::decodeEntities(System::getContainer()->get('translator')->trans($this->readerConfigElement->mailBodyLabel, ['%title%' => rawurlencode($this->getTitle()), '%url%' => rawurlencode($this->getUrl())])))
             )
         );
 

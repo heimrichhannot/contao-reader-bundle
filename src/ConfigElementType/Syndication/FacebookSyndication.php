@@ -25,7 +25,7 @@ class FacebookSyndication extends AbstractSyndication
         $link->setContent('huh.reader.element.title.facebook');
         $link->setTarget('_blank');
         $link->setOnClick('window.open(this.href,\'\',\'width=640,height=380,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false');
-        $link->setHref(sprintf('https://www.facebook.com/sharer/sharer.php?u=%s&amp;t=%s', $this->getUrl(), $this->getTitle()));
+        $link->setHref(sprintf('https://www.facebook.com/sharer/sharer.php?u=%s&t=%s', rawurlencode($this->getUrl()), rawurlencode($this->getTitle())));
 
         return $link;
     }

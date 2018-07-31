@@ -40,7 +40,7 @@ class PinterestSyndication extends AbstractSyndication
         $link->setContent('huh.reader.element.title.pinterest');
         $link->setTarget('_blank');
         $link->setOnClick('window.open(this.href,\'\',\'width=460,height=460,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\');return false');
-        $link->setHref(sprintf('http://pinterest.com/pin/create/button/?url=%s&amp;media=%s&amp;description=%s', $this->getUrl(), $imgPath, $this->getDescription()));
+        $link->setHref(sprintf('http://pinterest.com/pin/create/button/?url=%s&media=%s&description=%s', rawurlencode($this->getUrl()), rawurlencode($imgPath), rawurlencode($this->getDescription())));
 
         return $link;
     }
