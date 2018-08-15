@@ -165,7 +165,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
                 return System::getContainer()->get('huh.reader.util.reader-config-element-util')->getCheckboxFields($dc);
             },
             'exclude'          => true,
-            'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
+            'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
         'imageField'                    => [

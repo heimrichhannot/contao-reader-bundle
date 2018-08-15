@@ -36,6 +36,10 @@ class ImageConfigElementType implements ConfigElementType
             $imageSelectorField = $readerConfigElement->imageSelectorField;
             $image = $item->getRawValue($readerConfigElement->imageField);
             $imageField = $readerConfigElement->imageField;
+        } elseif (!$readerConfigElement->imageSelectorField && $item->getRawValue($readerConfigElement->imageField)) {
+            $imageSelectorField = '';
+            $image = $item->getRawValue($readerConfigElement->imageField);
+            $imageField = $readerConfigElement->imageField;
         } elseif ($readerConfigElement->placeholderImageMode) {
             $imageSelectorField = $readerConfigElement->imageSelectorField;
             $imageField = $readerConfigElement->imageField;
@@ -79,6 +83,7 @@ class ImageConfigElementType implements ConfigElementType
             $imageArray[$imageField] = $imageFile->path;
 
             $templateData['images'] = $item->images ?? [];
+            $templateData['images'] = $item->getFormattedValue('images') ?? [];
             $templateData['images'][$imageField] = [];
 
             System::getContainer()->get('huh.utils.image')->addToTemplateData(
