@@ -178,6 +178,16 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
+	'orderField'                    => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['orderField'],
+            'inputType'        => 'select',
+            'options_callback' => function (DataContainer $dc) {
+                return $dc->activeRecord->pid > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->pid) : [];
+            },
+            'exclude'          => true,
+            'eval'             => ['includeBlankOption' => true,'chosen' => true, 'tl_class' => 'w50 autoheight'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
         'imgSize'                       => $GLOBALS['TL_DCA']['tl_module']['fields']['imgSize'],
         'placeholderImageMode'          => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['placeholderImageMode'],
