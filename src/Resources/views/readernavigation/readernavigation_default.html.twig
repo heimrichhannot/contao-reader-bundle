@@ -3,7 +3,7 @@
     <ul class="nav">
         {% for item in items %}
             <li class="{{ 'nav-item '~ item.class|trim }}">
-                <a href="{{ item.url }}" class="{{ 'nav-link '~ item.class|trim }}" itemprop="url"><span itemprop="name">{{ item.label|trans }}</span></a>
+                <a href="{{ item.url }}" class="{{ 'nav-link '~ item.class|trim }}"{% if item.title|default() %} title="{{ item.title|trans }}"{% endif %} itemprop="url"><span itemprop="name">{{ item.label|trans }}</span></a>
             </li>
         {% endfor %}
     </ul>

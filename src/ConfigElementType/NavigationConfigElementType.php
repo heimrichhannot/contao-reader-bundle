@@ -173,10 +173,13 @@ class NavigationConfigElementType implements ConfigElementType
             $items['previous'] = [
                 'item' => $prevItem,
                 'label' => $readerConfigElement->previousLabel,
-                'title' => $readerConfigElement->previousTitle,
                 'class' => 'prev',
                 'url' => $prevItem->getDetailsUrl(),
             ];
+
+            if ($readerConfigElement->previousTitle) {
+                $items['previous']['title'] = $readerConfigElement->previousTitle;
+            }
         }
 
         if (false === ($next = $queryBuilderNext->select('*')->setMaxResults(1)->execute()->fetch()) && $readerConfigElement->infiniteNavigation) {
@@ -195,10 +198,13 @@ class NavigationConfigElementType implements ConfigElementType
             $items['next'] = [
                 'item' => $nextItem,
                 'label' => $readerConfigElement->nextLabel,
-                'title' => $readerConfigElement->nextTitle,
                 'class' => 'next',
                 'url' => $nextItem->getDetailsUrl(),
             ];
+
+            if ($readerConfigElement->nextTitle) {
+                $items['next']['title'] = $readerConfigElement->nextTitle;
+            }
         }
 
         return $items;

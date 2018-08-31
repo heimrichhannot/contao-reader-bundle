@@ -347,7 +347,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'options_callback' => function (\DataContainer $dc) {
                 return \Contao\System::getContainer()->get('huh.utils.choice.message')->getCachedChoices('huh.reader.element.title.previous');
             },
-            'eval'             => ['chosen' => true, 'mandatory' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
+            'eval'             => ['chosen' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
         'nextTitle'                     => [
@@ -358,7 +358,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'options_callback' => function (\DataContainer $dc) {
                 return \Contao\System::getContainer()->get('huh.utils.choice.message')->getCachedChoices('huh.reader.element.title.next');
             },
-            'eval'             => ['chosen' => true, 'mandatory' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
+            'eval'             => ['chosen' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
         'sortingField'                  => [
