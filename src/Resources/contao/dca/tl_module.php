@@ -5,7 +5,7 @@ $dca = &$GLOBALS['TL_DCA']['tl_module'];
 /**
  * Palettes
  */
-$dca['palettes'][\HeimrichHannot\ReaderBundle\Backend\Module::MODULE_READER] =
+$dca['palettes'][\HeimrichHannot\ReaderBundle\Module\ModuleReader::TYPE] =
     '{title_legend},name,headline,type;' . '{config_legend},readerConfig;' . '{template_legend:hide},customTpl;'
     . '{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 

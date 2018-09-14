@@ -634,7 +634,7 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
             'inputType'        => 'select',
             'exclude'          => true,
             'options_callback' => function () {
-                return \Contao\System::getContainer()->get('huh.list.backend.module')->getAllListModules();
+                return \Contao\System::getContainer()->get('huh.list.datacontainer.module')->getAllListModules();
             },
             'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight', 'submitOnChange' => true],
             'sql'              => "int(10) unsigned NOT NULL default '0'",
@@ -671,7 +671,7 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
                             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['filterElement'],
                             'inputType'        => 'select',
                             'options_callback' => function (DataContainer $dc) {
-                                return \Contao\System::getContainer()->get('huh.list.backend.module')->getFieldsByListModule($dc);
+                                return \Contao\System::getContainer()->get('huh.reader.backend.module')->getFieldsByListModule($dc);
                             },
                             'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'mandatory' => true, 'groupStyle' => 'width:250px'],
                         ],

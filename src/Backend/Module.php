@@ -9,15 +9,15 @@
 namespace HeimrichHannot\ReaderBundle\Backend;
 
 use Contao\DataContainer;
+use Contao\ModuleModel;
 use Contao\System;
-use HeimrichHannot\ReaderBundle\Module\ModuleReader;
 
 class Module
 {
     /**
      * @deprecated constant MODULE_READER is deprecated and will be removed in future version. Use ModuleReader::TYPE instead.
      */
-    const MODULE_READER = ModuleReader::TYPE;
+    const MODULE_READER = 'huhreader';
 
     /**
      * @param DataContainer $dc
@@ -31,5 +31,37 @@ class Module
         if (!$dc->id || null === ($readerConfigElement = System::getContainer()->get('huh.reader.reader-config-element-registry')->findByPk($dc->id))) {
             return [];
         }
+    }
+
+    /**
+     * Get fields by.
+     *
+     * @param DataContainer $dc
+     *
+     * @return array|mixed
+     */
+    public function getFieldsByListModule(DataContainer $dc)
+    {
+        if (!$dc->id || null === ($readerConfigElement = System::getContainer()->get('huh.reader.reader-config-element-registry')->findByPk($dc->id))) {
+            return [];
+        }
+
+        if ('' === $readerConfigElement->listModule || null === ($listModule = ModuleModel::findById($readerConfigElement->listModule))) {
+            return [];
+        }
+
+        if (null === ($listConfig = System::getContainer()->get('huh.list.list-config-registry')->findByPk($listModule->listConfig))) {
+            return [];
+        }
+
+        if (null === ($filterConfig = System::getContainer()->get('huh.filter.manager')->findById($listConfig->filter))) {
+            return [];
+        }
+
+        $filter = (object) $filterConfig->getFilter();
+
+        return System::getContainer()->get('huh.utils.choice.field')->getCachedChoices([
+            'dataContainer' => $filter->dataContainer,
+        ]);
     }
 }

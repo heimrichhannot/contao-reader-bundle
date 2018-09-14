@@ -14,7 +14,7 @@ array_insert(
     $GLOBALS['FE_MOD']['reader'],
     3,
     [
-        \HeimrichHannot\ReaderBundle\Backend\Module::MODULE_READER => 'HeimrichHannot\ReaderBundle\Module\ModuleReader',
+        \HeimrichHannot\ReaderBundle\Module\ModuleReader::TYPE => \HeimrichHannot\ReaderBundle\Module\ModuleReader::class,
     ]
 );
 
