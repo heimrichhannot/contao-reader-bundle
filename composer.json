@@ -28,6 +28,8 @@
     "satooshi/php-coveralls": "^2.0",
     "symfony/phpunit-bridge": "^3.2"
   },
+  "minimum-stability": "beta",
+  "prefer-stable": true,
   "autoload": {
     "psr-4": {
       "HeimrichHannot\\ReaderBundle\\": "src/"
