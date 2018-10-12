@@ -186,8 +186,7 @@ class ReaderManager implements ReaderManagerInterface
         // hide unpublished items?
         if (null !== $item && $readerConfig->hideUnpublishedItems) {
             if (!$readerConfig->invertPublishedField && !$item[$readerConfig->publishedField]
-                || $readerConfig->invertPublishedField && $item[$readerConfig->publishedField]
-            ) {
+                || $readerConfig->invertPublishedField && $item[$readerConfig->publishedField]) {
                 return null;
             }
         }
@@ -611,12 +610,13 @@ class ReaderManager implements ReaderManagerInterface
                 return $item;
             }
 
-            $orX = $queryBuilder->expr()->orX(
-                $queryBuilder->expr()->eq($readerConfig->dataContainer.'.'.$field, ':autoItem'),
-                $queryBuilder->expr()->eq($readerConfig->dataContainer.'.'.$model->getPk(), ':autoItem')
-            );
+            // mysql automatically casts string to number -> alias `10er-tagesticket` will be cast to 10 and wont match against alias but pk
+            if (is_numeric($autoItem)) {
+                $queryBuilder->expr()->eq($readerConfig->dataContainer.'.'.$model->getPk(), ':autoItem');
+            } else {
+                $queryBuilder->expr()->eq($readerConfig->dataContainer.'.'.$field, ':autoItem');
+            }
 
-            $queryBuilder->where($orX);
             $queryBuilder->setParameter(':autoItem', $autoItem);
             $item = $queryBuilder->execute()->fetch() ?: null;
         }
