@@ -2,6 +2,7 @@
 
 \Contao\Controller::loadDataContainer('tl_module');
 \Contao\Controller::loadLanguageFile('tl_list_config');
+\Contao\Controller::loadLanguageFile('tl_news_archive');
 
 $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
     'config'      => [
@@ -11,7 +12,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         'onload_callback'   => [
             ['huh.reader.backend.reader-config-element', 'checkPermission'],
             ['huh.reader.backend.reader-config-element', 'modifyPalette'],
-            ['huh.reader.listener.callback.readerconfigelement','updateLabel']
+            ['huh.reader.listener.callback.readerconfigelement', 'updateLabel']
         ],
         'onsubmit_callback' => [
             ['huh.utils.dca', 'setDateAdded'],
@@ -60,7 +61,8 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
                 'label'      => &$GLOBALS['TL_LANG']['tl_reader_config_element']['delete'],
                 'href'       => 'act=delete',
                 'icon'       => 'delete.gif',
-                'attributes' => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
+                'attributes' => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm']
+                                . '\'))return false;Backend.getScrollOffset()"',
             ],
             'show'   => [
                 'label' => &$GLOBALS['TL_LANG']['tl_reader_config_element']['show'],
@@ -80,6 +82,8 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'syndicationPinterest',
             'syndicationPrint',
             'syndicationPdf',
+            'commentOverridePalette',
+            'commentHideFields'
         ],
         'default'                                                                  => '{type_legend},title,type;',
         \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_IMAGE       => '{title_type_legend},title,type;{config_legend},imageSelectorField,imageField,imgSize,placeholderImageMode;',
@@ -87,18 +91,21 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_NAVIGATION  => '{title_type_legend},title,type;{config_legend},name,navigationTemplate,previousLabel,nextLabel,previousTitle,nextTitle,sortingField,sortingDirection,listConfig,infiniteNavigation;',
         \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_SYNDICATION => '{title_type_legend},title,type;{config_legend},name,syndicationTemplate,syndicationFacebook,syndicationTwitter,syndicationGooglePlus,syndicationLinkedIn,syndicationXing,syndicationMail,syndicationPdf,syndicationPrint,syndicationTumblr,syndicationPinterest,syndicationReddit,syndicationWhatsApp;',
         \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_DELETE      => '{title_type_legend},title,type;{config_legend},name,jumpTo,addRedirectConditions,addRedirectParam,addAutoItem,addMemberGroups,deleteClass,deleteJumpTo;',
+        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_COMMENT     => '{title_type_legend},title,type;{config_legend},commentTemplate,commentCustomTemplate,commentNotify,commentSortOrder,commentPerPage,commentModerate,commentBbcode,commentRequireLogin,commentDisableCaptcha,commentOverridePalette,commentHideFields;',
     ],
     'subpalettes' => [
-        'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE   => 'placeholderImage',
-        'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED => 'genderField,placeholderImage,placeholderImageFemale',
-        'addRedirectConditions'                                                                                             => 'redirectConditions',
-        'addRedirectParam'                                                                                                  => 'redirectParams',
-        'syndicationMail'                                                                                                   => 'mailSubjectLabel,mailBodyLabel',
-        'syndicationPinterest'                                                                                              => 'imageSelectorField,imageField,imgSize',
-        'syndicationPrint'                                                                                                  => 'syndicationPrintTemplate',
-        'syndicationPdf'                                                                                                    => 'syndicationPdfReader,syndicationPdfTemplate,syndicationPdfFontDirectories,syndicationPdfMasterTemplate,syndicationPdfPageMargin',
-        'addMemberGroups'                                                                                                   => 'memberGroups',
-
+        'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE => 'placeholderImage',
+        'placeholderImageMode_'
+        . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED                       => 'genderField,placeholderImage,placeholderImageFemale',
+        'addRedirectConditions'                                                                                           => 'redirectConditions',
+        'addRedirectParam'                                                                                                => 'redirectParams',
+        'syndicationMail'                                                                                                 => 'mailSubjectLabel,mailBodyLabel',
+        'syndicationPinterest'                                                                                            => 'imageSelectorField,imageField,imgSize',
+        'syndicationPrint'                                                                                                => 'syndicationPrintTemplate',
+        'syndicationPdf'                                                                                                  => 'syndicationPdfReader,syndicationPdfTemplate,syndicationPdfFontDirectories,syndicationPdfMasterTemplate,syndicationPdfPageMargin',
+        'addMemberGroups'                                                                                                 => 'memberGroups',
+        'commentOverridePalette'                                                                                          => 'commentPalette',
+        'commentHideFields'                                                                                               => 'commentHideFieldsPalette'
     ],
     'fields'      => [
         'id'                            => [
@@ -138,7 +145,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'submitOnChange' => true],
             'sql'       => "varchar(64) NOT NULL default ''",
         ],
-        'typeSelectorField'     => [
+        'typeSelectorField'             => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['typeSelectorField'],
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
@@ -148,11 +155,13 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'eval'             => ['includeBlankOption' => true, 'tl_class' => 'w50 autoheight'],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
-        'typeField'             => [
+        'typeField'                     => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['typeField'],
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
-                return $dc->activeRecord->pid > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->pid) : [];
+                return $dc->activeRecord->pid > 0 ? System::getContainer()
+                    ->get('huh.reader.util.reader-config-util')
+                    ->getFields($dc->activeRecord->pid) : [];
             },
             'exclude'          => true,
             'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
@@ -172,20 +181,24 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['imageField'],
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
-                return $dc->activeRecord->pid > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->pid) : [];
+                return $dc->activeRecord->pid > 0 ? System::getContainer()
+                    ->get('huh.reader.util.reader-config-util')
+                    ->getFields($dc->activeRecord->pid) : [];
             },
             'exclude'          => true,
             'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
-	'orderField'                    => [
+        'orderField'                    => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['orderField'],
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
-                return $dc->activeRecord->pid > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->pid) : [];
+                return $dc->activeRecord->pid > 0 ? System::getContainer()
+                    ->get('huh.reader.util.reader-config-util')
+                    ->getFields($dc->activeRecord->pid) : [];
             },
             'exclude'          => true,
-            'eval'             => ['includeBlankOption' => true,'chosen' => true, 'tl_class' => 'w50 autoheight'],
+            'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
         'imgSize'                       => $GLOBALS['TL_DCA']['tl_module']['fields']['imgSize'],
@@ -203,21 +216,35 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['placeholderImage'],
             'exclude'   => true,
             'inputType' => 'fileTree',
-            'eval'      => ['tl_class' => 'w50 autoheight', 'fieldType' => 'radio', 'filesOnly' => true, 'extensions' => Config::get('validImageTypes'), 'mandatory' => true],
+            'eval'      => [
+                'tl_class'   => 'w50 autoheight',
+                'fieldType'  => 'radio',
+                'filesOnly'  => true,
+                'extensions' => Config::get('validImageTypes'),
+                'mandatory'  => true
+            ],
             'sql'       => "binary(16) NULL",
         ],
         'placeholderImageFemale'        => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['placeholderImageFemale'],
             'exclude'   => true,
             'inputType' => 'fileTree',
-            'eval'      => ['tl_class' => 'w50 autoheight', 'fieldType' => 'radio', 'filesOnly' => true, 'extensions' => Config::get('validImageTypes'), 'mandatory' => true],
+            'eval'      => [
+                'tl_class'   => 'w50 autoheight',
+                'fieldType'  => 'radio',
+                'filesOnly'  => true,
+                'extensions' => Config::get('validImageTypes'),
+                'mandatory'  => true
+            ],
             'sql'       => "binary(16) NULL",
         ],
         'genderField'                   => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['genderField'],
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
-                return $dc->activeRecord->id > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->id) : [];
+                return $dc->activeRecord->id > 0 ? System::getContainer()
+                    ->get('huh.reader.util.reader-config-util')
+                    ->getFields($dc->activeRecord->id) : [];
             },
             'exclude'          => true,
             'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
@@ -289,7 +316,12 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
                             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['field'],
                             'inputType'        => 'select',
                             'options_callback' => ['huh.reader.backend.reader-config-element', 'getFieldsAsOptions'],
-                            'eval'             => ['tl_class' => 'w50', 'chosen' => true, 'includeBlankOption' => true, 'groupStyle' => 'width: 250px'],
+                            'eval'             => [
+                                'tl_class'           => 'w50',
+                                'chosen'             => true,
+                                'includeBlankOption' => true,
+                                'groupStyle'         => 'width: 250px'
+                            ],
                         ],
                     ],
                 ],
@@ -367,7 +399,9 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'filter'           => true,
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
-                return $dc->activeRecord->pid > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->pid) : [];
+                return $dc->activeRecord->pid > 0 ? System::getContainer()
+                    ->get('huh.reader.util.reader-config-util')
+                    ->getFields($dc->activeRecord->pid) : [];
             },
             'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
             'sql'              => "varchar(64) NOT NULL default ''",
@@ -606,6 +640,107 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'sql'        => "int(10) unsigned NOT NULL default '0'",
             'relation'   => ['type' => 'hasOne', 'load' => 'eager'],
         ],
+        'commentCustomTemplate'            => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['commentCustomTemplate'],
+            'exclude'          => true,
+            'inputType'        => 'select',
+            'options_callback' => ['huh.reader.backend.reader-config-element', 'getCustomCommentTemplate'],
+            'eval'             => ['tl_class' => 'w50', 'includeBlankOption' => true],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'commentTemplate'               => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['commentTemplate'],
+            'exclude'          => true,
+            'inputType'        => 'select',
+            'options_callback' => ['tl_module_comments', 'getCommentTemplates'],
+            'eval'             => ['tl_class' => 'w50', 'includeBlankOption' => true],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'commentNotify'                        => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_news_archive']['notify'],
+            'default'   => 'notify_admin',
+            'exclude'   => true,
+            'inputType' => 'select',
+            'options'   => ['notify_admin', 'notify_author', 'notify_both'],
+            'eval'      => ['tl_class' => 'w50'],
+            'reference' => &$GLOBALS['TL_LANG']['tl_news_archive'],
+            'sql'       => "varchar(16) NOT NULL default ''"
+        ],
+        'commentSortOrder'                     => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_news_archive']['sortOrder'],
+            'default'   => 'ascending',
+            'exclude'   => true,
+            'inputType' => 'select',
+            'options'   => ['ascending', 'descending'],
+            'reference' => &$GLOBALS['TL_LANG']['MSC'],
+            'eval'      => ['tl_class' => 'w50 clr'],
+            'sql'       => "varchar(32) NOT NULL default ''"
+        ],
+        'commentPerPage'                       => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_news_archive']['perPage'],
+            'exclude'   => true,
+            'inputType' => 'text',
+            'eval'      => ['rgxp' => 'natural', 'tl_class' => 'w50'],
+            'sql'       => "smallint(5) unsigned NOT NULL default '0'"
+        ],
+        'commentModerate'                      => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_news_archive']['moderate'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''"
+        ],
+        'commentBbcode'                        => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_news_archive']['bbcode'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''"
+        ],
+        'commentRequireLogin'                  => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_news_archive']['requireLogin'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''"
+        ],
+        'commentDisableCaptcha'                => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_news_archive']['disableCaptcha'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''"
+        ],
+        'commentOverridePalette' => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['commentOverridePalette'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50','submitOnChange'=>true],
+            'sql'       => "char(1) NOT NULL default ''"
+        ],
+        'commentPalette' => [
+            'inputType'        => 'checkboxWizard',
+            'label'            => &$GLOBALS['TL_LANG']['tl_module']['formHybridEditable'],
+            'options'          => ['name','email','website','comment','notify'],
+            'exclude'          => true,
+            'eval'             => ['multiple' => true, 'includeBlankOption' => true, 'tl_class' => 'w50 autoheight clr'],
+            'sql'              => "blob NULL",
+        ],
+        'commentHideFields' => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['commentHideFields'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50','submitOnChange'=>true],
+            'sql'       => "char(1) NOT NULL default ''"
+        ],
+        'commentHideFieldsPalette' => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_module']['formHybridEditable'],
+            'inputType'        => 'checkboxWizard',
+            'options'          => ['name','email','website'],
+            'exclude'          => true,
+            'eval'             => ['multiple' => true, 'includeBlankOption' => true, 'tl_class' => 'w50 autoheight clr'],
+            'sql'              => "blob NULL",
+        ]
     ],
 ];
 
@@ -615,10 +750,11 @@ $dca = &$GLOBALS['TL_DCA']['tl_reader_config_element'];
 
 // list type
 if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('HeimrichHannot\ListBundle\HeimrichHannotContaoListBundle')) {
-    $dca['palettes'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_LIST] = '{title_type_legend},title,type;{config_legend},listName,listModule,initialFilter;';
-
+    $dca['palettes'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_LIST] =
+        '{title_type_legend},title,type;{config_legend},listName,listModule,initialFilter;';
+    
     $dca['fields'] = array_merge($dca['fields'], [
-        'sortingDirection'              => [
+        'sortingDirection' => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['sortingDirection'],
             'exclude'   => true,
             'filter'    => true,
@@ -629,17 +765,23 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
             'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true],
             'sql'       => "varchar(16) NOT NULL default ''",
         ],
-        'listModule'    => [
+        'listModule'       => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['listModule'],
             'inputType'        => 'select',
             'exclude'          => true,
             'options_callback' => function () {
                 return \Contao\System::getContainer()->get('huh.list.datacontainer.module')->getAllListModules();
             },
-            'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight', 'submitOnChange' => true],
+            'eval'             => [
+                'includeBlankOption' => true,
+                'mandatory'          => true,
+                'chosen'             => true,
+                'tl_class'           => 'w50 autoheight',
+                'submitOnChange'     => true
+            ],
             'sql'              => "int(10) unsigned NOT NULL default '0'",
         ],
-        'listName'      => [
+        'listName'         => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['listName'],
             'exclude'   => true,
             'search'    => true,
@@ -647,7 +789,7 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
             'eval'      => ['maxlength' => 128, 'tl_class' => 'w50', 'mandatory' => true],
             'sql'       => "varchar(128) NOT NULL default ''",
         ],
-        'initialFilter' => [
+        'initialFilter'    => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['initialFilter'],
             'inputType' => 'multiColumnEditor',
             'eval'      => [
@@ -665,7 +807,12 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
                             'options_callback' => function (DataContainer $dc) {
                                 return System::getContainer()->get('huh.reader.util.reader-config-element-util')->getFields($dc);
                             },
-                            'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'mandatory' => true, 'groupStyle' => 'width:250px'],
+                            'eval'             => [
+                                'includeBlankOption' => true,
+                                'chosen'             => true,
+                                'mandatory'          => true,
+                                'groupStyle'         => 'width:250px'
+                            ],
                         ],
                         'filterElement' => [
                             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['filterElement'],
@@ -673,7 +820,12 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
                             'options_callback' => function (DataContainer $dc) {
                                 return \Contao\System::getContainer()->get('huh.reader.backend.module')->getFieldsByListModule($dc);
                             },
-                            'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'mandatory' => true, 'groupStyle' => 'width:250px'],
+                            'eval'             => [
+                                'includeBlankOption' => true,
+                                'chosen'             => true,
+                                'mandatory'          => true,
+                                'groupStyle'         => 'width:250px'
+                            ],
                         ],
                     ],
                 ],
@@ -682,5 +834,7 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
         ],
     ]);
 } else {
-    $dca['fields']['type']['options'] = array_diff($dca['fields']['type']['options'], [\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_LIST]);
+    $dca['fields']['type']['options'] =
+        array_diff($dca['fields']['type']['options'], [\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_LIST]);
 }
+

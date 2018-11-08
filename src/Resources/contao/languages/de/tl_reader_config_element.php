@@ -159,6 +159,19 @@ $lang['syndicationReddit'][1] = 'Aktivieren Sie die Syndikation zur Verbreitung 
 $lang['syndicationWhatsApp'][0] = 'WhatsApp-Syndikation aktivieren';
 $lang['syndicationWhatsApp'][1] = 'Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf WhatsApp.';
 
+$lang['commentTemplate'][0] = 'Kommentar-Template';
+$lang['commentTemplate'][1] = 'Hier können Sie das Kommentartemplate auswählen.';
+
+$lang['commentCustomTemplate'][0] = 'Individuelles-Template';
+$lang['commentCustomTemplate'][1] = 'Hier können Sie das Standard-Template überschreiben.';
+
+$lang['commentOverridePalette'][0] = 'Palette überschreiben';
+$lang['commentOverridePalette'][1] = 'Wählen Sie diese Option, wenn Sie die Palette des Kommentarformulars anpassen möchten.';
+
+$lang['commentHideFields'][0] = 'Felder verstecken';
+$lang['commentHideFields'][1] = 'Wählen Sie hier Felder, die im Kommentar-Formular versteckt dargestellt werden sollen.';
+
+
 /**
  * Reference
  */
@@ -169,6 +182,7 @@ $lang['reference'] = [
     \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_SYNDICATION            => 'Syndikationen',
     \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_LIST                   => 'Liste',
     \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_DELETE                 => 'Löschen',
+    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_COMMENT                => 'Kommentar',
 ];
 
 if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('HeimrichHannot\ListBundle\HeimrichHannotContaoListBundle'))

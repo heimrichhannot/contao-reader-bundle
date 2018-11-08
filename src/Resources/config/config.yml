@@ -11,6 +11,7 @@ huh:
             - { name: syndication, class: HeimrichHannot\ReaderBundle\ConfigElementType\SyndicationConfigElementType }
             - { name: redirection, class: HeimrichHannot\ReaderBundle\ConfigElementType\RedirectionConfigElementType }
             - { name: delete, class: HeimrichHannot\ReaderBundle\ConfigElementType\DeleteConfigElementType }
+            - { name: comment, class: HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType }
         templates:
             item:
                 - { name: default, template: "@HeimrichHannotContaoReader/reader_item_default.html.twig" }

@@ -1,0 +1,41 @@
+<?php $this->extend('block_searchable'); ?>
+<?php $this->block('content'); ?>
+<?php if(!empty($this->comments)): ?>
+<div class="comments">
+    <?= implode('', $this->comments) ?>
+</div>
+<?= $this->pagination ?>
+<?php endif; ?>
+<div class="comment-form">
+    <?php $data = $this->arrData ?>
+    <!-- indexer::stop -->
+    <div class="form">
+        <?php if ($data['requireLogin']): ?>
+            <p class="info"><?= $data['login'] ?></p>
+        <?php else: ?>
+            <?php if ($data['confirm']): ?>
+                <p class="tl_confirm"><?= $data['confirm'] ?></p>
+            <?php elseif ($data['allowComments']): ?>
+                <form<?php if ($data['action']): ?> action="<?= $data['action'] ?>"<?php endif; ?> id="<?= $data['formId'] ?>" method="post">
+                    <div class="formbody">
+                        <input type="hidden" name="FORM_SUBMIT" value="<?= $data['formId'] ?>">
+                        <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
+                        <?php foreach ($data['fields'] as $key => $field): ?>
+                            <?php if (in_array($key, $data['hiddenFields'])): ?>
+                                <input type="hidden" value="<?= $field->value ?>" name="<?= $field->name ?>">
+                            <?php else: ?>
+                                <?= $field->parse() ?>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                        <div class="form-group submit">
+                            <button type="submit" class="submit btn btn-primary"><?= $data['submit'] ?></button>
+                        </div>
+                    </div>
+                </form>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+    <!-- indexer::continue -->
+</div>
+
+<?php $this->endblock(); ?>

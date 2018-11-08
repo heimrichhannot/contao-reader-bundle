@@ -25,6 +25,7 @@ class ReaderConfigElement
     const TYPE_NAVIGATION = 'navigation';
     const TYPE_SYNDICATION = 'syndication';
     const TYPE_DELETE = 'delete';
+    const TYPE_COMMENT = 'comment';
 
     const TYPES = [
         self::TYPE_IMAGE,
@@ -33,6 +34,7 @@ class ReaderConfigElement
         self::TYPE_NAVIGATION,
         self::TYPE_SYNDICATION,
         self::TYPE_DELETE,
+        self::TYPE_COMMENT,
     ];
 
     const REDIRECTION_PARAM_TYPE_DEFAULT_VALUE = 'default_value';
@@ -62,7 +64,8 @@ class ReaderConfigElement
 
     public function listChildren($arrRow)
     {
-        return '<div class="tl_content_left">'.($arrRow['title'] ?: $arrRow['id']).' <span style="color:#b3b3b3; padding-left:3px">['.\Date::parse(\Contao\Config::get('datimFormat'), trim($arrRow['dateAdded'])).']</span></div>';
+        return '<div class="tl_content_left">'.($arrRow['title'] ?: $arrRow['id']).' <span style="color:#b3b3b3; padding-left:3px">['
+               .\Date::parse(\Contao\Config::get('datimFormat'), trim($arrRow['dateAdded'])).']</span></div>';
     }
 
     public function checkPermission()
@@ -91,14 +94,16 @@ class ReaderConfigElement
 
             case 'create':
                 if (!strlen(Input::get('pid')) || !in_array(Input::get('pid'), $root, true)) {
-                    throw new AccessDeniedException('Not enough permissions to create reader_config_element items in reader_config_element archive ID '.Input::get('pid').'.');
+                    throw new AccessDeniedException('Not enough permissions to create reader_config_element items in reader_config_element archive ID '
+                                                    .Input::get('pid').'.');
                 }
                 break;
 
             case 'cut':
             case 'copy':
                 if (!in_array(Input::get('pid'), $root, true)) {
-                    throw new AccessDeniedException('Not enough permissions to '.Input::get('act').' reader_config_element item ID '.$id.' to reader_config_element archive ID '.Input::get('pid').'.');
+                    throw new AccessDeniedException('Not enough permissions to '.Input::get('act').' reader_config_element item ID '.$id
+                                                    .' to reader_config_element archive ID '.Input::get('pid').'.');
                 }
             // no break STATEMENT HERE
 
@@ -114,7 +119,8 @@ class ReaderConfigElement
                 }
 
                 if (!in_array($objArchive->pid, $root, true)) {
-                    throw new AccessDeniedException('Not enough permissions to '.Input::get('act').' reader_config_element item ID '.$id.' of reader_config_element archive ID '.$objArchive->pid.'.');
+                    throw new AccessDeniedException('Not enough permissions to '.Input::get('act').' reader_config_element item ID '.$id
+                                                    .' of reader_config_element archive ID '.$objArchive->pid.'.');
                 }
                 break;
 
@@ -158,7 +164,9 @@ class ReaderConfigElement
             if (null !== ($readerConfig = System::getContainer()->get('huh.reader.reader-config-registry')->findByPk($readerConfigElement->pid))) {
                 $dca = &$GLOBALS['TL_DCA']['tl_reader_config_element'];
 
-                $readerConfig = System::getContainer()->get('huh.utils.model')->findRootParentRecursively('parentReaderConfig', 'tl_reader_config', $readerConfig);
+                $readerConfig = System::getContainer()
+                    ->get('huh.utils.model')
+                    ->findRootParentRecursively('parentReaderConfig', 'tl_reader_config', $readerConfig);
 
                 if ($readerConfig->dataContainer) {
                     foreach (['redirectConditions', 'redirectParams'] as $field) {
@@ -189,5 +197,10 @@ class ReaderConfigElement
             return array_keys($fields);
         }
         throw new \Exception("No 'table' set in $dc->table.$dc->field's eval array.");
+    }
+
+    public function getCustomCommentTemplate(DataContainer $dc)
+    {
+        return Controller::getTemplateGroup('mod_comments');
     }
 }
