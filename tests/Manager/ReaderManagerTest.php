@@ -93,7 +93,7 @@ class ReaderManagerTest extends TestCaseEnvironment
     {
         parent::setUp();
 
-        if (!defined('TL_ROOT')) {
+        if (!\defined('TL_ROOT')) {
             \define('TL_ROOT', $this->getFixturesDir());
         }
 
@@ -673,8 +673,8 @@ class ReaderManagerTest extends TestCaseEnvironment
 
     public function testGetItemTemplateByName()
     {
-        if (!defined('TL_MODE')) {
-            define('TL_MODE', 'FE');
+        if (!\defined('TL_MODE')) {
+            \define('TL_MODE', 'FE');
         }
 
         global $objPage;

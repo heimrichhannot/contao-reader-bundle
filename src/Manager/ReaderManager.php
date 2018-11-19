@@ -178,7 +178,7 @@ class ReaderManager implements ReaderManagerInterface
         $itemFields = array_keys($item);
 
         foreach (array_keys($GLOBALS['TL_DCA'][$readerConfig->dataContainer]['fields']) as $field) {
-            if (!in_array($field, $itemFields, true)) {
+            if (!\in_array($field, $itemFields, true)) {
                 $item[$field] = null;
             }
         }
@@ -270,7 +270,7 @@ class ReaderManager implements ReaderManagerInterface
                     "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND $readerConfig->dataContainer.id=?"
                 );
 
-                $result = call_user_func_array([$statement, 'execute'], array_merge($values, [$this->item->id]));
+                $result = \call_user_func_array([$statement, 'execute'], array_merge($values, [$this->item->id]));
 
                 if ($result->numRows < 1) {
                     $allowed = false;
@@ -305,7 +305,7 @@ class ReaderManager implements ReaderManagerInterface
                 "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND $readerConfig->dataContainer.id=?"
             );
 
-            $result = call_user_func_array([$statement, 'execute'], array_merge($values, [$this->item->id]));
+            $result = \call_user_func_array([$statement, 'execute'], array_merge($values, [$this->item->id]));
 
             $redirect = $result->numRows > 0;
         }

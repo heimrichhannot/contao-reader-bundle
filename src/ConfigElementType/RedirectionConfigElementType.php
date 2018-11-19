@@ -82,7 +82,7 @@ class RedirectionConfigElementType implements ConfigElementType
 
             $statement = $this->framework->createInstance(Database::class)->prepare("SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND $readerConfig->dataContainer.id=?");
 
-            $result = call_user_func_array([$statement, 'execute'], array_merge($values, [$item->id]));
+            $result = \call_user_func_array([$statement, 'execute'], array_merge($values, [$item->id]));
 
             if ($result->numRows < 1) {
                 $allowed = false;

@@ -22,7 +22,7 @@ class FilterChoice extends AbstractChoice
 
         $dataContainers = $this->getContext();
 
-        if (!is_array($dataContainers)) {
+        if (!\is_array($dataContainers)) {
             $dataContainers = [$dataContainers];
         }
 

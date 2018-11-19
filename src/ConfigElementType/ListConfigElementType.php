@@ -47,6 +47,6 @@ class ListConfigElementType implements ConfigElementType
 
         $lists = $item->getFormattedValue('list');
 
-        $item->setFormattedValue('list', array_merge(is_array($lists) ? $lists : [], [$readerConfigElement->listName => $listModule->generate()]));
+        $item->setFormattedValue('list', array_merge(\is_array($lists) ? $lists : [], [$readerConfigElement->listName => $listModule->generate()]));
     }
 }
