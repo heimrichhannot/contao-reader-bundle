@@ -105,7 +105,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         'syndicationPinterest'                                                                                            => 'imageSelectorField,imageField,imgSize',
         'syndicationPrint'                                                                                                => 'syndicationPrintTemplate',
         'syndicationPdf'                                                                                                  => 'syndicationPdfReader,syndicationPdfTemplate,syndicationPdfFontDirectories,syndicationPdfMasterTemplate,syndicationPdfPageMargin',
-        'syndicationIcs'                                                                                                  => 'syndicationIcsTitleField,syndicationIcsDescriptionField,syndicationIcsStartDateField,syndicationIcsEndDateField,syndicationIcsAddTime',
+        'syndicationIcs'                                                                                                  => 'syndicationIcsTitleField,syndicationIcsDescriptionField,syndicationIcsLocationField,syndicationIcsUrlField,syndicationIcsStartDateField,syndicationIcsEndDateField,syndicationIcsAddTime',
         'syndicationIcsAddTime'                                                                                           => 'syndicationIcsAddTimeField,syndicationIcsStartTimeField,syndicationIcsEndTimeField',
         'addMemberGroups'                                                                                                 => 'memberGroups',
         'commentOverridePalette'                                                                                          => 'commentPalette',
@@ -217,6 +217,18 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50'],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
+        'syndicationIcsLocationField'     => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationIcsLocationField'],
+            'inputType'        => 'select',
+            'options_callback' => function (DataContainer $dc) {
+                return $dc->activeRecord->pid > 0 ? System::getContainer()
+                    ->get('huh.reader.util.reader-config-util')
+                    ->getFields($dc->activeRecord->pid) : [];
+            },
+            'exclude'          => true,
+            'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
         'syndicationIcsStartDateField'   => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationIcsStartDateField'],
             'inputType'        => 'select',
@@ -274,6 +286,18 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         ],
         'syndicationIcsEndTimeField'     => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationIcsEndTimeField'],
+            'inputType'        => 'select',
+            'options_callback' => function (DataContainer $dc) {
+                return $dc->activeRecord->pid > 0 ? System::getContainer()
+                    ->get('huh.reader.util.reader-config-util')
+                    ->getFields($dc->activeRecord->pid) : [];
+            },
+            'exclude'          => true,
+            'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'syndicationIcsUrlField'     => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationIcsUrlField'],
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
                 return $dc->activeRecord->pid > 0 ? System::getContainer()

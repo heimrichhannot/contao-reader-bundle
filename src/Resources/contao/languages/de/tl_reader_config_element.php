@@ -168,6 +168,12 @@ $lang['syndicationIcsTitleField'][1] = 'Wählen Sie hier das Feld aus, das für 
 $lang['syndicationIcsDescriptionField'][0] = 'Beschreibungsfeld';
 $lang['syndicationIcsDescriptionField'][1] = 'Wählen Sie hier das Feld aus, das für die Beschreibung in der ICS-Datei genutzt werden soll.';
 
+$lang['syndicationIcsLocationField'][0] = 'Ortsfeld';
+$lang['syndicationIcsLocationField'][1] = 'Wählen Sie hier das Feld aus, das für den Ort in der ICS-Datei genutzt werden soll.';
+
+$lang['syndicationIcsUrlField'][0] = 'URL-Feld (Fallback: aktuelle URL)';
+$lang['syndicationIcsUrlField'][1] = 'Wählen Sie hier das Feld aus, das abweichend von der aktuellen URL in der ICS-Datei genutzt werden soll.';
+
 $lang['syndicationIcsStartDateField'][0] = 'Startdatumsfeld';
 $lang['syndicationIcsStartDateField'][1] = 'Wählen Sie hier das Feld aus, das als Startdatum in der ICS-Datei genutzt werden soll.';
 

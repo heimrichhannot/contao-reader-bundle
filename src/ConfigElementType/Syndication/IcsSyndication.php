@@ -18,6 +18,7 @@ use Jsvrcek\ICS\CalendarExport;
 use Jsvrcek\ICS\CalendarStream;
 use Jsvrcek\ICS\Model\Calendar;
 use Jsvrcek\ICS\Model\CalendarEvent;
+use Jsvrcek\ICS\Model\Description\Location;
 use Jsvrcek\ICS\Utility\Formatter;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -52,54 +53,74 @@ class IcsSyndication extends AbstractSyndication
 
     public function exportIcs(ItemInterface $item)
     {
-        $container = System::getContainer();
         $readerConfigElement = $this->readerConfigElement;
 
         // prepare data
-        $addTime = $readerConfigElement->syndicationIcsAddTime && $item->{$readerConfigElement->syndicationIcsAddTimeField};
+        $addTime = $readerConfigElement->syndicationIcsAddTime && $item->getRawValue($readerConfigElement->syndicationIcsAddTimeField);
         $end = null;
 
-        if ($addTime && $item->{$readerConfigElement->syndicationIcsStartTimeField}) {
-            $start = new \DateTime($item->{$readerConfigElement->syndicationIcsStartTimeField});
+        if ($addTime && $item->getRawValue($readerConfigElement->syndicationIcsStartTimeField)) {
+            $start = (new \DateTime())->setTimestamp($item->getRawValue($readerConfigElement->syndicationIcsStartTimeField));
         } else {
-            $start = new \DateTime($item->{$readerConfigElement->syndicationIcsStartDateField});
+            $start = (new \DateTime())->setTimestamp($item->getRawValue($readerConfigElement->syndicationIcsStartDateField));
             $start->setTime(0, 0, 0);
         }
 
-        if ($readerConfigElement->syndicationIcsEndDateField && $item->{$readerConfigElement->syndicationIcsEndDateField}) {
-            if ($addTime && $item->{$readerConfigElement->syndicationIcsEndTimeField}) {
-                $end = new \DateTime($item->{$readerConfigElement->syndicationIcsEndTimeField});
-            } else {
-                $end = new \DateTime($item->{$readerConfigElement->syndicationIcsEndDateField});
-                $end->setTime(0, 0, 0);
-            }
+        if ($readerConfigElement->syndicationIcsEndDateField && $item->getRawValue($readerConfigElement->syndicationIcsEndDateField)) {
+            // workaround for allday events
+            $end = (new \DateTime())->setTimestamp($item->getRawValue($readerConfigElement->syndicationIcsEndDateField) + ($addTime ? 0 : 86400));
+            $end->setTime(0, 0, 0);
+        }
+
+        if ($addTime && $readerConfigElement->syndicationIcsEndTimeField && $item->getRawValue($readerConfigElement->syndicationIcsEndTimeField)) {
+            $end = (new \DateTime())->setTimestamp($item->getRawValue($readerConfigElement->syndicationIcsEndTimeField));
         }
 
         // create an event
         $event = new CalendarEvent();
 
+        $event->setAllDay(!$addTime);
         $event->setStart($start);
 
         if (null !== $end) {
             $event->setEnd($end);
         }
 
-        if ($readerConfigElement->syndicationIcsTitleField && $item->{$readerConfigElement->syndicationIcsTitleField}) {
-            $event->setSummary(strip_tags($item->{$readerConfigElement->syndicationIcsTitleField}));
+        if ($readerConfigElement->syndicationIcsTitleField && $item->getFormattedValue($readerConfigElement->syndicationIcsTitleField)) {
+            $event->setSummary(strip_tags($item->getFormattedValue($readerConfigElement->syndicationIcsTitleField)));
         }
 
-        if ($readerConfigElement->syndicationIcsDescriptionField && $item->{$readerConfigElement->syndicationIcsDescriptionField}) {
+        if ($readerConfigElement->syndicationIcsDescriptionField && $item->getFormattedValue($readerConfigElement->syndicationIcsDescriptionField)) {
             // preserve linebreaks
-            $description = preg_replace('@<br\s*/?>@i', "\n", $item->{$readerConfigElement->syndicationIcsDescriptionField});
+            $description = preg_replace('@<br\s*/?>@i', "\n", $item->getFormattedValue($readerConfigElement->syndicationIcsDescriptionField));
+            $description = preg_replace('@</p>\s*<p>@i', "\n\n", $description);
 
             $event->setDescription(strip_tags($description));
         }
 
-//        $event->setUrl()
+        if ($readerConfigElement->syndicationIcsLocationField && $item->getFormattedValue($readerConfigElement->syndicationIcsLocationField)) {
+            $location = new Location();
+
+            $location->setName($item->getFormattedValue($readerConfigElement->syndicationIcsLocationField));
+            $location->setLanguage($GLOBALS['TL_LANGUAGE']);
+
+            $event->addLocation($location);
+        }
+
+        if ($readerConfigElement->syndicationIcsUrlField && $item->getFormattedValue($readerConfigElement->syndicationIcsUrlField)) {
+            $url = $item->getFormattedValue($readerConfigElement->syndicationIcsUrlField);
+        } else {
+            $url = $this->getUrl();
+        }
+
+        $event->setUrl(System::getContainer()->get('huh.utils.url')->removeQueryString([$readerConfigElement->name], $url));
 
         // create a calendar
         $calendar = new Calendar();
+
+        $calendar->setTimezone(new \DateTimeZone(\Config::get('timeZone')));
         $calendar->addEvent($event);
+
         $calendarExport = new CalendarExport(new CalendarStream(), new Formatter());
 
         // store to ics
