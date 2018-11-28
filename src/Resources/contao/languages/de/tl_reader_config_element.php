@@ -159,6 +159,33 @@ $lang['syndicationReddit'][1] = 'Aktivieren Sie die Syndikation zur Verbreitung 
 $lang['syndicationWhatsApp'][0] = 'WhatsApp-Syndikation aktivieren';
 $lang['syndicationWhatsApp'][1] = 'Aktivieren Sie die Syndikation zur Verbreitung des Beitrags auf WhatsApp.';
 
+$lang['syndicationIcs'][0] = 'ICS-Syndikation aktivieren';
+$lang['syndicationIcs'][1] = 'Aktivieren Sie die Syndikation für das Hinzufügen eines Links zur Erzeugung von ICS-Termindateien.';
+
+$lang['syndicationIcsTitleField'][0] = 'Titelfeld';
+$lang['syndicationIcsTitleField'][1] = 'Wählen Sie hier das Feld aus, das für den Titel in der ICS-Datei genutzt werden soll.';
+
+$lang['syndicationIcsDescriptionField'][0] = 'Beschreibungsfeld';
+$lang['syndicationIcsDescriptionField'][1] = 'Wählen Sie hier das Feld aus, das für die Beschreibung in der ICS-Datei genutzt werden soll.';
+
+$lang['syndicationIcsStartDateField'][0] = 'Startdatumsfeld';
+$lang['syndicationIcsStartDateField'][1] = 'Wählen Sie hier das Feld aus, das als Startdatum in der ICS-Datei genutzt werden soll.';
+
+$lang['syndicationIcsEndDateField'][0] = 'Enddatumsfeld';
+$lang['syndicationIcsEndDateField'][1] = 'Wählen Sie hier das Feld aus, das als Enddatum in der ICS-Datei genutzt werden soll.';
+
+$lang['syndicationIcsAddTime'][0] = 'Unterstützung für Zeit hinzufügen';
+$lang['syndicationIcsAddTime'][1] = 'Wählen Sie diese Option, wenn auch eine Zeit in der exportierten ICS-Datei enthalten sein soll.';
+
+$lang['syndicationIcsAddTimeField'][0] = '"Zeit hinzufügen"-Selektorfeld';
+$lang['syndicationIcsAddTimeField'][1] = 'Wählen Sie hier das Feld aus, das in der verknüpften Entität darüber entscheidet, ob eine Zeit hinzugefügt werden soll.';
+
+$lang['syndicationIcsStartTimeField'][0] = 'Startzeitfeld';
+$lang['syndicationIcsStartTimeField'][1] = 'Wählen Sie hier das Feld aus, das als Startzeit in der ICS-Datei genutzt werden soll.';
+
+$lang['syndicationIcsEndTimeField'][0] = 'Endzeitfeld';
+$lang['syndicationIcsEndTimeField'][1] = 'Wählen Sie hier das Feld aus, das als Endzeit in der ICS-Datei genutzt werden soll.';
+
 $lang['commentTemplate'][0] = 'Kommentar-Template';
 $lang['commentTemplate'][1] = 'Hier können Sie das Kommentartemplate auswählen.';
 

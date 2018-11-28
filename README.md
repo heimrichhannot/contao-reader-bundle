@@ -105,7 +105,7 @@ huh:
 
 ### Syndications
 
-Syndications as links that share the artile with other social networks or provide print or pdf export.
+Syndications as links that share the article with other social networks or provide print or pdf export.
 
 #### PDF-Syndication
 

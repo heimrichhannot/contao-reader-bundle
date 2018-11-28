@@ -61,6 +61,7 @@ namespace HeimrichHannot\ReaderBundle\Model;
  * @property bool   $syndicationPinterest
  * @property bool   $syndicationReddit
  * @property bool   $syndicationWhatsApp
+ * @property bool   $syndicationIcs
  */
 class ReaderConfigElementModel extends \Model
 {

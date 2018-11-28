@@ -29,6 +29,7 @@ huh:
             - { name: pdf, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\PdfSyndication, sort: 3 }
             - { name: mail, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\MailSyndication, sort: 2 }
             - { name: print, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\PrintSyndication, sort: 4 }
+            - { name: ics, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\IcsSyndication, sort: 12 }
             - { name: tumblr, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\TumblrSyndication, sort: 7}
             - { name: pinterest, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\PinterestSyndication, sort: 8 }
             - { name: reddit, class: HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\RedditSyndication, sort: 10 }
