@@ -159,15 +159,14 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'sql'              => "varchar(128) NOT NULL default ''",
         ],
         // filter
-        'filter'                     => [
-            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config']['filter'],
-            'exclude'          => true,
-            'inputType'        => 'select',
-            'options_callback' => function (\Contao\DataContainer $dc) {
-                return \Contao\System::getContainer()->get('huh.reader.choice.filter')->setContext($dc->activeRecord->dataContainer)->getChoices();
-            },
-            'eval'             => ['tl_class' => 'w50', 'includeBlankOption' => true, 'chosen' => true, 'notOverridable' => true],
-            'sql'              => "int(10) NOT NULL default '0'",
+        'filter'                      => [
+            'label'      => &$GLOBALS['TL_LANG']['tl_reader_config']['filter'],
+            'exclude'    => true,
+            'inputType'  => 'select',
+            'foreignKey' => 'tl_reader_config.title',
+            'relation'   => ['type' => 'belongsTo', 'load' => 'eager'],
+            'eval'       => ['tl_class' => 'w50 clr', 'includeBlankOption' => true, 'chosen' => true, 'mandatory' => true],
+            'sql'        => "int(10) NOT NULL default '0'",
         ],
         'manager'                    => [
             'inputType'        => 'select',
@@ -177,8 +176,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
                 'chosen'             => true,
                 'includeBlankOption' => true,
                 'tl_class'           => 'clr w50',
-                'mandatory'          => true,
-                'notOverridable'     => true
+                'mandatory'          => true
             ],
             'exclude'          => true,
             'sql'              => "varchar(128) NOT NULL default 'default'",
@@ -191,8 +189,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
                 'chosen'             => true,
                 'includeBlankOption' => true,
                 'mandatory'          => true,
-                'tl_class'           => 'w50',
-                'notOverridable'     => true
+                'tl_class'           => 'w50'
             ],
             'exclude'          => true,
             'sql'              => "varchar(128) NOT NULL default 'default'",
