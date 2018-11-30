@@ -76,7 +76,10 @@ class ReaderConfig
         $overridableFields = [];
 
         foreach ($dca['fields'] as $field => $data) {
-            if (isset($data['eval']['notOverridable'])) {
+            $overrideFieldname = 'override'.ucfirst($field);
+
+            if (isset($data['eval']['notOverridable']) || isset($dca['fields'][$overrideFieldname]) ||
+                isset($data['eval']['isOverrideSelector'])) {
                 continue;
             }
 
