@@ -260,12 +260,17 @@ class ReaderManagerTest extends TestCaseEnvironment
                 switch ($field) {
                     case 'firstname':
                         return $value;
+
                         break;
+
                     case 'lastname':
                         return $value;
+
                         break;
+
                     case 'someDate':
                         return '02.03.2018';
+
                         break;
                 }
             }
@@ -276,12 +281,17 @@ class ReaderManagerTest extends TestCaseEnvironment
                 switch ($field) {
                     case 'firstname':
                         return $value;
+
                         break;
+
                     case 'lastname':
                         return $value;
+
                         break;
+
                     case 'someDate':
                         return '02.03.2018';
+
                         break;
                 }
             }
@@ -377,7 +387,9 @@ class ReaderManagerTest extends TestCaseEnvironment
                                 'path' => 'data/image.png',
                             ]
                         );
+
                         break;
+
                     case 'female':
                         return $this->mockClassWithProperties(
                             FilesModel::class,
@@ -385,7 +397,9 @@ class ReaderManagerTest extends TestCaseEnvironment
                                 'path' => 'data/female.png',
                             ]
                         );
+
                         break;
+
                     case 'male':
                         return $this->mockClassWithProperties(
                             FilesModel::class,
@@ -393,6 +407,7 @@ class ReaderManagerTest extends TestCaseEnvironment
                                 'path' => 'data/male.png',
                             ]
                         );
+
                         break;
                 }
             }
@@ -409,10 +424,14 @@ class ReaderManagerTest extends TestCaseEnvironment
                 switch ($class) {
                     case Database::class:
                         return $databaseAdapter;
+
                         break;
+
                     case ImageConfigElementType::class:
                         return new ImageConfigElementType($this->framework);
+
                         break;
+
                     default:
                         return null;
                 }
@@ -653,7 +672,9 @@ class ReaderManagerTest extends TestCaseEnvironment
                 switch ($id) {
                     case 1:
                         return $readerConfigMock;
+
                         break;
+
                     default:
                         return null;
                 }

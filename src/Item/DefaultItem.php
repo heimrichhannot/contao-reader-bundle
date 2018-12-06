@@ -166,7 +166,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
             true
         ) : (isset($dca['fields']) && \is_array($dca['fields']) ? array_keys($dca['fields']) : []);
 
-        if (\in_array($name, $fields, true)) {
+        if (\in_array($name, $fields)) {
             $this->dc->field = $name;
 
             $value = $this->_manager->getFormUtil()->prepareSpecialValueForOutput(

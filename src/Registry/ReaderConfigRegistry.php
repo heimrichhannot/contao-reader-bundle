@@ -206,7 +206,7 @@ class ReaderConfigRegistry
                 $manager = System::getContainer()->get($manager['id']);
                 $interfaces = class_implements($manager);
 
-                if (!\is_array($interfaces) || !\in_array(ReaderManagerInterface::class, $interfaces, true)) {
+                if (!\is_array($interfaces) || !\in_array(ReaderManagerInterface::class, $interfaces)) {
                     throw new \Exception(sprintf('Reader manager service %s must implement %s', $manager['id'], ReaderManagerInterface::class));
                 }
 

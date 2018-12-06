@@ -40,15 +40,18 @@ class DeleteConfigElementType extends RedirectionConfigElementType
         $redirectParams = StringUtil::deserialize($readerConfigElement->redirectParams, true);
         $deleteConditions = false;
         $request = System::getContainer()->get('huh.request');
+
         foreach ($redirectParams as $redirectParam) {
             if (ReaderConfigElement::REDIRECTION_PARAM_TYPE_DEFAULT_VALUE === $redirectParam['parameterType'] && (!$request->hasGet($redirectParam['name']) || $redirectParam['defaultValue'] !== $request->getGet($redirectParam['name']))) {
                 $deleteConditions = false;
+
                 break;
             }
             $deleteConditions = true;
 
             if (ReaderConfigElement::REDIRECTION_PARAM_TYPE_FIELD_VALUE === $redirectParam['parameterType'] && !$request->hasGet($redirectParam['name'])) {
                 $deleteConditions = false;
+
                 break;
             }
             $deleteConditions = true;
@@ -56,6 +59,7 @@ class DeleteConfigElementType extends RedirectionConfigElementType
 
         if ($deleteConditions) {
             $class = $this->getDeleteClassByName($readerConfigElement->deleteClass);
+
             if (null === $class) {
                 return;
             }

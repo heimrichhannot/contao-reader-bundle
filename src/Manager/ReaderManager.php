@@ -163,9 +163,12 @@ class ReaderManager implements ReaderManagerInterface
         switch ($readerConfig->itemRetrievalMode) {
             case ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM:
                 $item = $this->retrieveItemByAutoItem();
+
                 break;
+
             case ReaderConfig::ITEM_RETRIEVAL_MODE_FIELD_CONDITIONS:
                 $item = $this->retrieveItemByFieldConditions();
+
                 break;
         }
 
@@ -178,7 +181,7 @@ class ReaderManager implements ReaderManagerInterface
         $itemFields = array_keys($item);
 
         foreach (array_keys($GLOBALS['TL_DCA'][$readerConfig->dataContainer]['fields']) as $field) {
-            if (!\in_array($field, $itemFields, true)) {
+            if (!\in_array($field, $itemFields)) {
                 $item[$field] = null;
             }
         }
@@ -398,7 +401,9 @@ class ReaderManager implements ReaderManagerInterface
                 case 'huh.head.tag.title':
                     global $objPage;
                     $objPage->pageTitle = $value;
+
                     break;
+
                 default:
                     System::getContainer()->get($service)->setContent($value);
             }
@@ -602,6 +607,7 @@ class ReaderManager implements ReaderManagerInterface
 
             /* @var Model $adapter */
             $adapter = $this->framework->getAdapter(Model::class);
+
             if (!($modelClass = $adapter->getClassFromTable($readerConfig->dataContainer))) {
                 return $item;
             }

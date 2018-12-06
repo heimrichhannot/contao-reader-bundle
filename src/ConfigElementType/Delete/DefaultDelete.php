@@ -77,6 +77,7 @@ class DefaultDelete implements DeleteInterface
     {
         /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class)->findPublishedById($jumpTo);
+
         if (null === $pageModel) {
             throw new PageNotFoundException('The redirect page with the id:'.$jumpTo.'does not exist.');
         }

@@ -50,20 +50,24 @@ class ReaderConfigCallbackListener
     {
         /** @var Input $input */
         $input = $this->framework->getAdapter(Input::class);
+
         if (!$input->get('act') || 'edit' !== $input->get('act')) {
             return;
         }
+
         if (!$this->translator instanceof TranslatorBagInterface) {
             return;
         }
         $table = $dc->table;
         $configModel = $this->modelUtil->findModelInstanceByIdOrAlias($table, $dc->id);
+
         if (!$configModel) {
             return;
         }
         $type = $configModel->type;
         Controller::loadDataContainer($table);
         $dca = &$GLOBALS['TL_DCA'][$table];
+
         if (!strpos($dca['palettes'][$type], static::SELECTOR_FIELD)) {
             return;
         }
@@ -75,9 +79,11 @@ class ReaderConfigCallbackListener
                 $this->translator->trans('huh.reader.tl_reader_config_element.field.typeSelectorField.'.$type.'.desc'),
             ];
         }
+
         if (!strpos($dca['palettes'][$type], static::TYPE_FIELD)) {
             return;
         }
+
         if ($this->translator->getCatalogue()->has("huh.reader.tl_reader_config_element.field.typeField.$type.name") &&
             $this->translator->getCatalogue()->has("huh.reader.tl_reader_config_element.field.typeField.$type.desc")) {
             $dca['fields'][static::TYPE_FIELD]['label'] = [

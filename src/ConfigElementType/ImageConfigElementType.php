@@ -52,9 +52,12 @@ class ImageConfigElementType implements ConfigElementType
                     } else {
                         $image = $readerConfigElement->placeholderImage;
                     }
+
                     break;
+
                 case ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE:
                     $image = $readerConfigElement->placeholderImage;
+
                     break;
             }
         } else {

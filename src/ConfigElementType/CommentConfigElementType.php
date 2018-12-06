@@ -120,6 +120,7 @@ class CommentConfigElementType implements ConfigElementType
         }
 
         $fields = [];
+
         foreach ($standardFields as $key => $field) {
             if (!\in_array($key, $overridePalette)) {
                 continue;

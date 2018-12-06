@@ -128,6 +128,7 @@ class IcsSyndication extends AbstractSyndication
 
         $response = new Response($calendarExport->getStream());
         $response->headers->set('Content-Type', 'text/calendar');
+
         throw new ResponseException($response);
     }
 

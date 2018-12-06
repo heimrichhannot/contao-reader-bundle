@@ -38,6 +38,7 @@ class RedirectionConfigElementType implements ConfigElementType
         }
         /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class)->findPublishedById($readerConfigElement->jumpTo);
+
         if (null === $pageModel) {
             return;
         }
@@ -50,6 +51,7 @@ class RedirectionConfigElementType implements ConfigElementType
 
         if ($readerConfigElement->addRedirectParam) {
             $redirectParams = StringUtil::deserialize($readerConfigElement->redirectParams, true);
+
             foreach ($redirectParams as $redirectParam) {
                 if (ReaderConfigElement::REDIRECTION_PARAM_TYPE_FIELD_VALUE === $redirectParam['parameterType']) {
                     $param = $redirectParam['field'];
