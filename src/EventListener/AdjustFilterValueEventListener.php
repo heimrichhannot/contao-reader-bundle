@@ -26,6 +26,10 @@ class AdjustFilterValueEventListener
             return;
         }
 
+        if (System::getContainer()->get('huh.utils.container')->isBackend()) {
+            return;
+        }
+
         $instance = System::getContainer()->get('huh.reader.manager.reader')->retrieveItem();
 
         $value = $instance->{$element->readerField};
