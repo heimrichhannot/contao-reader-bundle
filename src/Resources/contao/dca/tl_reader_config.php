@@ -163,7 +163,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'label'      => &$GLOBALS['TL_LANG']['tl_reader_config']['filter'],
             'exclude'    => true,
             'inputType'  => 'select',
-            'foreignKey' => 'tl_reader_config.title',
+            'foreignKey' => 'tl_filter_config.title',
             'relation'   => ['type' => 'belongsTo', 'load' => 'eager'],
             'eval'       => ['tl_class' => 'w50 clr', 'includeBlankOption' => true, 'chosen' => true, 'mandatory' => true],
             'sql'        => "int(10) NOT NULL default '0'",
