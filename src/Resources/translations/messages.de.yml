@@ -20,7 +20,7 @@ huh.reader.element.title.whatsapp: Über WhatsApp teilen
 huh.reader.element.title.mail: Per E-Mail teilen
 huh.reader.element.title.pdf: Als PDF-herunterladen
 huh.reader.element.title.print: Diese Seite drucken
-huh.reader.element.title.ics: ICS-Termindatei herunterladen
+huh.reader.element.title.ics: Kalendereintrag aus ICS-Datei erstellen
 
 
 # Config element mail subject labels

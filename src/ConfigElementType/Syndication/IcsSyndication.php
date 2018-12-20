@@ -46,6 +46,7 @@ class IcsSyndication extends AbstractSyndication
         $link->setCssClass('ics');
         $link->setRel('nofollow');
         $link->setTitle('huh.reader.element.title.ics');
+        $link->setContent('huh.reader.element.title.ics');
         $link->setHref(System::getContainer()->get('huh.utils.url')->addQueryString($this->readerConfigElement->name.'=1', $this->getUrl()));
 
         return $link;
