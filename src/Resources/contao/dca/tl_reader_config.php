@@ -87,7 +87,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
         'default'      => '{general_legend},title,parentReaderConfig;'
             . '{config_legend},dataContainer,filter,manager,item,limitFormattedFields,itemRetrievalMode,hideUnpublishedItems;'
             . '{security_legend},addShowConditions;' . '{jumpto_legend},addFieldDependentRedirect;'
-            . '{misc_legend},headTags;' . '{template_legend},itemTemplate;'
+            . '{misc_legend},headTags,addDcMultilingualSupport;' . '{template_legend},itemTemplate;'
     ],
     'subpalettes' => [
         'limitFormattedFields'                                                                    => 'formattedFields',
@@ -321,6 +321,8 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
     ]
 ];
 
+$dca = &$GLOBALS['TL_DCA']['tl_reader_config'];
+
 \Contao\System::getContainer()->get('huh.entity_filter.manager')->addFilterToDca(
     'itemRetrievalFieldConditions',
     'tl_reader_config',
@@ -338,5 +340,18 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
     'tl_reader_config',
     '' // set in modifyPalette
 );
+
+if (System::getContainer()->get('huh.utils.container')->isBundleActive('Terminal42\DcMultilingualBundle\Terminal42DcMultilingualBundle'))
+{
+    $dca['fields'] += [
+        'addDcMultilingualSupport' => [
+            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config']['addDcMultilingualSupport'],
+            'exclude'                 => true,
+            'inputType'               => 'checkbox',
+            'eval'                    => ['tl_class' => 'w50'],
+            'sql'                     => "char(1) NOT NULL default ''"
+        ]
+    ];
+}
 
 \HeimrichHannot\ReaderBundle\Backend\ReaderConfig::addOverridableFields();
