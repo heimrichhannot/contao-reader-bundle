@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2019 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -157,6 +157,10 @@ class ReaderManager implements ReaderManagerInterface
     public function retrieveItem(): ?ItemInterface
     {
         $readerConfig = $this->getReaderConfig();
+        Controller::loadDataContainer($readerConfig->dataContainer);
+
+        // reset since this method might be run more than once
+        $this->getQueryBuilder()->resetQueryParts(['where', 'join', 'from']);
 
         $item = null;
 
@@ -177,7 +181,6 @@ class ReaderManager implements ReaderManagerInterface
         }
 
         // add fields without sql key in DCA (could have a value by load_callback)
-        Controller::loadDataContainer($readerConfig->dataContainer);
         $itemFields = array_keys($item);
 
         foreach (array_keys($GLOBALS['TL_DCA'][$readerConfig->dataContainer]['fields']) as $field) {
@@ -599,7 +602,7 @@ class ReaderManager implements ReaderManagerInterface
     protected function retrieveItemByAutoItem()
     {
         $readerConfig = $this->readerConfig;
-        $queryBuilder = $this->getQueryBuilder()->select('*')->from($readerConfig->dataContainer)->setMaxResults(1);
+        $queryBuilder = $this->getQueryBuilder()->from($readerConfig->dataContainer)->setMaxResults(1);
         $item = null;
 
         if (Config::get('useAutoItem') && ($autoItem = Request::getGet('auto_item'))) {
@@ -624,7 +627,39 @@ class ReaderManager implements ReaderManagerInterface
                 $queryBuilder->where($queryBuilder->expr()->eq($readerConfig->dataContainer.'.'.$field, ':autoItem'));
             }
 
+            $readerConfig->addDcMultilingualSupport = true;
+
+            // get the parent record for dc_multilingual-based entities
+            if ($readerConfig->addDcMultilingualSupport && System::getContainer()->get('huh.utils.container')->isBundleActive(
+                    'Terminal42\DcMultilingualBundle\Terminal42DcMultilingualBundle'
+                )) {
+                $instance = $this->database->prepare(
+                    'SELECT * FROM '.$readerConfig->dataContainer.' WHERE '.$readerConfig->dataContainer.'.'.$field.'=?')
+                    ->limit(1)->execute($autoItem);
+
+                if ($instance->numRows > 0) {
+                    $dca = &$GLOBALS['TL_DCA'][$readerConfig->dataContainer];
+
+                    $langPidField = $dca['config']['langPid'];
+
+                    if ($instance->{$langPidField}) {
+                        $instance = $this->database->prepare(
+                            'SELECT * FROM '.$readerConfig->dataContainer.' WHERE '.$readerConfig->dataContainer.'.'.$model->getPk().'=?')
+                            ->limit(1)->execute($instance->{$langPidField});
+
+                        if ($instance->numRows > 0) {
+                            $autoItem = $instance->{$field};
+                        }
+                    }
+                }
+            }
+
+            $fields = $this->addDcMultilingualSupport($readerConfig, $queryBuilder);
+
             $queryBuilder->setParameter(':autoItem', $autoItem);
+
+            $queryBuilder->select($fields);
+
             $item = $queryBuilder->execute()->fetch() ?: null;
         }
 
@@ -639,7 +674,7 @@ class ReaderManager implements ReaderManagerInterface
     protected function retrieveItemByFieldConditions()
     {
         $readerConfig = $this->readerConfig;
-        $queryBuilder = $this->getQueryBuilder()->select('*')->from($readerConfig->dataContainer)->setMaxResults(1);
+        $queryBuilder = $this->getQueryBuilder()->from($readerConfig->dataContainer)->setMaxResults(1);
         $item = null;
 
         $itemConditions = StringUtil::deserialize($readerConfig->itemRetrievalFieldConditions, true);
@@ -651,9 +686,49 @@ class ReaderManager implements ReaderManagerInterface
                 $readerConfig->dataContainer
             );
 
+            $fields = $this->addDcMultilingualSupport($readerConfig, $queryBuilder);
+            $queryBuilder->select($fields);
+
             $item = $queryBuilder->execute()->fetch() ?: null;
         }
 
         return $item;
+    }
+
+    protected function addDcMultilingualSupport(ReaderConfigModel $readerConfig, QueryBuilder $queryBuilder)
+    {
+        $dca = &$GLOBALS['TL_DCA'][$readerConfig->dataContainer];
+        $dbFields = $this->database->getFieldNames($readerConfig->dataContainer);
+
+        if ($readerConfig->addDcMultilingualSupport && System::getContainer()->get('huh.utils.container')->isBundleActive(
+                'Terminal42\DcMultilingualBundle\Terminal42DcMultilingualBundle')) {
+            $suffixedTable = $readerConfig->dataContainer.ReaderManagerInterface::DC_MULTILINGUAL_SUFFIX;
+
+            $queryBuilder->innerJoin(
+                $readerConfig->dataContainer,
+                $readerConfig->dataContainer,
+                $suffixedTable,
+                $readerConfig->dataContainer.'.id = '.$suffixedTable.'.'.$dca['config']['langPid'].' AND '.$suffixedTable.'.language = "'.$GLOBALS['TL_LANGUAGE'].'"'
+            );
+
+            // compute fields
+            $fieldNames = [];
+
+            foreach ($dca['fields'] as $field => $data) {
+                if ('*' === $data['eval']['translatableFor'] || $data['eval']['translatableFor'] === $GLOBALS['TL_LANGUAGE']) {
+                    $fieldNames[] = $suffixedTable.'.'.$field;
+                } else {
+                    $fieldNames[] = $readerConfig->dataContainer.'.'.$field;
+                }
+            }
+
+            $fields = implode(', ', $fieldNames);
+        } else {
+            $fields = implode(', ', array_map(function ($field) use ($readerConfig) {
+                return $readerConfig->dataContainer.'.'.$field;
+            }, $dbFields));
+        }
+
+        return $fields;
     }
 }

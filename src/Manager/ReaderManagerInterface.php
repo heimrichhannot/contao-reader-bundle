@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2019 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -19,6 +19,8 @@ use HeimrichHannot\UtilsBundle\Form\FormUtil;
 
 interface ReaderManagerInterface
 {
+    const DC_MULTILINGUAL_SUFFIX = '_dcm';
+
     /**
      * Set the current module data.
      *
