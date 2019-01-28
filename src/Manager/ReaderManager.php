@@ -717,6 +717,10 @@ class ReaderManager implements ReaderManagerInterface
             $fieldNames = [];
 
             foreach ($dca['fields'] as $field => $data) {
+                if (!isset($data['sql'])) {
+                    continue;
+                }
+
                 if ('*' === $data['eval']['translatableFor'] || $data['eval']['translatableFor'] === $GLOBALS['TL_LANGUAGE']) {
                     $fieldNames[] = $suffixedTable.'.'.$field;
                 } else {
