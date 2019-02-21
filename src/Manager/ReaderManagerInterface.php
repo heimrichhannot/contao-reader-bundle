@@ -102,7 +102,7 @@ interface ReaderManagerInterface
     /**
      * Get the current data container.
      *
-     * @return null|DataContainer
+     * @return DataContainer|null
      */
     public function getDataContainer(): ?DataContainer;
 

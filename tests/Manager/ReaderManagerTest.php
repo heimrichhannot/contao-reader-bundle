@@ -462,7 +462,7 @@ class ReaderManagerTest extends TestCaseEnvironment
 
         $this->manager->setModuleData(['id' => 1, 'readerConfig' => 1]);
 
-        if (!\interface_exists('listable')) {
+        if (!interface_exists('listable')) {
             include_once __DIR__.'/../../vendor/contao/core-bundle/src/Resources/contao/helper/interface.php';
         }
 

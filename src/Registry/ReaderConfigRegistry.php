@@ -184,7 +184,7 @@ class ReaderConfigRegistry
      *
      * @throws \Exception
      *
-     * @return null|ReaderManagerInterface
+     * @return ReaderManagerInterface|null
      */
     public function getReaderManagerByName(string $name): ?ReaderManagerInterface
     {
