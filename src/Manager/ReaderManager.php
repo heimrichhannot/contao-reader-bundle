@@ -193,8 +193,7 @@ class ReaderManager implements ReaderManagerInterface
         // hide unpublished items?
         if (null !== $item && $readerConfig->hideUnpublishedItems) {
             if (!$readerConfig->invertPublishedField && !$item[$readerConfig->publishedField]
-                || $readerConfig->invertPublishedField && $item[$readerConfig->publishedField]
-            ) {
+                || $readerConfig->invertPublishedField && $item[$readerConfig->publishedField]) {
                 return null;
             }
         }
@@ -268,14 +267,9 @@ class ReaderManager implements ReaderManagerInterface
             $itemConditions = StringUtil::deserialize($readerConfig->showFieldConditions, true);
 
             if (!empty($itemConditions)) {
-                list($whereCondition, $values) = $this->entityFilter->computeSqlCondition(
-                    $itemConditions,
-                    $readerConfig->dataContainer
-                );
+                list($whereCondition, $values) = $this->entityFilter->computeSqlCondition($itemConditions, $readerConfig->dataContainer);
 
-                $statement = $this->database->prepare(
-                    "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND $readerConfig->dataContainer.id=?"
-                );
+                $statement = $this->database->prepare("SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND $readerConfig->dataContainer.id=?");
 
                 $result = \call_user_func_array([$statement, 'execute'], array_merge($values, [$this->item->id]));
 
@@ -303,14 +297,9 @@ class ReaderManager implements ReaderManagerInterface
         $itemConditions = StringUtil::deserialize($readerConfig->redirectFieldConditions, true);
 
         if (!empty($itemConditions)) {
-            list($whereCondition, $values) = $this->entityFilter->computeSqlCondition(
-                $itemConditions,
-                $readerConfig->dataContainer
-            );
+            list($whereCondition, $values) = $this->entityFilter->computeSqlCondition($itemConditions, $readerConfig->dataContainer);
 
-            $statement = $this->database->prepare(
-                "SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND $readerConfig->dataContainer.id=?"
-            );
+            $statement = $this->database->prepare("SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND $readerConfig->dataContainer.id=?");
 
             $result = \call_user_func_array([$statement, 'execute'], array_merge($values, [$this->item->id]));
 
@@ -335,13 +324,9 @@ class ReaderManager implements ReaderManagerInterface
         $item = $this->item;
 
         if ($readerConfig->setPageTitleByField && $readerConfig->pageTitleFieldPattern) {
-            $pageTitle = preg_replace_callback(
-                '@%([^%]+)%@i',
-                function (array $matches) use ($item) {
-                    return $item->{$matches[1]};
-                },
-                $readerConfig->pageTitleFieldPattern
-            );
+            $pageTitle = preg_replace_callback('@%([^%]+)%@i', function (array $matches) use ($item) {
+                return $item->{$matches[1]};
+            }, $readerConfig->pageTitleFieldPattern);
 
             $this->modifyPageTitle($pageTitle);
         }
@@ -356,13 +341,9 @@ class ReaderManager implements ReaderManagerInterface
         $item = $this->item;
 
         if ($readerConfig->setMetaDescriptionByField && $readerConfig->metaDescriptionFieldPattern) {
-            $description = preg_replace_callback(
-                '@%([^%]+)%@i',
-                function (array $matches) use ($item) {
-                    return $item->{$matches[1]};
-                },
-                $readerConfig->metaDescriptionFieldPattern
-            );
+            $description = preg_replace_callback('@%([^%]+)%@i', function (array $matches) use ($item) {
+                return $item->{$matches[1]};
+            }, $readerConfig->metaDescriptionFieldPattern);
 
             $description = Controller::replaceInsertTags($description, false);
             $description = strip_tags($description);
@@ -393,13 +374,9 @@ class ReaderManager implements ReaderManagerInterface
                 continue;
             }
 
-            $value = preg_replace_callback(
-                '@%([^%]+)%@i',
-                function (array $matches) use ($item) {
-                    return System::getContainer()->get('huh.utils.form')->prepareSpecialValueForOutput($matches[1], $item->{$matches[1]}, $this->getDataContainer());
-                },
-                $pattern
-            );
+            $value = preg_replace_callback('@%([^%]+)%@i', function (array $matches) use ($item) {
+                return System::getContainer()->get('huh.utils.form')->prepareSpecialValueForOutput($matches[1], $item->{$matches[1]}, $this->getDataContainer());
+            }, $pattern);
 
             switch ($service) {
                 case 'huh.head.tag.title':
@@ -458,9 +435,7 @@ class ReaderManager implements ReaderManagerInterface
         }
 
         // compute reader config respecting the inheritance hierarchy
-        $readerConfig = $this->readerConfigRegistry->computeReaderConfig(
-            $readerConfigId
-        );
+        $readerConfig = $this->readerConfigRegistry->computeReaderConfig($readerConfigId);
 
         $this->readerConfig = $readerConfig;
 
@@ -585,16 +560,16 @@ class ReaderManager implements ReaderManagerInterface
 
     public function isDcMultilingualActive(ReaderConfigModel $readerConfig, array $dca)
     {
-        return $GLOBALS['TL_LANGUAGE'] !== $dca['config']['fallbackLang'] &&
-            $readerConfig->addDcMultilingualSupport && System::getContainer()->get('huh.utils.container')->isBundleActive(
-                'Terminal42\DcMultilingualBundle\Terminal42DcMultilingualBundle');
+        return $GLOBALS['TL_LANGUAGE'] !== $dca['config']['fallbackLang']
+               && $readerConfig->addDcMultilingualSupport
+               && System::getContainer()->get('huh.utils.container')->isBundleActive('Terminal42\DcMultilingualBundle\Terminal42DcMultilingualBundle');
     }
 
     public function isDcMultilingualUtilsActive(ReaderConfigModel $readerConfig, array $dca)
     {
-        return $GLOBALS['TL_LANGUAGE'] !== $dca['config']['fallbackLang'] &&
-            $readerConfig->addDcMultilingualSupport && System::getContainer()->get('huh.utils.container')->isBundleActive(
-                'HeimrichHannot\DcMultilingualUtilsBundle\ContaoDcMultilingualUtilsBundle');
+        return $GLOBALS['TL_LANGUAGE'] !== $dca['config']['fallbackLang']
+               && $readerConfig->addDcMultilingualSupport
+               && System::getContainer()->get('huh.utils.container')->isBundleActive('HeimrichHannot\DcMultilingualUtilsBundle\ContaoDcMultilingualUtilsBundle');
     }
 
     /**
@@ -622,7 +597,7 @@ class ReaderManager implements ReaderManagerInterface
 
         $dca = &$GLOBALS['TL_DCA'][$readerConfig->dataContainer];
 
-        if (Config::get('useAutoItem') && ($autoItem = Request::getGet('auto_item'))) {
+        if (Config::get('useAutoItem') && ($autoItem = System::getContainer()->get('huh.request')->getGet('auto_item'))) {
             $field = $readerConfig->itemRetrievalAutoItemField;
 
             /* @var Model $adapter */
@@ -646,17 +621,13 @@ class ReaderManager implements ReaderManagerInterface
 
             // get the parent record for dc_multilingual-based entities
             if ($this->isDcMultilingualActive($readerConfig, $dca)) {
-                $instance = $this->database->prepare(
-                    'SELECT * FROM '.$readerConfig->dataContainer.' WHERE '.$readerConfig->dataContainer.'.'.$field.'=?')
-                    ->limit(1)->execute($autoItem);
+                $instance = $this->database->prepare('SELECT * FROM '.$readerConfig->dataContainer.' WHERE '.$readerConfig->dataContainer.'.'.$field.'=?')->limit(1)->execute($autoItem);
 
                 if ($instance->numRows > 0) {
                     $langPidField = $dca['config']['langPid'];
 
                     if ($instance->{$langPidField}) {
-                        $instance = $this->database->prepare(
-                            'SELECT * FROM '.$readerConfig->dataContainer.' WHERE '.$readerConfig->dataContainer.'.'.$model->getPk().'=?')
-                            ->limit(1)->execute($instance->{$langPidField});
+                        $instance = $this->database->prepare('SELECT * FROM '.$readerConfig->dataContainer.' WHERE '.$readerConfig->dataContainer.'.'.$model->getPk().'=?')->limit(1)->execute($instance->{$langPidField});
 
                         if ($instance->numRows > 0) {
                             $autoItem = $instance->{$field};
@@ -691,11 +662,7 @@ class ReaderManager implements ReaderManagerInterface
         $itemConditions = StringUtil::deserialize($readerConfig->itemRetrievalFieldConditions, true);
 
         if (!empty($itemConditions)) {
-            $queryBuilder = $this->entityFilter->computeQueryBuilderCondition(
-                $queryBuilder,
-                $itemConditions,
-                $readerConfig->dataContainer
-            );
+            $queryBuilder = $this->entityFilter->computeQueryBuilderCondition($queryBuilder, $itemConditions, $readerConfig->dataContainer);
 
             $fields = $this->addDcMultilingualSupport($readerConfig, $queryBuilder);
             $queryBuilder->select($fields);
@@ -714,12 +681,7 @@ class ReaderManager implements ReaderManagerInterface
         if ($this->isDcMultilingualActive($readerConfig, $dca)) {
             $suffixedTable = $readerConfig->dataContainer.ReaderManagerInterface::DC_MULTILINGUAL_SUFFIX;
 
-            $queryBuilder->innerJoin(
-                $readerConfig->dataContainer,
-                $readerConfig->dataContainer,
-                $suffixedTable,
-                $readerConfig->dataContainer.'.id = '.$suffixedTable.'.'.$dca['config']['langPid'].' AND '.$suffixedTable.'.language = "'.$GLOBALS['TL_LANGUAGE'].'"'
-            );
+            $queryBuilder->innerJoin($readerConfig->dataContainer, $readerConfig->dataContainer, $suffixedTable, $readerConfig->dataContainer.'.id = '.$suffixedTable.'.'.$dca['config']['langPid'].' AND '.$suffixedTable.'.language = "'.$GLOBALS['TL_LANGUAGE'].'"');
 
             // compute fields
             $fieldNames = [];
@@ -743,22 +705,18 @@ class ReaderManager implements ReaderManagerInterface
                 if (isset($dca['config']['langPublished']) && isset($dca['fields'][$dca['config']['langPublished']]) && \is_array($dca['fields'][$dca['config']['langPublished']])) {
                     $and = $queryBuilder->expr()->andX();
 
-                    if (isset($dca['config']['langStart']) && isset($dca['fields'][$dca['config']['langStart']]) && \is_array($dca['fields'][$dca['config']['langStart']]) &&
-                        isset($dca['config']['langStop']) && isset($dca['fields'][$dca['config']['langStop']]) && \is_array($dca['fields'][$dca['config']['langStop']])) {
+                    if (isset($dca['config']['langStart']) && isset($dca['fields'][$dca['config']['langStart']]) && \is_array($dca['fields'][$dca['config']['langStart']])
+                        && isset($dca['config']['langStop'])
+                        && isset($dca['fields'][$dca['config']['langStop']])
+                        && \is_array($dca['fields'][$dca['config']['langStop']])) {
                         $time = Date::floorToMinute();
 
-                        $orStart = $queryBuilder->expr()->orX(
-                            $queryBuilder->expr()->eq($suffixedTable.'.'.$dca['config']['langStart'], '""'),
-                            $queryBuilder->expr()->lte($suffixedTable.'.'.$dca['config']['langStart'], ':'.$dca['config']['langStart'].'_time')
-                        );
+                        $orStart = $queryBuilder->expr()->orX($queryBuilder->expr()->eq($suffixedTable.'.'.$dca['config']['langStart'], '""'), $queryBuilder->expr()->lte($suffixedTable.'.'.$dca['config']['langStart'], ':'.$dca['config']['langStart'].'_time'));
 
                         $and->add($orStart);
                         $queryBuilder->setParameter(':'.$dca['config']['langStart'].'_time', $time);
 
-                        $orStop = $queryBuilder->expr()->orX(
-                            $queryBuilder->expr()->eq($suffixedTable.'.'.$dca['config']['langStop'], '""'),
-                            $queryBuilder->expr()->gt($suffixedTable.'.'.$dca['config']['langStop'], ':'.$dca['config']['langStop'].'_time')
-                        );
+                        $orStop = $queryBuilder->expr()->orX($queryBuilder->expr()->eq($suffixedTable.'.'.$dca['config']['langStop'], '""'), $queryBuilder->expr()->gt($suffixedTable.'.'.$dca['config']['langStop'], ':'.$dca['config']['langStop'].'_time'));
 
                         $and->add($orStop);
                         $queryBuilder->setParameter(':'.$dca['config']['langStop'].'_time', $time + 60);

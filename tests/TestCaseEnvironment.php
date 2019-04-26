@@ -12,6 +12,7 @@ use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -53,7 +54,7 @@ abstract class TestCaseEnvironment extends ContaoTestCase
     public function createRequestStackMock()
     {
         $requestStack = new RequestStack();
-        $request = new \Symfony\Component\HttpFoundation\Request();
+        $request = new Request();
         $request->attributes->set('_contao_referer_id', 'foobar');
         $requestStack->push($request);
 

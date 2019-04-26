@@ -2,99 +2,99 @@ services:
   huh.reader.backend.reader-config:
     class: HeimrichHannot\ReaderBundle\Backend\ReaderConfig
     arguments:
-    - "@contao.framework"
-    - "@huh.reader.reader-config-registry"
-    - "@huh.utils.model"
-    - "@huh.utils.dca"
+      - "@contao.framework"
+      - "@huh.reader.reader-config-registry"
+      - "@huh.utils.model"
+      - "@huh.utils.dca"
 
   huh.reader.backend.reader-config-element:
     class: HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement
     arguments:
-    - "@contao.framework"
+      - "@contao.framework"
 
   huh.reader.choice.template.item:
     class: HeimrichHannot\ReaderBundle\Choice\ReaderItemTemplateChoice
     arguments:
-    - "@contao.framework"
+      - "@contao.framework"
 
   huh.reader.choice.manager:
     class: HeimrichHannot\ReaderBundle\Choice\ManagerChoice
     arguments:
-    - "@contao.framework"
+      - "@contao.framework"
 
   huh.reader.choice.item:
     class: HeimrichHannot\ReaderBundle\Choice\ItemChoice
     arguments:
-    - "@contao.framework"
+      - "@contao.framework"
 
   huh.reader.choice.filter:
     class: HeimrichHannot\ReaderBundle\Choice\FilterChoice
     arguments:
-    - "@contao.framework"
+      - "@contao.framework"
 
   huh.reader.choice.parent-reader-config:
     class: HeimrichHannot\ReaderBundle\Choice\ParentReaderConfigChoice
     arguments:
-    - "@contao.framework"
-    - "@huh.reader.reader-config-registry"
+      - "@contao.framework"
+      - "@huh.reader.reader-config-registry"
 
   huh.reader.choice.syndication:
     class: HeimrichHannot\ReaderBundle\Choice\SyndicationChoice
     arguments:
-    - "@contao.framework"
+      - "@contao.framework"
 
   huh.reader.choice.syndication-pdf-reader:
     class: HeimrichHannot\ReaderBundle\Choice\SyndicationPdfReaderChoice
     arguments:
-    - "@contao.framework"
+      - "@contao.framework"
 
   huh.reader.manager.reader:
     class: HeimrichHannot\ReaderBundle\Manager\ReaderManager
     arguments:
-    - "@contao.framework"
-    - "@huh.filter.manager"
-    - "@huh.reader.query_builder"
-    - "@huh.entity_filter.backend.entity_filter"
-    - "@huh.reader.reader-config-registry"
-    - "@huh.reader.reader-config-element-registry"
-    - "@huh.utils.model"
-    - "@huh.utils.url"
-    - "@huh.utils.container"
-    - "@huh.utils.image"
-    - "@huh.utils.form"
-    - "@twig"
+      - "@contao.framework"
+      - "@huh.filter.manager"
+      - "@huh.reader.query_builder"
+      - "@huh.entity_filter.backend.entity_filter"
+      - "@huh.reader.reader-config-registry"
+      - "@huh.reader.reader-config-element-registry"
+      - "@huh.utils.model"
+      - "@huh.utils.url"
+      - "@huh.utils.container"
+      - "@huh.utils.image"
+      - "@huh.utils.form"
+      - "@twig"
 
   huh.reader.reader-config-registry:
     class: HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry
     arguments:
-    - "@contao.framework"
-    - "@huh.filter.manager"
-    - "@huh.utils.model"
-    - "@huh.utils.dca"
+      - "@contao.framework"
+      - "@huh.filter.manager"
+      - "@huh.utils.model"
+      - "@huh.utils.dca"
 
   huh.reader.reader-config-element-registry:
     class: HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry
     arguments:
-    - "@contao.framework"
-    - "@huh.reader.reader-config-registry"
-    - "@huh.utils.model"
+      - "@contao.framework"
+      - "@huh.reader.reader-config-registry"
+      - "@huh.utils.model"
 
   huh.reader.util.reader-config-element-util:
     class: HeimrichHannot\ReaderBundle\Util\ReaderConfigElementUtil
     arguments:
-    - "@contao.framework"
-    - "@huh.reader.reader-config-registry"
-    - "@huh.reader.reader-config-element-registry"
-    - "@huh.utils.choice.field"
+      - "@contao.framework"
+      - "@huh.reader.reader-config-registry"
+      - "@huh.reader.reader-config-element-registry"
+      - "@huh.utils.choice.field"
 
   huh.reader.util.reader-config-util:
     class: HeimrichHannot\ReaderBundle\Util\ReaderConfigUtil
     arguments:
-    - "@contao.framework"
-    - "@huh.reader.reader-config-registry"
-    - "@huh.utils.choice.field"
-    - "@huh.utils.model"
-    - "@huh.utils.dca"
+      - "@contao.framework"
+      - "@huh.reader.reader-config-registry"
+      - "@huh.utils.choice.field"
+      - "@huh.utils.model"
+      - "@huh.utils.dca"
 
   huh.reader.backend.module:
     class: HeimrichHannot\ReaderBundle\Backend\Module
@@ -103,30 +103,30 @@ services:
     class: HeimrichHannot\ReaderBundle\QueryBuilder\ReaderQueryBuilder
     shared: false
     arguments:
-    - "@contao.framework"
-    - "@doctrine.dbal.default_connection"
+      - "@contao.framework"
+      - "@doctrine.dbal.default_connection"
 
   twig.extension.text:
     class: Twig_Extensions_Extension_Text
     tags:
-    - { name: twig.extension }
+      - { name: twig.extension }
 
   twig.extension.intl:
     class: Twig_Extensions_Extension_Intl
     tags:
-    - { name: twig.extension }
+      - { name: twig.extension }
 
   twig.extension.array:
     class: Twig_Extensions_Extension_Array
     tags:
-    - { name: twig.extension }
+      - { name: twig.extension }
 
   twig.extension.date:
     class: Twig_Extensions_Extension_Date
     tags:
-    - { name: twig.extension }
+      - { name: twig.extension }
     arguments:
-    - "@translator"
+      - "@translator"
 
   twig.truncate.service:
     class: Urodoz\Truncate\TruncateService
@@ -134,6 +134,6 @@ services:
   twig.extension.truncate.html:
     class: Urodoz\Truncate\Bridge\Twig\TruncateExtension
     arguments:
-    - "@twig.truncate.service"
+      - "@twig.truncate.service"
     tags:
-    - { name: twig.extension }
+      - { name: twig.extension }

@@ -8,6 +8,8 @@
 
 namespace HeimrichHannot\ReaderBundle\Model;
 
+use Contao\Model;
+
 /**
  * @property int    $id
  * @property int    $pid
@@ -63,7 +65,7 @@ namespace HeimrichHannot\ReaderBundle\Model;
  * @property bool   $syndicationWhatsApp
  * @property bool   $syndicationIcs
  */
-class ReaderConfigElementModel extends \Model
+class ReaderConfigElementModel extends Model
 {
     protected static $strTable = 'tl_reader_config_element';
 }

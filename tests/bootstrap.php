@@ -29,6 +29,8 @@ if (false === ($loader = $include(__DIR__.'/../vendor/autoload.php'))
     exit(1);
 }
 
+require 'FixturesTrait.php';
+
 require 'TestCaseEnvironment.php';
 
 // Handle classes in the global namespace
