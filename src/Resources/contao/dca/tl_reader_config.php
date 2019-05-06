@@ -296,7 +296,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
                         'service' => [
                             'label'     => $GLOBALS['TL_LANG']['tl_reader_config']['headTags_service'],
                             'inputType' => 'select',
-                            'options'   => \Contao\System::getContainer()->getParameter('huh.head.tags'),
+                            'options'   => array_values(\Contao\System::getContainer()->getParameter('huh.head.tags')),
                             'eval'      => ['groupStyle' => 'width:20%', 'includeBlankOption' => true, 'decodeEntities' => true]
                         ],
                         'pattern' => [
