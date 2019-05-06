@@ -159,7 +159,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'sql'              => "varchar(128) NOT NULL default ''",
         ],
         // filter
-        'filter'                      => [
+        'filter'                     => [
             'label'      => &$GLOBALS['TL_LANG']['tl_reader_config']['filter'],
             'exclude'    => true,
             'inputType'  => 'select',
@@ -297,7 +297,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
                             'label'     => $GLOBALS['TL_LANG']['tl_reader_config']['headTags_service'],
                             'inputType' => 'select',
                             'options'   => \Contao\System::getContainer()->getParameter('huh.head.tags'),
-                            'eval'      => ['groupStyle' => 'width:20%', 'includeBlankOption' => true]
+                            'eval'      => ['groupStyle' => 'width:20%', 'includeBlankOption' => true, 'decodeEntities' => true]
                         ],
                         'pattern' => [
                             'label'     => $GLOBALS['TL_LANG']['tl_reader_config']['headTags_pattern'],
@@ -305,7 +305,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
                             'eval'      => ['groupStyle' => 'width:70%']
                         ]
                     ]
-                ]
+                ],
             ],
             'sql'       => "blob NULL"
         ],
@@ -341,15 +341,14 @@ $dca = &$GLOBALS['TL_DCA']['tl_reader_config'];
     '' // set in modifyPalette
 );
 
-if (System::getContainer()->get('huh.utils.container')->isBundleActive('Terminal42\DcMultilingualBundle\Terminal42DcMultilingualBundle'))
-{
+if (System::getContainer()->get('huh.utils.container')->isBundleActive('Terminal42\DcMultilingualBundle\Terminal42DcMultilingualBundle')) {
     $dca['fields'] += [
         'addDcMultilingualSupport' => [
-            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config']['addDcMultilingualSupport'],
-            'exclude'                 => true,
-            'inputType'               => 'checkbox',
-            'eval'                    => ['tl_class' => 'w50'],
-            'sql'                     => "char(1) NOT NULL default ''"
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['addDcMultilingualSupport'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''"
         ]
     ];
 }
