@@ -14,7 +14,6 @@
     "heimrichhannot/contao-list-bundle": "^1.0.0-beta68",
     "heimrichhannot/truncate-html": "^1.0",
     "jsvrcek/ics-bundle": "0.*",
-    "mpdf/mpdf": "^7.0",
     "twig/extensions": "^1.5"
   },
   "require-dev": {
