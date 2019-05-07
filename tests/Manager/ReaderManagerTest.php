@@ -21,7 +21,9 @@ use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\Mysqli\Driver;
+use Doctrine\DBAL\Driver\ResultStatement;
 use HeimrichHannot\EntityFilterBundle\Backend\EntityFilter;
+use HeimrichHannot\FilterBundle\Config\FilterConfig;
 use HeimrichHannot\FilterBundle\Manager\FilterManager;
 use HeimrichHannot\FilterBundle\Session\FilterSession;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfig;
@@ -108,7 +110,7 @@ class ReaderManagerTest extends TestCaseEnvironment
             \define('TL_ROOT', $this->getFixturesDir());
         }
 
-        $GLOBALS['TL_LANGUAGE'] = 'de';
+        $GLOBALS['TL_LANGUAGE'] = 'en';
         $GLOBALS['TL_LANG']['MSC'] = ['test' => 'bar'];
 
         $GLOBALS['TL_DCA']['tl_reader_config'] = [
@@ -120,8 +122,6 @@ class ReaderManagerTest extends TestCaseEnvironment
             ],
             'fields' => [],
         ];
-
-        $this->entityFilter = $this->createConfiguredMock(EntityFilter::class, ['computeSqlCondition' => ['firstname=?', ['John']]]);
 
         $this->readerConfigRegistry = $this->createMock(ReaderConfigRegistry::class);
 
@@ -136,6 +136,7 @@ class ReaderManagerTest extends TestCaseEnvironment
         ]);
 
         $this->containerUtil = $this->createConfiguredMock(ContainerUtil::class, ['getProjectDir' => __DIR__.'/..']);
+        $this->containerUtil->method('isBundleActive')->willReturn(true);
 
         $this->imageUtil = $this->createMock(ImageUtil::class);
         $this->imageUtil->method('addToTemplateData')->willReturnCallback(function (
@@ -169,6 +170,14 @@ class ReaderManagerTest extends TestCaseEnvironment
 
         $this->readerQueryBuilder = new ReaderQueryBuilder($this->framework, new \Doctrine\DBAL\Connection([], new Driver()));
 
+        $resultStatement = $this->createMock(ResultStatement::class);
+        $resultStatement->method('fetch')->willReturn(null);
+        $readerQueryBuilderMock = $this->createMock(ReaderQueryBuilder::class);
+        $readerQueryBuilderMock->method('select');
+        $readerQueryBuilderMock->method('execute')->willReturn($resultStatement);
+        $this->entityFilter = $this->createConfiguredMock(EntityFilter::class, ['computeSqlCondition' => ['firstname=?', ['John']]]);
+        $this->entityFilter->method('computeQueryBuilderCondition')->willReturn($readerQueryBuilderMock);
+
         $this->manager = new ReaderManager($this->framework, $this->filterManager, $this->readerQueryBuilder, $this->entityFilter, $this->readerConfigRegistry, $this->readerConfigElementRegistry, $this->modelUtil, $this->urlUtil, $this->containerUtil, $this->imageUtil, $this->formUtil, $this->twig);
 
         $this->manager->setModuleData(['id' => 1, 'readerConfig' => 1]);
@@ -177,6 +186,7 @@ class ReaderManagerTest extends TestCaseEnvironment
             include_once __DIR__.'/../../vendor/contao/core-bundle/src/Resources/contao/helper/interface.php';
         }
 
+        // TODO: config['lang...'] research to find correct values
         $GLOBALS['TL_DCA']['tl_test'] = [
             'fields' => [
                 'firstname' => [
@@ -185,18 +195,24 @@ class ReaderManagerTest extends TestCaseEnvironment
                 ],
                 'lastname' => [
                     'inputType' => 'text',
+                    'sql' => 'someStuff',
                     'load_callback' => [
                         ['HeimrichHannot\ReaderBundle\Tests\Manager\ReaderManagerTest', 'loadCallback'],
                     ],
-                    'eval' => ['maxlength' => 255, 'tl_class' => 'w50', 'mandatory' => true],
+                    'eval' => ['maxlength' => 255, 'tl_class' => 'w50', 'mandatory' => true, 'translatableFor' => '*'],
                 ],
                 'someDate' => [
                     'inputType' => 'text',
-                    'eval' => ['rgxp' => 'date', 'datepicker' => true, 'tl_class' => 'w50 wizard', 'mandatory' => true],
+                    'sql' => 'someStuff',
+                    'eval' => ['rgxp' => 'date', 'datepicker' => true, 'tl_class' => 'w50 wizard', 'mandatory' => true, 'translatableFor' => 'pl'],
                 ],
             ],
             'config' => [
                 'fallbackLang' => 'de',
+                'langPid' => '2',
+                'langPublished' => 'firstname',
+                'langStart' => 'firstname',
+                'langStop' => 'firstname',
             ],
         ];
     }
@@ -557,6 +573,114 @@ class ReaderManagerTest extends TestCaseEnvironment
         ]);
     }
 
+    public function testAddDcMultilingualSupport()
+    {
+        // create reflection class for reader manager class and set protected function addDcMultilingualSupport accessible
+        $reflectionClassReaderManager = new \ReflectionClass(ReaderManager::class);
+        $testMethodAddDcMultilingualSupport = $reflectionClassReaderManager->getMethod('addDcMultilingualSupport');
+        $testMethodAddDcMultilingualSupport->setAccessible(true);
+
+        $readerConfig = new ReaderConfigModel();
+        $readerConfig->setRow(array_merge([
+            'dataContainer' => 'tl_test',
+        ], [
+            'itemRetrievalMode' => ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM,
+            'itemRetrievalAutoItemField' => 'alias',
+            'hideUnpublishedItems' => true,
+            'publishedField' => 'published',
+        ]));
+
+        $fields = $testMethodAddDcMultilingualSupport->invokeArgs($this->manager, [$readerConfig, $this->readerQueryBuilder]);
+        $this->assertSame('tl_test.firstname, tl_test.lastname, tl_test.someDate', $fields);
+
+        $readerConfig = new ReaderConfigModel();
+        $readerConfig->setRow(array_merge([
+            'dataContainer' => 'tl_test',
+        ], [
+            'itemRetrievalMode' => ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM,
+            'itemRetrievalAutoItemField' => 'alias',
+            'hideUnpublishedItems' => true,
+            'publishedField' => 'published',
+            'addDcMultilingualSupport' => true,
+        ]));
+
+        $fields = $testMethodAddDcMultilingualSupport->invokeArgs($this->manager, [$readerConfig, $this->readerQueryBuilder]);
+        $this->assertSame('tl_test_dcm.lastname, tl_test.someDate', $fields);
+    }
+
+    public function testRetrieveItemByFieldConditions()
+    {
+        $readerConfigMock = $this->mockClassWithProperties(ReaderConfigModel::class, ['dataContainer' => 'tl_test', 'itemRetrievalFieldConditions' => 'a:1:{i:0;a:6:{s:10:"connective";s:0:"";s:11:"bracketLeft";s:0:"";s:5:"field";s:15:"tl_ticket.alias";s:8:"operator";s:5:"equal";s:5:"value";s:13:"bayern-ticket";s:12:"bracketRight";s:0:"";}}']);
+        // create reflection class for reader manager class and set protected function addDcMultilingualSupport accessible
+        $reflectionClassReaderManager = new \ReflectionClass(ReaderManager::class);
+        $testMethodRetrieveItemByFieldConditions = $reflectionClassReaderManager->getMethod('retrieveItemByFieldConditions');
+        $testMethodRetrieveItemByFieldConditions->setAccessible(true);
+
+        $reflectionReaderConfig = $reflectionClassReaderManager->getProperty('readerConfig');
+        $reflectionReaderConfig->setAccessible(true);
+        $reflectionReaderConfig->setValue($this->manager, $readerConfigMock);
+
+        $item = $testMethodRetrieveItemByFieldConditions->invokeArgs($this->manager, []);
+        $this->assertNull($item);
+    }
+
+    public function testGetQueryBuilder()
+    {
+        $readerQueryBuilder = $this->getMockBuilder(ReaderQueryBuilder::class)->disableOriginalConstructor()->getMock();
+
+        $readerManager = $this->getMockBuilder(ReaderManager::class)->disableOriginalConstructor()->getMock();
+
+        $reflectionClassReaderManager = new \ReflectionClass(ReaderManager::class);
+
+        $reflectionFilterConfig = $reflectionClassReaderManager->getProperty('readerQueryBuilder');
+        $reflectionFilterConfig->setAccessible(true);
+        $reflectionFilterConfig->setValue($readerManager, $readerQueryBuilder);
+
+        $testGetFilterConfig = $reflectionClassReaderManager->getMethod('getQueryBuilder');
+        $testGetFilterConfig->setAccessible(true);
+        $queryBuilderResult = $testGetFilterConfig->invokeArgs($readerManager, []);
+
+        $this->assertSame($readerQueryBuilder, $queryBuilderResult);
+    }
+
+    public function testGetFilterConfig()
+    {
+        $filterConfigMock = $this->getMockBuilder(FilterConfig::class)->disableOriginalConstructor()->getMock();
+        $filterConfigMock->method('getFilter')->willReturn(['id' => 1]);
+        $readerConfigMock = $this->mockClassWithProperties(ReaderConfigModel::class, ['filter' => 1]);
+
+        $readerManager = $this->getMockBuilder(ReaderManager::class)->disableOriginalConstructor()->getMock();
+
+        $reflectionClassReaderManager = new \ReflectionClass(ReaderManager::class);
+        $reflectionFilterConfig = $reflectionClassReaderManager->getProperty('filterConfig');
+        $reflectionFilterConfig->setAccessible(true);
+        $reflectionFilterConfig->setValue($readerManager, $filterConfigMock);
+
+        $reflectionReaderConfig = $reflectionClassReaderManager->getProperty('readerConfig');
+        $reflectionReaderConfig->setAccessible(true);
+        $reflectionReaderConfig->setValue($readerManager, $readerConfigMock);
+
+        $testGetFilterConfig = $reflectionClassReaderManager->getMethod('getFilterConfig');
+        $testGetFilterConfig->setAccessible(true);
+
+        $filterConfig = $testGetFilterConfig->invokeArgs($readerManager, []);
+
+        $this->assertSame($filterConfigMock, $filterConfig);
+
+        $readerConfigMock = $this->mockClassWithProperties(ReaderConfigModel::class, ['filter' => 2]);
+        $filterManagerMock = $this->getMockBuilder(FilterManager::class)->disableOriginalConstructor()->getMock();
+        $filterManagerMock->method('findById')->willReturn($filterConfigMock);
+
+        $reflectionReaderConfig->setValue($readerManager, $readerConfigMock);
+
+        $reflectionFilterManager = $reflectionClassReaderManager->getProperty('filterManager');
+        $reflectionFilterManager->setAccessible(true);
+        $reflectionFilterManager->setValue($readerManager, $filterManagerMock);
+
+        $filterConfig = $testGetFilterConfig->invokeArgs($readerManager, []);
+        $this->assertSame($filterConfigMock, $filterConfig);
+    }
+
     /**
      * Mocks a request scope matcher.
      *
@@ -768,7 +892,7 @@ class ReaderManagerTest extends TestCaseEnvironment
     protected function createAdapters()
     {
         // database
-        $databaseAdapter = $this->mockAdapter(['execute', 'prepare', 'limit']);
+        $databaseAdapter = $this->mockAdapter(['execute', 'prepare', 'limit', 'getFieldNames']);
         $databaseAdapter->method('execute')->willReturnCallback(function ($values, $id = null) {
             if (!isset($id)) {
                 return $this->mockClassWithProperties(Database\Result::class, ['total' => 1]);
@@ -786,6 +910,16 @@ class ReaderManagerTest extends TestCaseEnvironment
             return $this->mockClassWithProperties(Database\Result::class, ['numRows' => 1, 'id' => '1']);
         });
         $databaseAdapter->method('limit')->willReturn($limitAdapter);
+        $databaseAdapter->method('getFieldNames')->willReturnCallback(function ($strTable) {
+            $arrNames = [];
+            $arrFields = $GLOBALS['TL_DCA'][$strTable]['fields'];
+
+            foreach ($arrFields as $arrField => $arrValue) {
+                $arrNames[] = $arrField;
+            }
+
+            return $arrNames;
+        });
 
         // model
         $modelAdapter = $this->mockAdapter(['getClassFromTable']);
