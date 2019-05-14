@@ -24,7 +24,7 @@ class WhatsAppSyndication extends AbstractSyndication
         $link->setRel('nofollow');
         $link->setTitle('huh.reader.element.title.whatsapp');
         $link->setContent('huh.reader.element.title.whatsapp');
-        $link->setHref(sprintf('whatsapp://send?text=%s%s', $this->getDescription() ? (rawurlencode($this->getDescription()).'%0A%0A') : '', rawurlencode($this->getUrl())));
+        $link->setHref(sprintf('https://wa.me/?text=%s%s', $this->getDescription() ? (rawurlencode($this->getDescription()).'%0A%0A') : '', rawurlencode($this->getUrl())));
         $link->addAttribute('data-action', 'share/whatsapp/share');
 
         return $link;
