@@ -22,6 +22,7 @@ use Contao\System;
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\Mysqli\Driver;
 use Doctrine\DBAL\Driver\ResultStatement;
+use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use HeimrichHannot\EntityFilterBundle\Backend\EntityFilter;
 use HeimrichHannot\FilterBundle\Config\FilterConfig;
 use HeimrichHannot\FilterBundle\Manager\FilterManager;
@@ -237,41 +238,54 @@ class ReaderManagerTest extends TestCaseEnvironment
 
     public function testRetrieveItem()
     {
-        $this->markTestSkipped('FIXME: Test within retrieveItem');
-
         // auto_item
         Config::set('useAutoItem', true);
         $this->request->setGet('auto_item', 'john-doe');
+
+        $this->prepareReaderConfig([
+            'itemRetrievalMode' => 'blahbluh',
+            'itemRetrievalAutoItemField' => 'alias',
+            'hideUnpublishedItems' => true,
+            'publishedField' => 'published',
+        ]);
+        $this->assertNull($this->manager->retrieveItem());
 
         $this->prepareReaderConfig([
             'itemRetrievalMode' => ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM,
             'itemRetrievalAutoItemField' => 'alias',
             'hideUnpublishedItems' => true,
             'publishedField' => 'published',
+            'invertPublishedField' => false,
         ]);
-
-        $item = new DefaultItem($this->manager, $this->johnDoeModel->row());
-
-        $data = json_decode(json_encode($item));
-        $managerData = json_decode(json_encode($this->manager->retrieveItem()));
-
-        $this->assertSame($data->raw, $managerData->raw);
-
-        $this->request->setGet('auto_item', '1');
-
-        $data = json_decode(json_encode($item));
-        $managerData = json_decode(json_encode($this->manager->retrieveItem()));
-
-        $this->assertSame($data->raw, $managerData->raw);
-
-        // unpublished
-        $this->request->setGet('auto_item', '2');
-
-        $this->assertNull($this->manager->retrieveItem());
+        $readerManager = $this->manager;
+        // create reflection class for reader manager class and set protected function addDcMultilingualSupport accessible
+        $reflectionClassReaderManager = new \ReflectionClass(ReaderManager::class);
+        // overwrite property readerQueryBuilder
+        $resultStatement = $this->createMock(ResultStatement::class);
+        $resultStatement->method('fetch')->willReturn(['published' => false]);
+        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $expressionBuilder->method('eq');
+        $readerQueryBuilderMock = $this->createMock(ReaderQueryBuilder::class);
+        $readerQueryBuilderMock->method('select');
+        $readerQueryBuilderMock->method('setMaxResults')->willReturnSelf();
+        $readerQueryBuilderMock->method('where');
+        $readerQueryBuilderMock->method('expr')->willReturn($expressionBuilder);
+        $readerQueryBuilderMock->method('setParameter');
+        $readerQueryBuilderMock->method('from')->willReturnSelf();
+        $readerQueryBuilderMock->method('execute')->willReturn($resultStatement);
+        $reflectionReaderQueryBuilder = $reflectionClassReaderManager->getProperty('readerQueryBuilder');
+        $reflectionReaderQueryBuilder->setAccessible(true);
+        $reflectionReaderQueryBuilder->setValue($readerManager, $readerQueryBuilderMock);
+        $this->assertNull($readerManager->retrieveItem());
 
         // field conditions
         $this->prepareReaderConfig([
-            'itemRetrievalMode' => ReaderConfig::ITEM_RETRIEVAL_MODE_FIELD_CONDITIONS,
+            'itemRetrievalMode' => ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM,
+            'itemRetrievalAutoItemField' => 'alias',
+            'hideUnpublishedItems' => false,
+            'publishedField' => 'published',
+            'invertPublishedField' => false,
+            'item' => 'default',
             'itemRetrievalFieldConditions' => serialize([
                 [
                     'bracketLeft' => true,
@@ -282,12 +296,79 @@ class ReaderManagerTest extends TestCaseEnvironment
                 ],
             ]),
         ]);
+        $readerManager = $this->manager;
+        // create reflection class for reader manager class and set protected function addDcMultilingualSupport accessible
+        $reflectionClassReaderManager = new \ReflectionClass(ReaderManager::class);
+        // overwrite property readerQueryBuilder
+        $resultStatement = $this->createMock(ResultStatement::class);
+        $resultStatement->method('fetch')->willReturn($this->johnDoeModel->row());
+        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $expressionBuilder->method('eq');
+        $readerQueryBuilderMock = $this->createMock(ReaderQueryBuilder::class);
+        $readerQueryBuilderMock->method('select');
+        $readerQueryBuilderMock->method('setMaxResults')->willReturnSelf();
+        $readerQueryBuilderMock->method('where');
+        $readerQueryBuilderMock->method('expr')->willReturn($expressionBuilder);
+        $readerQueryBuilderMock->method('setParameter');
+        $readerQueryBuilderMock->method('from')->willReturnSelf();
+        $readerQueryBuilderMock->method('execute')->willReturn($resultStatement);
+        $reflectionReaderQueryBuilder = $reflectionClassReaderManager->getProperty('readerQueryBuilder');
+        $reflectionReaderQueryBuilder->setAccessible(true);
+        $reflectionReaderQueryBuilder->setValue($readerManager, $readerQueryBuilderMock);
 
-        $data = json_decode(json_encode($item));
+        $item = new DefaultItem($readerManager, $this->johnDoeModel->row());
+        $itemReturn = $readerManager->retrieveItem();
 
-        $managerData = json_decode(json_encode($this->manager->retrieveItem()));
+        $this->assertSame($item->getRawValue('lastname'), $itemReturn->getRawValue('lastname'));
+        $this->assertSame($item->getRawValue('firstname'), $itemReturn->getRawValue('firstname'));
+    }
 
-        $this->assertSame($data->raw, $managerData->raw);
+    public function testRetrieveItemByAutoItem()
+    {
+        $this->prepareReaderConfig([
+            'itemRetrievalMode' => ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM,
+            'itemRetrievalAutoItemField' => 'alias',
+            'hideUnpublishedItems' => true,
+            'publishedField' => 'published',
+        ]);
+        // set manager to a variable for changing properties just for this test, so it wont affect other tests
+        $readerManager = $this->manager;
+
+        $readerConfigMock = $this->mockClassWithProperties(ReaderConfigModel::class, ['dataContainer' => 'tl_test', 'itemRetrievalAutoItemField' => 'alias']);
+        // create reflection class for reader manager class and set protected function addDcMultilingualSupport accessible
+        $reflectionClassReaderManager = new \ReflectionClass(ReaderManager::class);
+        $testMethodRetrieveItemByAutoItem = $reflectionClassReaderManager->getMethod('retrieveItemByAutoItem');
+        $testMethodRetrieveItemByAutoItem->setAccessible(true);
+
+        $reflectionReaderConfig = $reflectionClassReaderManager->getProperty('readerConfig');
+        $reflectionReaderConfig->setAccessible(true);
+        $reflectionReaderConfig->setValue($readerManager, $readerConfigMock);
+
+        // overwrite property readerQueryBuilder
+        $resultStatement = $this->createMock(ResultStatement::class);
+        $resultStatement->method('fetch')->willReturn(['works']);
+        $expressionBuilder = $this->createMock(ExpressionBuilder::class);
+        $expressionBuilder->method('eq');
+        $readerQueryBuilderMock = $this->createMock(ReaderQueryBuilder::class);
+        $readerQueryBuilderMock->method('select');
+        $readerQueryBuilderMock->method('setMaxResults')->willReturnSelf();
+        $readerQueryBuilderMock->method('where');
+        $readerQueryBuilderMock->method('expr')->willReturn($expressionBuilder);
+        $readerQueryBuilderMock->method('setParameter');
+        $readerQueryBuilderMock->method('from')->willReturnSelf();
+        $readerQueryBuilderMock->method('execute')->willReturn($resultStatement);
+        $reflectionReaderQueryBuilder = $reflectionClassReaderManager->getProperty('readerQueryBuilder');
+        $reflectionReaderQueryBuilder->setAccessible(true);
+        $reflectionReaderQueryBuilder->setValue($readerManager, $readerQueryBuilderMock);
+
+        $item = $testMethodRetrieveItemByAutoItem->invokeArgs($readerManager, []);
+        $this->assertNull($item);
+
+        // auto_item
+        Config::set('useAutoItem', true);
+        $this->request->setGet('auto_item', 'john-doe');
+        $item = $testMethodRetrieveItemByAutoItem->invokeArgs($readerManager, []);
+        $this->assertSame(['works'], $item);
     }
 
     public function testTriggerOnLoadCallbacks()
