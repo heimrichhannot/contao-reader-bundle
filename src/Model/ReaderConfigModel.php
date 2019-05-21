@@ -8,6 +8,8 @@
 
 namespace HeimrichHannot\ReaderBundle\Model;
 
+use Contao\Model;
+
 /**
  * @property int    $id
  * @property int    $tstamp
@@ -32,7 +34,7 @@ namespace HeimrichHannot\ReaderBundle\Model;
  * @property array  $headTags
  * @property string $itemTemplate
  */
-class ReaderConfigModel extends \Model
+class ReaderConfigModel extends Model
 {
     protected static $strTable = 'tl_reader_config';
 }
