@@ -8,7 +8,6 @@
 
 namespace HeimrichHannot\ReaderBundle\ConfigElementType\Syndication;
 
-use Contao\Environment;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\DefaultLink;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\LinkInterface;
 
@@ -35,11 +34,6 @@ class WhatsAppSyndication extends AbstractSyndication
      */
     public function isEnabled(): bool
     {
-        /**
-         * @var Environment
-         */
-        $environment = $this->item->getManager()->getFramework()->getAdapter(Environment::class);
-
-        return true === (bool) $this->readerConfigElement->syndicationWhatsApp && $environment->get('agent')->mobile;
+        return true === (bool) $this->readerConfigElement->syndicationWhatsApp;
     }
 }
