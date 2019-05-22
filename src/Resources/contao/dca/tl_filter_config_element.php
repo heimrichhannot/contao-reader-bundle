@@ -10,7 +10,7 @@ $dca['subpalettes']['alternativeValueSource_' . \HeimrichHannot\ReaderBundle\Bac
 /**
  * Fields
  */
-$dca['fields'] += [
+$fields = [
     'readerConfig' => [
         'label'            => &$GLOBALS['TL_LANG']['tl_filter_config_element']['readerConfig'],
         'exclude'          => true,
@@ -35,5 +35,7 @@ $dca['fields'] += [
         'sql'              => "varchar(64) NOT NULL default ''",
     ],
 ];
+
+$dca['fields'] = array_merge($fields, is_array($dca['fields']) ? $dca['fields'] : []);
 
 $dca['fields']['alternativeValueSource']['options'] = array_merge($dca['fields']['alternativeValueSource']['options'], [\HeimrichHannot\ReaderBundle\Backend\FilterConfigElement::ALTERNATIVE_SOURCE_READER_BUNDLE_ENTITY]);
