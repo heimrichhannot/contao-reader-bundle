@@ -59,7 +59,7 @@ abstract class AbstractSyndication
     {
         $this->item = $item;
         $this->readerConfigElement = $readerConfigElement;
-        $this->url = System::getContainer()->get('request_stack')->getMasterRequest()->getUri();
+        $this->url = System::getContainer()->get('request_stack')->getMasterRequest()->getSchemeAndHttpHost().System::getContainer()->get('request_stack')->getMasterRequest()->getPathInfo();
 
         /*
          * @var PageModel $objPage

@@ -2,7 +2,6 @@
 {% set iconClass = {
     'facebook' : 'fa fa-facebook-f',
     'twitter' : 'fa fa-twitter',
-    'googleplus' : 'fa fa-google-plus',
     'linkedin' : 'fa fa-linkedin',
     'xing' : 'fa fa-xing',
     'mail' : 'fa fa-envelope-o',
@@ -26,11 +25,11 @@
                 {% set key = child %}
                 {% set link = links[child] %}
                 <a href="{{ link.href }}"
-                   class="{{ (linkBaseClass|default('syndication-link btn btn-secondary') ~ ' ' ~ link.cssClass ~ ' ' ~ (useIcons|default(false) and iconClass[key]|default({}) ? iconClass[key] :  ''))|trim }}"{% if link.target|default() %} target="{{ link.target }}"{% endif %}{% if link.name|default() %} name="{{ link.name }}"{% endif %}{% if link.rel|default() %} rel="{{ link.rel }}"{% endif %}{% if link.title|default() %} title="{{ link.title|trans }}"{% endif %}{% if link.onclick|default() %} onclick="{{ link.onclick }}"{% endif %}{% for key,attribute in link.attributes %}{{ ' ' ~ key ~ '=' ~ attribute }}{% endfor %}><span>{{ (useIcons|default() and iconClass[key]|default({}) ? '' :  link.content|trans) }}</span></a>
-            {% else %}
+                   class="{{ (linkBaseClass|default('syndication-link btn btn-light') ~ ' ' ~ link.cssClass ~ ' ' ~ (useIcons|default(false) and iconClass[key]|default({}) ? iconClass[key] :  ''))|trim }}"{% if link.target|default() %} target="{{ link.target }}"{% endif %}{% if link.name|default() %} name="{{ link.name }}"{% endif %}{% if link.rel|default() %} rel="{{ link.rel }}"{% endif %}{% if link.title|default() %} title="{{ link.title|trans }}"{% endif %}{% if link.onclick|default() %} onclick="{{ link.onclick }}"{% endif %}{% for key,attribute in link.attributes %}{{ ' ' ~ key ~ '=' ~ attribute }}{% endfor %}><span>{{ (useIcons|default() and iconClass[key]|default({}) ? '' :  link.content|trans) }}</span></a>
+            {% elseif child is iterable%}
                 <div class="{{ btnGroupClass|default('btn-group') }}" role="group">
                     <button type="button"
-                            class="{{ btnGroupToggleClass|default('btn btn-secondary dropdown-toggle fa fa-share-alt') }}"
+                            class="{{ btnGroupToggleClass|default('btn btn-light dropdown-toggle fa fa-share-alt') }}"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                     <div class="dropdown-menu">
                         {% for nested in child %}
@@ -38,7 +37,7 @@
                                 {% set key = nested %}
                                 {% set link = links[nested] %}
                                 <a href="{{ link.href }}"
-                                   class="{{ (linkBaseClass|default('syndication-link dropdown-item') ~ ' ' ~ link.cssClass ~ ' ' ~ (useIcons|default(false) and iconClass[key]|default({}) ? iconClass[key] :  ''))|trim }}"{% if link.target|default() %} target="{{ link.target }}"{% endif %}{% if link.name|default() %} name="{{ link.name }}"{% endif %}{% if link.rel|default() %} rel="{{ link.rel }}"{% endif %}{% if link.title|default() %} title="{{ link.title|trans }}"{% endif %}{% if link.onclick|default() %} onclick="{{ link.onclick }}"{% endif %}{% for key,attribute in link.attributes %}{{ ' ' ~ key ~ '=' ~ attribute }}{% endfor %}><span>{{ (useIcons|default() and iconClass[key]|default({}) ? '' :  link.content|trans) }}</span></a>
+                                   class="{{ (linkBaseClass|default('syndication-link dropdown-item') ~ ' ' ~ link.cssClass)|trim }}"{% if link.target|default() %} target="{{ link.target }}"{% endif %}{% if link.name|default() %} name="{{ link.name }}"{% endif %}{% if link.rel|default() %} rel="{{ link.rel }}"{% endif %}{% if link.title|default() %} title="{{ link.title|trans }}"{% endif %}{% if link.onclick|default() %} onclick="{{ link.onclick }}"{% endif %}{% for key,attribute in link.attributes %}{{ ' ' ~ key ~ '=' ~ attribute }}{% endfor %}>{{ (useIcons|default() and iconClass[key]|default({}) ? ('<span class="' ~iconClass[key]|default({}) ~  '"></span>&nbsp;' ~  link.content|trans)|raw :  link.content|trans) }}</a>
                             {% endif %}
                         {% endfor %}
                     </div>
