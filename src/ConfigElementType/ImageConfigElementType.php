@@ -46,8 +46,7 @@ class ImageConfigElementType implements ConfigElementType
 
             switch ($readerConfigElement->placeholderImageMode) {
                 case ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED:
-                    if ($item->getRawValue($readerConfigElement->genderField) && 'female' == $item->getRawValue($readerConfigElement->genderField)
-                    ) {
+                    if ($item->getRawValue($readerConfigElement->genderField) && 'female' == $item->getRawValue($readerConfigElement->genderField)) {
                         $image = $readerConfigElement->placeholderImageFemale;
                     } else {
                         $image = $readerConfigElement->placeholderImage;
@@ -70,8 +69,7 @@ class ImageConfigElementType implements ConfigElementType
         $imageFile = $this->framework->getAdapter(FilesModel::class)->findByUuid($image);
 
         if (null !== $imageFile
-            && file_exists(System::getContainer()->get('huh.utils.container')->getProjectDir().'/'.$imageFile->path)
-        ) {
+            && file_exists(System::getContainer()->get('huh.utils.container')->getProjectDir().'/'.$imageFile->path)) {
             $imageArray = $item->getRaw();
 
             // Override the default image size
@@ -89,16 +87,7 @@ class ImageConfigElementType implements ConfigElementType
             $templateData['images'] = $item->getFormattedValue('images') ?? [];
             $templateData['images'][$imageField] = [];
 
-            System::getContainer()->get('huh.utils.image')->addToTemplateData(
-                $imageField,
-                $imageSelectorField,
-                $templateData['images'][$imageField],
-                $imageArray,
-                null,
-                null,
-                null,
-                $imageFile
-            );
+            System::getContainer()->get('huh.utils.image')->addToTemplateData($imageField, $imageSelectorField, $templateData['images'][$imageField], $imageArray, null, null, null, $imageFile);
 
             $item->setFormattedValue('images', $templateData['images']);
         }

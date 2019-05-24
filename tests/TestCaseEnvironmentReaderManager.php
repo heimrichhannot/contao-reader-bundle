@@ -132,7 +132,7 @@ abstract class TestCaseEnvironmentReaderManager extends TestCaseEnvironment
             ]),
         ]);
 
-        $this->containerUtil = $this->createConfiguredMock(ContainerUtil::class, ['getProjectDir' => __DIR__.'/..']);
+        $this->containerUtil = $this->createConfiguredMock(ContainerUtil::class, ['getProjectDir' => __DIR__]);
         $this->containerUtil->method('isBundleActive')->willReturn(true);
 
         $this->imageUtil = $this->createMock(ImageUtil::class);

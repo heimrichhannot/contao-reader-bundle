@@ -36,7 +36,7 @@ class DefaultItemTest extends TestCaseEnvironmentReaderManager
     public function testParse()
     {
         $this->prepareReaderConfig(['itemTemplate' => 'my_item_template']);
-        $testData = ['id' => 1, 'test' => true, 'string' => 'string', 'timestamp' => 1557989217];
+        $testData = ['id' => 1, 'test' => true, 'string' => 'string', 'timestamp' => 1557989217, 'images' => null];
 
         $defaultItem = new DefaultItem($this->manager, $testData);
         $parseResult = $defaultItem->parse();
