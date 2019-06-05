@@ -11,6 +11,8 @@ namespace HeimrichHannot\ReaderBundle\ConfigElementType;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\ModuleModel;
 use Contao\StringUtil;
+use HeimrichHannot\FilterBundle\Config\FilterConfig;
+use HeimrichHannot\ListBundle\Module\ModuleList;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 
@@ -28,13 +30,14 @@ class ListConfigElementType implements ConfigElementType
 
     public function addToItemData(ItemInterface $item, ReaderConfigElementModel $readerConfigElement)
     {
-        $module = ModuleModel::findById($readerConfigElement->listModule);
+        $module = $this->framework->getAdapter(ModuleModel::class)->findById($readerConfigElement->listModule);
 
         if (null === $module) {
             return;
         }
 
-        $listModule = new \HeimrichHannot\ListBundle\Module\ModuleList($module);
+        $listModule = $this->framework->createInstance(ModuleList::class, [$module]);
+        /** @var FilterConfig $filterConfig */
         $filterConfig = $listModule->getFilterConfig();
         $filter = StringUtil::deserialize($readerConfigElement->initialFilter, true);
 

@@ -14,14 +14,17 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Database;
 use Contao\FilesModel;
 use Contao\Model;
+use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\Mysqli\Driver;
 use Doctrine\DBAL\Driver\ResultStatement;
 use HeimrichHannot\EntityFilterBundle\Backend\EntityFilter;
+use HeimrichHannot\FilterBundle\Config\FilterConfig;
 use HeimrichHannot\FilterBundle\Manager\FilterManager;
 use HeimrichHannot\FilterBundle\Session\FilterSession;
+use HeimrichHannot\ListBundle\Module\ModuleList;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement;
 use HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType;
 use HeimrichHannot\ReaderBundle\Manager\ReaderManager;
@@ -506,12 +509,37 @@ abstract class TestCaseEnvironmentReaderManager extends TestCaseEnvironment
             }
         });
 
+        // files
+        $moduleModelAdapter = $this->mockAdapter([
+            'findById',
+        ]);
+        $moduleModelAdapter->method('findById')->willReturnCallback(function ($id) {
+            switch ($id) {
+                case 1:
+                    return null;
+
+                    break;
+
+                case 2:
+                    return new ModuleModel();
+
+                    break;
+            }
+        });
+
         $this->framework = $this->mockContaoFramework([
             FilesModel::class => $filesAdapter,
             Model::class => $modelAdapter,
+            ModuleModel::class => $moduleModelAdapter,
         ]);
 
-        $this->framework->method('createInstance')->willReturnCallback(function ($class) use ($databaseAdapter) {
+        $filterConfig = $this->createMock(FilterConfig::class);
+
+        $moduleList = $this->createMock(ModuleList::class);
+        $moduleList->method('getFilterConfig')->willReturn($filterConfig);
+        $moduleList->method('generate')->willReturn('generate');
+
+        $this->framework->method('createInstance')->willReturnCallback(function ($class) use ($databaseAdapter, $moduleList) {
             switch ($class) {
                 case Database::class:
                     return $databaseAdapter;
@@ -520,6 +548,11 @@ abstract class TestCaseEnvironmentReaderManager extends TestCaseEnvironment
 
                 case ImageConfigElementType::class:
                     return new ImageConfigElementType($this->framework);
+
+                    break;
+
+                case ModuleList::class:
+                    return $moduleList;
 
                     break;
 

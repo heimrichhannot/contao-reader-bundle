@@ -27,6 +27,9 @@ class ItemChoice extends AbstractChoice
         }
 
         foreach ($config['reader']['items'] as $manager) {
+            if (!isset($manager['name']) || !isset($manager['class'])) {
+                continue;
+            }
             $choices[$manager['name']] = $manager['class'];
         }
 
