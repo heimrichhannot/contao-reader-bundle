@@ -35,6 +35,8 @@ require 'TestCaseEnvironment.php';
 
 require 'TestCaseEnvironmentReaderManager.php';
 
+require 'TestClass.php';
+
 // Handle classes in the global namespace
 $legacyLoader = function ($class) {
     if (class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false)) {

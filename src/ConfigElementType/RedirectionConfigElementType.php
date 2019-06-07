@@ -29,6 +29,12 @@ class RedirectionConfigElementType implements ConfigElementType
         $this->framework = $framework;
     }
 
+    /**
+     * @param ItemInterface            $item
+     * @param ReaderConfigElementModel $readerConfigElement
+     *
+     * @return void|null
+     */
     public function addToItemData(ItemInterface $item, ReaderConfigElementModel $readerConfigElement)
     {
         $item->setFormattedValue($readerConfigElement->name, false);

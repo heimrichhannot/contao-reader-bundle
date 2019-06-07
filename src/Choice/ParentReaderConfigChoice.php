@@ -30,25 +30,19 @@ class ParentReaderConfigChoice extends AbstractChoice
      */
     protected function collect()
     {
-        $id = $this->getContext()['id'];
+        $context = $this->getContext();
 
-        if (!$id
-            || null === ($readerConfigs = $this->readerConfigRegistry->findBy(
-                [
-                    'tl_reader_config.id != ?',
-                ],
-                [
-                    $id,
-                ]
-            ))
-        ) {
+        if (empty($context) || !isset($context['id'])) {
+            return [];
+        }
+        $id = $context['id'];
+        $readerConfigs = $this->readerConfigRegistry->findBy(['tl_reader_config.id != ?'], [$id]);
+
+        if (null === $readerConfigs) {
             return [];
         }
 
-        $choices = array_combine(
-            $readerConfigs->fetchEach('id'),
-            $readerConfigs->fetchEach('title')
-        );
+        $choices = array_combine($readerConfigs->fetchEach('id'), $readerConfigs->fetchEach('title'));
 
         asort($choices);
 

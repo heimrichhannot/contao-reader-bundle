@@ -27,6 +27,9 @@ class SyndicationChoice extends AbstractChoice
         }
 
         foreach ($config['reader']['syndications'] as $manager) {
+            if (!isset($manager['name']) || !isset($manager['class'])) {
+                continue;
+            }
             $choices[$manager['name']] = $manager['class'];
         }
 

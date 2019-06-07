@@ -27,6 +27,9 @@ class SyndicationPdfReaderChoice extends AbstractChoice
         }
 
         foreach ($config['reader']['syndication_pdf_readers'] as $manager) {
+            if (!isset($manager['name']) || !isset($manager['class'])) {
+                continue;
+            }
             $choices[$manager['name']] = $manager['class'];
         }
 

@@ -28,6 +28,12 @@ class ListConfigElementType implements ConfigElementType
         $this->framework = $framework;
     }
 
+    /**
+     * @param ItemInterface            $item
+     * @param ReaderConfigElementModel $readerConfigElement
+     *
+     * @return void|null
+     */
     public function addToItemData(ItemInterface $item, ReaderConfigElementModel $readerConfigElement)
     {
         $module = $this->framework->getAdapter(ModuleModel::class)->findById($readerConfigElement->listModule);

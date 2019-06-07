@@ -527,10 +527,33 @@ abstract class TestCaseEnvironmentReaderManager extends TestCaseEnvironment
             }
         });
 
+        $pageModelAdapter = $this->mockAdapter(['findPublishedById']);
+        $pageModelAdapter->method('findPublishedById')->willReturnCallback(function ($id) {
+            switch ($id) {
+                case 1:
+                    return null;
+
+                    break;
+
+                case 2:
+                    $pageModel = $this->createMock(PageModel::class);
+                    $pageModel->method('getFrontendUrl')->willReturn('www.heimrich-hannot.de');
+
+                    return $pageModel;
+
+                    break;
+
+                default:
+
+                    break;
+            }
+        });
+
         $this->framework = $this->mockContaoFramework([
             FilesModel::class => $filesAdapter,
             Model::class => $modelAdapter,
             ModuleModel::class => $moduleModelAdapter,
+            PageModel::class => $pageModelAdapter,
         ]);
 
         $filterConfig = $this->createMock(FilterConfig::class);
@@ -553,6 +576,11 @@ abstract class TestCaseEnvironmentReaderManager extends TestCaseEnvironment
 
                 case ModuleList::class:
                     return $moduleList;
+
+                    break;
+
+                case TestClass::class:
+                    return new TestClass();
 
                     break;
 

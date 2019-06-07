@@ -47,7 +47,6 @@ class DeleteConfigElementType extends RedirectionConfigElementType
 
                 break;
             }
-            $deleteConditions = true;
 
             if (ReaderConfigElement::REDIRECTION_PARAM_TYPE_FIELD_VALUE === $redirectParam['parameterType'] && !$request->hasGet($redirectParam['name'])) {
                 $deleteConditions = false;
@@ -74,9 +73,16 @@ class DeleteConfigElementType extends RedirectionConfigElementType
     protected function getDeleteClassByName(string $name)
     {
         $config = System::getContainer()->getParameter('huh.reader');
-        $templates = $config['reader']['delete_classes'];
 
-        foreach ($templates as $template) {
+        if (!isset($config['reader']['delete_classes'])) {
+            return null;
+        }
+
+        foreach ($config['reader']['delete_classes'] as $template) {
+            if (!isset($template['name']) || !isset($template['class'])) {
+                continue;
+            }
+
             if ($template['name'] == $name) {
                 return class_exists($template['class']) ? $template['class'] : null;
             }
