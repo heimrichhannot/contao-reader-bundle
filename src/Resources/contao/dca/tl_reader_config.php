@@ -81,6 +81,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'limitFormattedFields',
             'itemRetrievalMode',
             'hideUnpublishedItems',
+            'addStartAndStop',
             'addShowConditions',
             'addFieldDependentRedirect',
         ],
@@ -95,7 +96,8 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
         . \HeimrichHannot\ReaderBundle\Backend\ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM        => 'itemRetrievalAutoItemField',
         'itemRetrievalMode_'
         . \HeimrichHannot\ReaderBundle\Backend\ReaderConfig::ITEM_RETRIEVAL_MODE_FIELD_CONDITIONS => 'itemRetrievalFieldConditions',
-        'hideUnpublishedItems'                                                                    => 'publishedField,invertPublishedField',
+        'hideUnpublishedItems'                                                                    => 'publishedField,invertPublishedField,addStartAndStop',
+        'addStartAndStop'                                                                         => 'startField,stopField',
         'addShowConditions'                                                                       => 'showFieldConditions',
         'addFieldDependentRedirect'                                                               => 'fieldDependentJumpTo,redirectFieldConditions',
     ],
@@ -255,6 +257,35 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'inputType' => 'checkbox',
             'eval'      => ['tl_class' => 'w50'],
             'sql'       => "char(1) NOT NULL default ''"
+        ],
+        'addStartAndStop'        => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['addStartAndStop'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'startField'             => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config']['startField'],
+            'exclude'          => true,
+            'filter'           => true,
+            'inputType'        => 'select',
+            'options_callback' => function (\Contao\DataContainer $dc) {
+                return $dc->activeRecord->id > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->id) : [];
+            },
+            'eval'             => ['chosen' => true, 'includeBlankOption' => true, 'tl_class' => 'w50', 'mandatory' => true],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'stopField'              => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config']['stopField'],
+            'exclude'          => true,
+            'filter'           => true,
+            'inputType'        => 'select',
+            'options_callback' => function (\Contao\DataContainer $dc) {
+                return $dc->activeRecord->id > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->id) : [];
+            },
+            'eval'             => ['chosen' => true, 'includeBlankOption' => true, 'tl_class' => 'w50', 'mandatory' => true],
+            'sql'              => "varchar(64) NOT NULL default ''",
         ],
         // security
         'addShowConditions'          => [

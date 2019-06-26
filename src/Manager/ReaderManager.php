@@ -192,8 +192,21 @@ class ReaderManager implements ReaderManagerInterface
 
         // hide unpublished items?
         if (null !== $item && $readerConfig->hideUnpublishedItems) {
-            if (!$readerConfig->invertPublishedField && !$item[$readerConfig->publishedField]
-                || $readerConfig->invertPublishedField && $item[$readerConfig->publishedField]) {
+            $isPublished = !$readerConfig->invertPublishedField && $item[$readerConfig->publishedField]
+                || $readerConfig->invertPublishedField && !$item[$readerConfig->publishedField];
+
+            if ($isPublished && $readerConfig->addStartAndStop) {
+                $time = Date::floorToMinute();
+
+                $isPublished = ('' === $item[$readerConfig->startField] || $item[$readerConfig->startField] <= $time) &&
+                    ('' === $item[$readerConfig->stopField] || $item[$readerConfig->stopField] > ($time + 60));
+            }
+
+            if (\defined('BE_USER_LOGGED_IN') && BE_USER_LOGGED_IN === true && \Input::cookie('FE_PREVIEW')) {
+                $isPublished = true;
+            }
+
+            if (!$isPublished) {
                 return null;
             }
         }

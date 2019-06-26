@@ -43,6 +43,12 @@ $lang['publishedField'][1]               = 'Wählen Sie hier das Feld aus, in de
 $lang['invertPublishedField'][0]         = '"Veröffentlicht"-Feld negieren';
 $lang['invertPublishedField'][1]         =
     'Wählen Sie diese Option, wenn ein "wahr" im Veröffentlicht-Feld einem nichtöffentlichen Zustand entspricht.';
+$lang['addStartAndStop'][0]              = 'Start- und Stopfeld hinzufügen';
+$lang['addStartAndStop'][1]              = 'Wählen Sie diese Option, wenn Sie das Start- und Stopfeld beachten wollen.';
+$lang['startField'][0]                   = 'Startfeld';
+$lang['startField'][1]                   = 'Wählen Sie hier ein Feld aus.';
+$lang['stopField'][0]                    = 'Stopfeld';
+$lang['stopField'][1]                    = 'Wählen Sie hier ein Feld aus.';
 
 // security
 $lang['addShowConditions'][0]   = 'Bedingungen für die Anzeige hinzufügen';
@@ -71,8 +77,8 @@ $lang['setMetaDescriptionByField'][1]   = 'Wählen Sie diese Option, wenn die Me
 $lang['metaDescriptionFieldPattern'][0] = 'Instanzfeld-Muster';
 $lang['metaDescriptionFieldPattern'][1] = 'Geben Sie hier ein Text-Muster Meta-Description ein (Beispiel: "%somefield1% %somefield2%").';
 
-$lang['addDcMultilingualSupport'][0]    = 'Support für DC_Multilingual hinzufügen';
-$lang['addDcMultilingualSupport'][1]    = 'Wählen Sie diese Option, die verknüpfte Entität durch das Bundle "terminal42/contao-DC_Multilingual" übersetzbar ist.';
+$lang['addDcMultilingualSupport'][0] = 'Support für DC_Multilingual hinzufügen';
+$lang['addDcMultilingualSupport'][1] = 'Wählen Sie diese Option, die verknüpfte Entität durch das Bundle "terminal42/contao-DC_Multilingual" übersetzbar ist.';
 
 // template
 $lang['itemTemplate'][0] = 'Instanz-Template';
