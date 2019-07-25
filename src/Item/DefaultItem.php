@@ -274,7 +274,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
             )
         );
 
-        return $twig->render($this->_manager->getItemTemplateByName($template), $event->getContext());
+        return $twig->render($this->_manager->getItemTemplateByName($event->getTemplate()), $event->getContext());
     }
 
     /**
