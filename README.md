@@ -139,3 +139,11 @@ return [
 *Example: mpdf-config.php*
 
 More Information: https://mpdf.github.io/fonts-languages/fonts-in-mpdf-7-x.html
+
+## Developers
+
+### Events
+
+Class | Name | Description
+----- | ---- | -----------
+RenderTwigTemplateEvent | huh.utils.template.render | Fill be fired before the reader item is rendered (in DefaultItem). If you've overriden the parse method in an custom item class, you need to implement the event dispatcher by yourself. The event is located in [Utils Bundle](https://github.com/heimrichhannot/contao-utils-bundle) and used here for better bundle interoperability.

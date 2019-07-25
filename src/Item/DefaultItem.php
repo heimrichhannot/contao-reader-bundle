@@ -14,6 +14,7 @@ use Contao\System;
 use HeimrichHannot\ReaderBundle\ConfigElementType\ConfigElementType;
 use HeimrichHannot\ReaderBundle\Manager\ReaderManagerInterface;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
+use HeimrichHannot\UtilsBundle\Event\RenderTwigTemplateEvent;
 
 class DefaultItem implements ItemInterface, \JsonSerializable
 {
@@ -262,7 +263,18 @@ class DefaultItem implements ItemInterface, \JsonSerializable
 
         $twig = $this->_manager->getTwig();
 
-        return $twig->render($this->_manager->getItemTemplateByName($readerConfig->itemTemplate ?: 'default'), $this->jsonSerialize());
+        $context = $this->jsonSerialize();
+        $template = $readerConfig->itemTemplate ?: 'default';
+
+        /** @var RenderTwigTemplateEvent $event */
+        $event = System::getContainer()->get('event_dispatcher')->dispatch(
+            RenderTwigTemplateEvent::NAME,
+            new RenderTwigTemplateEvent(
+                $template, $context
+            )
+        );
+
+        return $twig->render($this->_manager->getItemTemplateByName($template), $event->getContext());
     }
 
     /**
