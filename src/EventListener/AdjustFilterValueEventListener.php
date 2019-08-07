@@ -9,6 +9,7 @@
 namespace HeimrichHannot\ReaderBundle\EventListener;
 
 use Contao\Database;
+use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\FilterBundle\Event\AdjustFilterValueEvent;
 use HeimrichHannot\ReaderBundle\Backend\FilterConfigElement;
@@ -62,6 +63,7 @@ class AdjustFilterValueEventListener
             }
         } else {
             $value = $instance->{$element->readerField};
+            $value = StringUtil::deserialize($value);
             $value = array_filter(!\is_array($value) ? explode(',', $value) : $value);
         }
 
