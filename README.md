@@ -147,3 +147,16 @@ More Information: https://mpdf.github.io/fonts-languages/fonts-in-mpdf-7-x.html
 Class | Name | Description
 ----- | ---- | -----------
 RenderTwigTemplateEvent | huh.utils.template.render | Fill be fired before the reader item is rendered (in DefaultItem). If you've overriden the parse method in an custom item class, you need to implement the event dispatcher by yourself. The event is located in [Utils Bundle](https://github.com/heimrichhannot/contao-utils-bundle) and used here for better bundle interoperability.
+
+
+### List config elements
+
+It is easy to add new list config elements.
+
+1. Create a class that implements `HeimrichHannot\ReaderBundle\ConfigElementType\ReaderConfigElementTypeInterface`
+1. Register the class as service with service tag `huh.reader.config_element_type`
+1. Add a friendly type name (translation) into the `$GLOBALS['TL_LANG']['tl_reader_config_element']['reference']` variable
+
+    ```php
+    $lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType::getType()] = 'Comment';
+    ```

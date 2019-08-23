@@ -35,6 +35,7 @@ use HeimrichHannot\UtilsBundle\Form\FormUtil;
 use HeimrichHannot\UtilsBundle\Image\ImageUtil;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 use HeimrichHannot\UtilsBundle\Url\UrlUtil;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ReaderManager implements ReaderManagerInterface
 {
@@ -122,12 +123,16 @@ class ReaderManager implements ReaderManagerInterface
      * @var Database
      */
     protected $database;
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
 
     public function __construct(
+        ContainerInterface $container,
         ContaoFrameworkInterface $framework,
         FilterManager $filterManager,
         ReaderQueryBuilder $readerQueryBuilder,
-        EntityFilter $entityFilter,
         ReaderConfigRegistry $readerConfigRegistry,
         ReaderConfigElementRegistry $readerConfigElementRegistry,
         ModelUtil $modelUtil,
@@ -140,7 +145,7 @@ class ReaderManager implements ReaderManagerInterface
         $this->framework = $framework;
         $this->filterManager = $filterManager;
         $this->readerQueryBuilder = $readerQueryBuilder;
-        $this->entityFilter = $entityFilter;
+        $this->entityFilter = $container->get('huh.entity_filter.backend.entity_filter');
         $this->readerConfigRegistry = $readerConfigRegistry;
         $this->readerConfigElementRegistry = $readerConfigElementRegistry;
         $this->modelUtil = $modelUtil;
@@ -150,6 +155,7 @@ class ReaderManager implements ReaderManagerInterface
         $this->imageUtil = $imageUtil;
         $this->twig = $twig;
         $this->database = $framework->createInstance(Database::class);
+        $this->container = $container;
     }
 
     /**
@@ -610,7 +616,7 @@ class ReaderManager implements ReaderManagerInterface
 
         $dca = &$GLOBALS['TL_DCA'][$readerConfig->dataContainer];
 
-        if (Config::get('useAutoItem') && ($autoItem = System::getContainer()->get('huh.request')->getGet('auto_item'))) {
+        if (Config::get('useAutoItem') && ($autoItem = $this->container->get('huh.request')->getGet('auto_item'))) {
             $field = $readerConfig->itemRetrievalAutoItemField;
 
             /* @var Model $adapter */

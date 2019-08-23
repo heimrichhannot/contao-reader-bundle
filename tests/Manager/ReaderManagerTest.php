@@ -39,6 +39,7 @@ class ReaderManagerTest extends TestCaseEnvironmentReaderManager
         // auto_item
         Config::set('useAutoItem', true);
         $this->request->setGet('auto_item', 'john-doe');
+        $this->container->set('huh.request', $this->request);
 
         $this->prepareReaderConfig([
             'itemRetrievalMode' => 'blahbluh',

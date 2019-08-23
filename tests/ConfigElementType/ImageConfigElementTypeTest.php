@@ -41,7 +41,7 @@ class ImageConfigElementTypeTest extends TestCaseEnvironmentReaderManager
         // image selector field and image field
         $readerConfigElementModel = new ReaderConfigElementModel();
         $readerConfigElementModel->setRow([
-            'type' => ReaderConfigElement::TYPE_IMAGE,
+            'type' => ImageConfigElementType::getType(),
             'imageSelectorField' => 'addImage1',
             'imageField' => 'singleSRC1',
             'placeholderImageMode' => ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED,
@@ -58,7 +58,7 @@ class ImageConfigElementTypeTest extends TestCaseEnvironmentReaderManager
         // no image selector field
         $defaultItem = new DefaultItem($this->manager, ['id' => 1, 'test' => true, 'string' => 'string', 'timestamp' => 1557989217, 'images' => null, 'singleSRC1' => 'female']);
         $readerConfigElementModel->setRow([
-            'type' => ReaderConfigElement::TYPE_IMAGE,
+            'type' => ImageConfigElementType::getType(),
             'imageField' => 'singleSRC1',
             'imageSelectorField' => false,
             'placeholderImageMode' => ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED,
@@ -74,7 +74,7 @@ class ImageConfigElementTypeTest extends TestCaseEnvironmentReaderManager
         // case PLACEHOLDER_IMAGE_MODE_GENDERED male
         $defaultItem = new DefaultItem($this->manager, ['id' => 1, 'test' => true, 'string' => 'string', 'timestamp' => 1557989217, 'images' => null, 'singleSRC1' => 'female']);
         $readerConfigElementModel->setRow([
-            'type' => ReaderConfigElement::TYPE_IMAGE,
+            'type' => ImageConfigElementType::getType(),
             'imageField' => 'singleSRC1',
             'imageSelectorField' => true,
             'placeholderImageMode' => ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED,
@@ -90,7 +90,7 @@ class ImageConfigElementTypeTest extends TestCaseEnvironmentReaderManager
         // case PLACEHOLDER_IMAGE_MODE_GENDERED female
         $defaultItem = new DefaultItem($this->manager, ['id' => 1, 'test' => true, 'string' => 'string', 'timestamp' => 1557989217, 'images' => null, 'singleSRC1' => 'female', 'gender' => 'female']);
         $readerConfigElementModel->setRow([
-            'type' => ReaderConfigElement::TYPE_IMAGE,
+            'type' => ImageConfigElementType::getType(),
             'imageField' => 'singleSRC1',
             'imageSelectorField' => true,
             'placeholderImageMode' => ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED,
@@ -106,7 +106,7 @@ class ImageConfigElementTypeTest extends TestCaseEnvironmentReaderManager
         // case PLACEHOLDER_IMAGE_MODE_SIMPLE
         $defaultItem = new DefaultItem($this->manager, ['id' => 1, 'test' => true, 'string' => 'string', 'timestamp' => 1557989217, 'images' => null, 'singleSRC1' => 'female', 'gender' => 'female']);
         $readerConfigElementModel->setRow([
-            'type' => ReaderConfigElement::TYPE_IMAGE,
+            'type' => ImageConfigElementType::getType(),
             'imageField' => 'singleSRC1',
             'imageSelectorField' => true,
             'placeholderImageMode' => ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE,

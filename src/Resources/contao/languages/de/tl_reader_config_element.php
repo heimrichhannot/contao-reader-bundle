@@ -209,13 +209,13 @@ $lang['commentHideFields'][1] = 'Wählen Sie hier Felder, die im Kommentar-Formu
  * Reference
  */
 $lang['reference'] = [
-    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_IMAGE                  => 'Bild',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType::getType()      => 'Bild',
     \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_REDIRECTION            => 'Weiterleitung',
     \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_NAVIGATION             => 'Navigation',
     \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_SYNDICATION            => 'Syndikationen',
     \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_LIST                   => 'Liste',
     \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_DELETE                 => 'Löschen',
-    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_COMMENT                => 'Kommentar',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType::getType()    => 'Kommentar',
 ];
 
 if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('HeimrichHannot\ListBundle\HeimrichHannotContaoListBundle'))

@@ -16,10 +16,32 @@ $lang['typeSelectorField'][1]     = 'Choose the field, which contains the boolea
 $lang['typeField'][0]             = 'Field';
 $lang['typeField'][1]             = 'Choose the field containing the reference for the type.';
 
+
+/**
+ * Reference
+ */
+$lang['reference'] = [
+   \HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType::getType()                 => 'Image',
+    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_REDIRECTION            => 'Redirect',
+    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_NAVIGATION             => 'Navigation',
+    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_SYNDICATION            => 'Syndication',
+    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_LIST                   => 'List',
+    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_DELETE                 => 'Delete',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType::getType()    => 'Comment',
+];
+
+if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('HeimrichHannot\ListBundle\HeimrichHannotContaoListBundle'))
+{
+    $lang['reference'][\HeimrichHannot\ListBundle\Backend\ListConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE] = 'simple';
+    $lang['reference'][\HeimrichHannot\ListBundle\Backend\ListConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED] = 'gender-specific';
+}
+
+
 /**
  * Legends
  */
 $lang['general_legend'] = 'General settings';
+
 
 /**
  * Buttons

@@ -21,7 +21,7 @@
                         <input type="hidden" name="FORM_SUBMIT" value="<?= $data['formId'] ?>">
                         <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
                         <?php foreach ($data['fields'] as $key => $field): ?>
-                            <?php if (in_array($key, $data['hiddenFields'])): ?>
+                            <?php if (isset($data['hiddenFields']) && !empty($data['hiddenFields']) && in_array($key, $data['hiddenFields'])): ?>
                                 <input type="hidden" value="<?= $field->value ?>" name="<?= $field->name ?>">
                             <?php else: ?>
                                 <?= $field->parse() ?>

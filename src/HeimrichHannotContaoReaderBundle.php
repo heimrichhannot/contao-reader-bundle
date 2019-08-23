@@ -8,7 +8,9 @@
 
 namespace HeimrichHannot\ReaderBundle;
 
+use HeimrichHannot\ReaderBundle\DependencyInjection\Compiler\ReaderCompilerPass;
 use HeimrichHannot\ReaderBundle\DependencyInjection\ReaderExtension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class HeimrichHannotContaoReaderBundle extends Bundle
@@ -19,5 +21,11 @@ class HeimrichHannotContaoReaderBundle extends Bundle
     public function getContainerExtension()
     {
         return new ReaderExtension();
+    }
+
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new ReaderCompilerPass());
+        parent::build($container);
     }
 }

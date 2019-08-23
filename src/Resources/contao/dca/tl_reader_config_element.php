@@ -12,7 +12,8 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         'onload_callback'   => [
             ['huh.reader.backend.reader-config-element', 'checkPermission'],
             ['huh.reader.backend.reader-config-element', 'modifyPalette'],
-            ['huh.reader.listener.callback.readerconfigelement', 'updateLabel']
+            ['huh.reader.listener.callback.readerconfigelement', 'updateLabel'],
+            [\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer::class, 'onLoadCallback'],
         ],
         'onsubmit_callback' => [
             ['huh.utils.dca', 'setDateAdded'],
@@ -36,7 +37,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'fields'                => ['title'],
             'headerFields'          => ['title'],
             'panelLayout'           => 'filter;sort,search,limit',
-            'child_record_callback' => ['huh.reader.backend.reader-config-element', 'listChildren'],
+            'child_record_callback' => [\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer::class, 'listChildren'],
         ],
         'global_operations' => [
             'all' => [
@@ -87,13 +88,11 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'commentOverridePalette',
             'commentHideFields'
         ],
-        'default'                                                                  => '{type_legend},title,type;',
-        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_IMAGE       => '{title_type_legend},title,type;{config_legend},imageSelectorField,imageField,imgSize,placeholderImageMode;',
+        'default'                                                                  => '{title_type_legend},title,type;',
         \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_REDIRECTION => '{title_type_legend},title,type;{config_legend},name,jumpTo,addRedirectConditions,addRedirectParam,addAutoItem;',
         \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_NAVIGATION  => '{title_type_legend},title,type;{config_legend},name,navigationTemplate,previousLabel,nextLabel,previousTitle,nextTitle,sortingField,sortingDirection,listConfig,infiniteNavigation;',
         \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_SYNDICATION => '{title_type_legend},title,type;{config_legend},name,syndicationTemplate,syndicationFacebook,syndicationTwitter,syndicationGooglePlus,syndicationLinkedIn,syndicationXing,syndicationMail,syndicationPdf,syndicationPrint,syndicationIcs,syndicationTumblr,syndicationPinterest,syndicationReddit,syndicationWhatsApp;',
         \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_DELETE      => '{title_type_legend},title,type;{config_legend},name,jumpTo,addRedirectConditions,addRedirectParam,addAutoItem,addMemberGroups,deleteClass,deleteJumpTo;',
-        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_COMMENT     => '{title_type_legend},title,type;{config_legend},commentTemplate,commentCustomTemplate,commentNotify,commentSortOrder,commentPerPage,commentModerate,commentBbcode,commentRequireLogin,commentDisableCaptcha,commentOverridePalette,commentHideFields;',
     ],
     'subpalettes' => [
         'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE => 'placeholderImage',
@@ -144,7 +143,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'exclude'   => true,
             'filter'    => true,
             'inputType' => 'select',
-            'options'   => System::getContainer()->get('huh.reader.util.reader-config-element-util')->getConfigElementTypes(),
+            'options_callback'   => [\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer::class, 'getConfigElementTypes'],
             'reference' => &$GLOBALS['TL_LANG']['tl_reader_config_element']['reference'],
             'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'submitOnChange' => true],
             'sql'       => "varchar(64) NOT NULL default ''",

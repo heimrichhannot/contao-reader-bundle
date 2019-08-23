@@ -19,22 +19,18 @@ use Contao\System;
 
 class ReaderConfigElement
 {
-    const TYPE_IMAGE = 'image';
     const TYPE_LIST = 'list';
     const TYPE_REDIRECTION = 'redirection';
     const TYPE_NAVIGATION = 'navigation';
     const TYPE_SYNDICATION = 'syndication';
     const TYPE_DELETE = 'delete';
-    const TYPE_COMMENT = 'comment';
 
     const TYPES = [
-        self::TYPE_IMAGE,
         self::TYPE_LIST,
         self::TYPE_REDIRECTION,
         self::TYPE_NAVIGATION,
         self::TYPE_SYNDICATION,
         self::TYPE_DELETE,
-        self::TYPE_COMMENT,
     ];
 
     const REDIRECTION_PARAM_TYPE_DEFAULT_VALUE = 'default_value';
@@ -60,12 +56,6 @@ class ReaderConfigElement
     public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
-    }
-
-    public function listChildren($arrRow)
-    {
-        return '<div class="tl_content_left">'.($arrRow['title'] ?: $arrRow['id']).' <span style="color:#b3b3b3; padding-left:3px">['
-               .\Date::parse(\Contao\Config::get('datimFormat'), trim($arrRow['dateAdded'])).']</span></div>';
     }
 
     public function checkPermission()

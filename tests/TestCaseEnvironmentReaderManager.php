@@ -159,7 +159,8 @@ abstract class TestCaseEnvironmentReaderManager extends TestCaseEnvironment
         $this->createRequest();
 
         // container
-        System::setContainer($this->getContainerMock());
+
+        $this->container = $this->mockContainer();
 
         $this->createAdapters();
 
@@ -178,7 +179,10 @@ abstract class TestCaseEnvironmentReaderManager extends TestCaseEnvironment
         $this->entityFilter = $this->createConfiguredMock(EntityFilter::class, ['computeSqlCondition' => ['firstname=?', ['John']]]);
         $this->entityFilter->method('computeQueryBuilderCondition')->willReturn($readerQueryBuilderMock);
 
-        $this->manager = new ReaderManager($this->framework, $this->filterManager, $this->readerQueryBuilder, $this->entityFilter, $this->readerConfigRegistry, $this->readerConfigElementRegistry, $this->modelUtil, $this->urlUtil, $this->containerUtil, $this->imageUtil, $this->formUtil, $this->twig);
+        $this->container->set('huh.entity_filter.backend.entity_filter', $this->entityFilter);
+        System::setContainer($this->container);
+
+        $this->manager = new ReaderManager($this->container, $this->framework, $this->filterManager, $this->readerQueryBuilder, $this->readerConfigRegistry, $this->readerConfigElementRegistry, $this->modelUtil, $this->urlUtil, $this->containerUtil, $this->imageUtil, $this->formUtil, $this->twig);
 
         $this->manager->setModuleData(['id' => 1, 'readerConfig' => 1]);
 
@@ -229,7 +233,9 @@ abstract class TestCaseEnvironmentReaderManager extends TestCaseEnvironment
         $this->readerConfigRegistry->method('findByPk')->willReturn($readerConfig);
         $this->readerConfigRegistry->method('computeReaderConfig')->willReturn($readerConfig);
 
-        $this->manager = new ReaderManager($this->framework, $this->filterManager, $this->readerQueryBuilder, $this->entityFilter, $this->readerConfigRegistry, $this->readerConfigElementRegistry, $this->modelUtil, $this->urlUtil, $this->containerUtil, $this->imageUtil, $this->formUtil, $this->twig);
+        $this->container->set('huh.entity_filter.backend.entity_filter', $this->entityFilter);
+
+        $this->manager = new ReaderManager($this->container, $this->framework, $this->filterManager, $this->readerQueryBuilder, $this->readerConfigRegistry, $this->readerConfigElementRegistry, $this->modelUtil, $this->urlUtil, $this->containerUtil, $this->imageUtil, $this->formUtil, $this->twig);
 
         $this->manager->setModuleData(['id' => 1, 'readerConfig' => 1]);
         $this->manager->setReaderConfig($readerConfig);
@@ -360,7 +366,7 @@ abstract class TestCaseEnvironmentReaderManager extends TestCaseEnvironment
     protected function createReaderConfigElementRegistry()
     {
         $imageElement1 = $this->mockClassWithProperties(ReaderConfigElementModel::class, [
-            'type' => ReaderConfigElement::TYPE_IMAGE,
+            'type' => ImageConfigElementType::getType(),
             'imageSelectorField' => 'addImage1',
             'imageField' => 'singleSRC1',
             'placeholderImageMode' => ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED,
@@ -370,7 +376,7 @@ abstract class TestCaseEnvironmentReaderManager extends TestCaseEnvironment
         ]);
 
         $imageElement2 = $this->mockClassWithProperties(ReaderConfigElementModel::class, [
-            'type' => ReaderConfigElement::TYPE_IMAGE,
+            'type' => ImageConfigElementType::getType(),
             'imageSelectorField' => 'addImage2',
             'imageField' => 'singleSRC2',
             'placeholderImageMode' => ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE,
@@ -379,7 +385,7 @@ abstract class TestCaseEnvironmentReaderManager extends TestCaseEnvironment
         ]);
 
         $imageElement3 = $this->mockClassWithProperties(ReaderConfigElementModel::class, [
-            'type' => ReaderConfigElement::TYPE_IMAGE,
+            'type' => ImageConfigElementType::getType(),
             'imageSelectorField' => 'addImage3',
             'imageField' => 'singleSRC3',
         ]);

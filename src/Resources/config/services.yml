@@ -1,4 +1,13 @@
 services:
+  _defaults:
+    public: true
+
+  _instanceof:
+    HeimrichHannot\ReaderBundle\ConfigElementType\ReaderConfigElementTypeInterface:
+      tags: ['huh.reader.config_element_type']
+      public: false
+      autowire: true
+
   huh.reader.backend.reader-config:
     class: HeimrichHannot\ReaderBundle\Backend\ReaderConfig
     arguments:
@@ -48,36 +57,21 @@ services:
     arguments:
       - "@contao.framework"
 
-  huh.reader.manager.reader:
-    class: HeimrichHannot\ReaderBundle\Manager\ReaderManager
-    arguments:
-      - "@contao.framework"
-      - "@huh.filter.manager"
-      - "@huh.reader.query_builder"
-      - "@huh.entity_filter.backend.entity_filter"
-      - "@huh.reader.reader-config-registry"
-      - "@huh.reader.reader-config-element-registry"
-      - "@huh.utils.model"
-      - "@huh.utils.url"
-      - "@huh.utils.container"
-      - "@huh.utils.image"
-      - "@huh.utils.form"
-      - "@twig"
+  HeimrichHannot\ReaderBundle\Manager\ReaderManager:
+    autowire: true
+  huh.reader.manager.reader: '@HeimrichHannot\ReaderBundle\Manager\ReaderManager'
 
-  huh.reader.reader-config-registry:
-    class: HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry
+  HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry:
     arguments:
       - "@contao.framework"
       - "@huh.filter.manager"
       - "@huh.utils.model"
       - "@huh.utils.dca"
+  huh.reader.reader-config-registry: '@HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry'
 
-  huh.reader.reader-config-element-registry:
-    class: HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry
-    arguments:
-      - "@contao.framework"
-      - "@huh.reader.reader-config-registry"
-      - "@huh.utils.model"
+  HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry:
+    autowire: true
+  huh.reader.reader-config-element-registry: '@HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry'
 
   huh.reader.util.reader-config-element-util:
     class: HeimrichHannot\ReaderBundle\Util\ReaderConfigElementUtil
@@ -137,3 +131,6 @@ services:
       - "@twig.truncate.service"
     tags:
       - { name: twig.extension }
+
+  HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType: ~
+  HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType: ~

@@ -75,29 +75,6 @@ class ReaderConfigElementUtil
     }
 
     /**
-     * get all config element types from config.
-     *
-     * @return array
-     */
-    public function getConfigElementTypes()
-    {
-        $types = [];
-
-        $readerConfig = System::getContainer()->getParameter('huh.reader');
-        $configElementTypes = $readerConfig['reader']['config_element_types'];
-
-        if (empty($configElementTypes)) {
-            return $types;
-        }
-
-        foreach ($configElementTypes as $configElementType) {
-            $types[] = $configElementType['name'];
-        }
-
-        return $types;
-    }
-
-    /**
      * get all delete classes from config.
      *
      * @return array

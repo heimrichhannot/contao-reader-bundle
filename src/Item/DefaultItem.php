@@ -12,7 +12,9 @@ use Contao\DataContainer;
 use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\ReaderBundle\ConfigElementType\ConfigElementType;
+use HeimrichHannot\ReaderBundle\ConfigElementType\ReaderConfigElementData;
 use HeimrichHannot\ReaderBundle\Manager\ReaderManagerInterface;
+use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
 use HeimrichHannot\UtilsBundle\Event\RenderTwigTemplateEvent;
 
@@ -247,17 +249,22 @@ class DefaultItem implements ItemInterface, \JsonSerializable
         $readerConfig = $this->_manager->getReaderConfig();
 
         // add reader config element data
+        /** @var ReaderConfigElementModel[]|array $readerConfigElements */
         if (null !== ($readerConfigElements = $this->_manager->getReaderConfigElementRegistry()->findBy(['tl_reader_config_element.pid=?'], [$readerConfig->id]))) {
             foreach ($readerConfigElements as $readerConfigElement) {
-                if (null === ($class = $this->_manager->getReaderConfigElementRegistry()->getElementClassByName($readerConfigElement->type))) {
-                    continue;
-                }
+                if ($readerConfigElementType = $this->_manager->getReaderConfigElementRegistry()->getReaderConfigElementType($readerConfigElement->type)) {
+                    $readerConfigElementType->addToListItemData(new ReaderConfigElementData($this, $readerConfigElement));
+                } else {
+                    if (null === ($class = $this->_manager->getReaderConfigElementRegistry()->getElementClassByName($readerConfigElement->type))) {
+                        continue;
+                    }
 
-                /**
-                 * @var ConfigElementType
-                 */
-                $type = $this->_manager->getFramework()->createInstance($class, [$this->_manager->getFramework()]);
-                $type->addToItemData($this, $readerConfigElement);
+                    /**
+                     * @var ConfigElementType
+                     */
+                    $type = $this->_manager->getFramework()->createInstance($class, [$this->_manager->getFramework()]);
+                    $type->addToItemData($this, $readerConfigElement);
+                }
             }
         }
 

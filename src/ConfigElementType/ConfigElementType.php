@@ -12,6 +12,11 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 
+/**
+ * Interface ConfigElementType.
+ *
+ * @deprecated Use ReaderConfigElementTypeInterface instead
+ */
 interface ConfigElementType
 {
     public function __construct(ContaoFrameworkInterface $framework);

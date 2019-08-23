@@ -16,7 +16,7 @@ use HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 
-class ImageConfigElementType implements ConfigElementType
+class ImageConfigElementType implements ReaderConfigElementTypeInterface
 {
     /**
      * @var ContaoFrameworkInterface
@@ -91,5 +91,35 @@ class ImageConfigElementType implements ConfigElementType
 
             $item->setFormattedValue('images', $templateData['images']);
         }
+    }
+
+    /**
+     * Return the reader config element type alias.
+     *
+     * @return string
+     */
+    public static function getType(): string
+    {
+        return 'image';
+    }
+
+    /**
+     * Return the reader config element type palette.
+     *
+     * @return string
+     */
+    public function getPalette(): string
+    {
+        return '{config_legend},imageSelectorField,imageField,imgSize,placeholderImageMode;';
+    }
+
+    /**
+     * Update the item data.
+     *
+     * @param ReaderConfigElementData $configElementData
+     */
+    public function addToListItemData(ReaderConfigElementData $configElementData): void
+    {
+        $this->addToItemData($configElementData->getItem(), $configElementData->getReaderConfigElement());
     }
 }
