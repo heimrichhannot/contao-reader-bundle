@@ -134,3 +134,7 @@ services:
 
   HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType: ~
   HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType: ~
+  HeimrichHannot\ReaderBundle\ConfigElementType\SyndicationConfigElementType: ~
+  HeimrichHannot\ReaderBundle\ConfigElementType\RedirectionConfigElementType: ~
+  HeimrichHannot\ReaderBundle\ConfigElementType\DeleteConfigElementType: ~
+  HeimrichHannot\ReaderBundle\ConfigElementType\NavigationConfigElementType: ~

@@ -70,6 +70,16 @@ class DeleteConfigElementType extends RedirectionConfigElementType
         }
     }
 
+    public static function getType(): string
+    {
+        return 'delete';
+    }
+
+    public function getPalette(): string
+    {
+        return '{config_legend},name,jumpTo,addRedirectConditions,addRedirectParam,addAutoItem,addMemberGroups,deleteClass,deleteJumpTo;';
+    }
+
     protected function getDeleteClassByName(string $name)
     {
         $config = System::getContainer()->getParameter('huh.reader');

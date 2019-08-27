@@ -4,12 +4,6 @@ huh:
             - { name: default, id: huh.reader.manager.reader }
         items:
             - { name: default, class: HeimrichHannot\ReaderBundle\Item\DefaultItem }
-        config_element_types:
-            - { name: list, class: HeimrichHannot\ReaderBundle\ConfigElementType\ListConfigElementType }
-            - { name: navigation, class: HeimrichHannot\ReaderBundle\ConfigElementType\NavigationConfigElementType }
-            - { name: syndication, class: HeimrichHannot\ReaderBundle\ConfigElementType\SyndicationConfigElementType }
-            - { name: redirection, class: HeimrichHannot\ReaderBundle\ConfigElementType\RedirectionConfigElementType }
-            - { name: delete, class: HeimrichHannot\ReaderBundle\ConfigElementType\DeleteConfigElementType }
         templates:
             item:
                 - { name: default, template: "@HeimrichHannotContaoReader/reader_item_default.html.twig" }

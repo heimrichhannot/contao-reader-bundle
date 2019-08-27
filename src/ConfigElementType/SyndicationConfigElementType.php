@@ -8,29 +8,28 @@
 
 namespace HeimrichHannot\ReaderBundle\ConfigElementType;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\System;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\AbstractSyndication;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class SyndicationConfigElementType implements ConfigElementType
+class SyndicationConfigElementType implements ReaderConfigElementTypeInterface
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContainerInterface
      */
-    protected $framework;
+    private $container;
 
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(ContainerInterface $container)
     {
-        $this->framework = $framework;
+        $this->container = $container;
     }
 
     public function addToItemData(ItemInterface $item, ReaderConfigElementModel $readerConfigElement)
     {
         $syndications = [];
 
-        $config = System::getContainer()->getParameter('huh.reader');
+        $config = $this->container->getParameter('huh.reader');
 
         if (!isset($config['reader']['syndications'])) {
             return $syndications;
@@ -67,9 +66,39 @@ class SyndicationConfigElementType implements ConfigElementType
 
         $item->setFormattedValue(
             $readerConfigElement->name,
-            $item->getManager()->getTwig()->render(System::getContainer()->get('huh.utils.template')->getTemplate($readerConfigElement->syndicationTemplate),
+            $this->container->get('twig')->render($this->container->get('huh.utils.template')->getTemplate($readerConfigElement->syndicationTemplate),
                 ['links' => $syndications]
             )
         );
+    }
+
+    /**
+     * Return the reader config element type alias.
+     *
+     * @return string
+     */
+    public static function getType(): string
+    {
+        return 'syndication';
+    }
+
+    /**
+     * Return the reader config element type palette.
+     *
+     * @return string
+     */
+    public function getPalette(): string
+    {
+        return '{config_legend},name,syndicationTemplate,syndicationFacebook,syndicationTwitter,syndicationGooglePlus,syndicationLinkedIn,syndicationXing,syndicationMail,syndicationPdf,syndicationPrint,syndicationIcs,syndicationTumblr,syndicationPinterest,syndicationReddit,syndicationWhatsApp;';
+    }
+
+    /**
+     * Update the item data.
+     *
+     * @param ReaderConfigElementData $configElementData
+     */
+    public function addToListItemData(ReaderConfigElementData $configElementData): void
+    {
+        $this->addToItemData($configElementData->getItem(), $configElementData->getReaderConfigElement());
     }
 }

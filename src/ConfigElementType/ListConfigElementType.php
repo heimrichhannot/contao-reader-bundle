@@ -16,7 +16,7 @@ use HeimrichHannot\ListBundle\Module\ModuleList;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 
-class ListConfigElementType implements ConfigElementType
+class ListConfigElementType implements ReaderConfigElementTypeInterface
 {
     /**
      * @var ContaoFrameworkInterface
@@ -57,5 +57,35 @@ class ListConfigElementType implements ConfigElementType
         $lists = $item->getFormattedValue('list');
 
         $item->setFormattedValue('list', array_merge(\is_array($lists) ? $lists : [], [$readerConfigElement->listName => $listModule->generate()]));
+    }
+
+    /**
+     * Return the reader config element type alias.
+     *
+     * @return string
+     */
+    public static function getType(): string
+    {
+        return 'list';
+    }
+
+    /**
+     * Return the reader config element type palette.
+     *
+     * @return string
+     */
+    public function getPalette(): string
+    {
+        return '{config_legend},listName,listModule,initialFilter;';
+    }
+
+    /**
+     * Update the item data.
+     *
+     * @param ReaderConfigElementData $configElementData
+     */
+    public function addToListItemData(ReaderConfigElementData $configElementData): void
+    {
+        $this->addToItemData($configElementData->getItem(), $configElementData->getReaderConfigElement());
     }
 }

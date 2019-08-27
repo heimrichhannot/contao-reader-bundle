@@ -89,10 +89,6 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'commentHideFields'
         ],
         'default'                                                                  => '{title_type_legend},title,type;',
-        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_REDIRECTION => '{title_type_legend},title,type;{config_legend},name,jumpTo,addRedirectConditions,addRedirectParam,addAutoItem;',
-        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_NAVIGATION  => '{title_type_legend},title,type;{config_legend},name,navigationTemplate,previousLabel,nextLabel,previousTitle,nextTitle,sortingField,sortingDirection,listConfig,infiniteNavigation;',
-        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_SYNDICATION => '{title_type_legend},title,type;{config_legend},name,syndicationTemplate,syndicationFacebook,syndicationTwitter,syndicationGooglePlus,syndicationLinkedIn,syndicationXing,syndicationMail,syndicationPdf,syndicationPrint,syndicationIcs,syndicationTumblr,syndicationPinterest,syndicationReddit,syndicationWhatsApp;',
-        \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_DELETE      => '{title_type_legend},title,type;{config_legend},name,jumpTo,addRedirectConditions,addRedirectParam,addAutoItem,addMemberGroups,deleteClass,deleteJumpTo;',
     ],
     'subpalettes' => [
         'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE => 'placeholderImage',
@@ -694,7 +690,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationIcs'],
             'exclude'   => true,
             'inputType' => 'checkbox',
-            'eval'      => ['tl_class' => 'w50'],
+            'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
             'sql'       => "char(1) NOT NULL default ''"
         ],
         'syndicationTumblr'              => [
@@ -875,9 +871,6 @@ $dca = &$GLOBALS['TL_DCA']['tl_reader_config_element'];
 
 // list type
 if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('HeimrichHannot\ListBundle\HeimrichHannotContaoListBundle')) {
-    $dca['palettes'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_LIST] =
-        '{title_type_legend},title,type;{config_legend},listName,listModule,initialFilter;';
-
     $dca['fields'] = array_merge($dca['fields'], [
         'sortingDirection' => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['sortingDirection'],
@@ -958,8 +951,5 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
             'sql'       => "blob NULL",
         ],
     ]);
-} else {
-    $dca['fields']['type']['options'] =
-        array_diff($dca['fields']['type']['options'], [\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_LIST]);
 }
 

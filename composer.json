@@ -6,12 +6,11 @@
   "require": {
     "php": "^7.1",
     "contao/core-bundle": "^4.4",
-    "symfony/framework-bundle": "^3.4",
+    "heimrichhannot/contao-filter-bundle": "^1.0.0-beta108",
     "heimrichhannot/contao-head-bundle": "^1.0",
     "heimrichhannot/contao-utils-bundle": "^2.1",
     "heimrichhannot/contao-status_messages": "^1.0",
     "heimrichhannot/contao-entity-filter-bundle": "^1.0",
-    "heimrichhannot/contao-list-bundle": "^1.0.0-beta68",
     "heimrichhannot/truncate-html": "^1.0",
     "jsvrcek/ics-bundle": "0.*",
     "twig/extensions": "^1.5"
@@ -27,6 +26,9 @@
     "php-http/message-factory": "^1.0.2",
     "satooshi/php-coveralls": "^2.0",
     "symfony/phpunit-bridge": "^3.2"
+  },
+  "suggest": {
+    "heimrichhannot/contao-list-bundle": "^1.3.0"
   },
   "minimum-stability": "beta",
   "autoload": {

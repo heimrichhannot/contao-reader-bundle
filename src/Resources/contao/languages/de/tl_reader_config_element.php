@@ -1,5 +1,4 @@
 <?php
-
 $lang = &$GLOBALS['TL_LANG']['tl_reader_config_element'];
 
 /**
@@ -209,13 +208,13 @@ $lang['commentHideFields'][1] = 'Wählen Sie hier Felder, die im Kommentar-Formu
  * Reference
  */
 $lang['reference'] = [
-    \HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType::getType()      => 'Bild',
-    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_REDIRECTION            => 'Weiterleitung',
-    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_NAVIGATION             => 'Navigation',
-    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_SYNDICATION            => 'Syndikationen',
-    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_LIST                   => 'Liste',
-    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_DELETE                 => 'Löschen',
-    \HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType::getType()    => 'Kommentar',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType::getType()       => 'Bild',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\RedirectionConfigElementType::getType() => 'Weiterleitung',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\NavigationConfigElementType::getType()  => 'Navigation',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\SyndicationConfigElementType::getType() => 'Syndikationen',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\ListConfigElementType::getType()        => 'Liste',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\DeleteConfigElementType::getType()      => 'Löschen',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType::getType()     => 'Kommentar',
 ];
 
 if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('HeimrichHannot\ListBundle\HeimrichHannotContaoListBundle'))

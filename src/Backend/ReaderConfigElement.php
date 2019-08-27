@@ -19,20 +19,6 @@ use Contao\System;
 
 class ReaderConfigElement
 {
-    const TYPE_LIST = 'list';
-    const TYPE_REDIRECTION = 'redirection';
-    const TYPE_NAVIGATION = 'navigation';
-    const TYPE_SYNDICATION = 'syndication';
-    const TYPE_DELETE = 'delete';
-
-    const TYPES = [
-        self::TYPE_LIST,
-        self::TYPE_REDIRECTION,
-        self::TYPE_NAVIGATION,
-        self::TYPE_SYNDICATION,
-        self::TYPE_DELETE,
-    ];
-
     const REDIRECTION_PARAM_TYPE_DEFAULT_VALUE = 'default_value';
     const REDIRECTION_PARAM_TYPE_FIELD_VALUE = 'field_value';
 

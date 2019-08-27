@@ -21,13 +21,13 @@ $lang['typeField'][1]             = 'Choose the field containing the reference f
  * Reference
  */
 $lang['reference'] = [
-   \HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType::getType()                 => 'Image',
-    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_REDIRECTION            => 'Redirect',
-    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_NAVIGATION             => 'Navigation',
-    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_SYNDICATION            => 'Syndication',
-    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_LIST                   => 'List',
-    \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::TYPE_DELETE                 => 'Delete',
-    \HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType::getType()    => 'Comment',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType::getType()       => 'Image',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\RedirectionConfigElementType::getType() => 'Redirect',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\NavigationConfigElementType::getType()  => 'Navigation',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\SyndicationConfigElementType::getType() => 'Syndication',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\ListConfigElementType::getType()        => 'List',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\DeleteConfigElementType::getType()      => 'Delete',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType::getType()     => 'Comment',
 ];
 
 if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('HeimrichHannot\ListBundle\HeimrichHannotContaoListBundle'))

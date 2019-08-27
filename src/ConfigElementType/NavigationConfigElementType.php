@@ -16,7 +16,7 @@ use HeimrichHannot\ReaderBundle\Exception\InvalidReaderAndListFilterDataContaine
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 
-class NavigationConfigElementType implements ConfigElementType
+class NavigationConfigElementType implements ReaderConfigElementTypeInterface
 {
     /**
      * @var ContaoFrameworkInterface
@@ -49,6 +49,36 @@ class NavigationConfigElementType implements ConfigElementType
                 ['items' => $items]
             )
         );
+    }
+
+    /**
+     * Return the reader config element type alias.
+     *
+     * @return string
+     */
+    public static function getType(): string
+    {
+        return 'navigation';
+    }
+
+    /**
+     * Return the reader config element type palette.
+     *
+     * @return string
+     */
+    public function getPalette(): string
+    {
+        return '{config_legend},name,navigationTemplate,previousLabel,nextLabel,previousTitle,nextTitle,sortingField,sortingDirection,listConfig,infiniteNavigation;';
+    }
+
+    /**
+     * Update the item data.
+     *
+     * @param ReaderConfigElementData $configElementData
+     */
+    public function addToListItemData(ReaderConfigElementData $configElementData): void
+    {
+        $this->addToItemData($configElementData->getItem(), $configElementData->getReaderConfigElement());
     }
 
     /**

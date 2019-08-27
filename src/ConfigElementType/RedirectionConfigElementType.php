@@ -17,7 +17,7 @@ use HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 
-class RedirectionConfigElementType implements ConfigElementType
+class RedirectionConfigElementType implements ReaderConfigElementTypeInterface
 {
     /**
      * @var ContaoFrameworkInterface
@@ -98,5 +98,35 @@ class RedirectionConfigElementType implements ConfigElementType
         }
 
         return $allowed;
+    }
+
+    /**
+     * Return the reader config element type alias.
+     *
+     * @return string
+     */
+    public static function getType(): string
+    {
+        return 'redirection';
+    }
+
+    /**
+     * Return the reader config element type palette.
+     *
+     * @return string
+     */
+    public function getPalette(): string
+    {
+        return '{config_legend},name,jumpTo,addRedirectConditions,addRedirectParam,addAutoItem;';
+    }
+
+    /**
+     * Update the item data.
+     *
+     * @param ReaderConfigElementData $configElementData
+     */
+    public function addToListItemData(ReaderConfigElementData $configElementData): void
+    {
+        $this->addToItemData($configElementData->getItem(), $configElementData->getReaderConfigElement());
     }
 }

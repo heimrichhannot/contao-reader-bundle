@@ -68,6 +68,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->arrayNode('config_element_types')
+                            ->setDeprecated('Add config element types this way is deprecated. See readme how to config element types.')
                             ->arrayPrototype()
                                 ->children()
                                     ->scalarNode('name')
