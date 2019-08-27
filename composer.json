@@ -6,7 +6,7 @@
   "require": {
     "php": "^7.1",
     "contao/core-bundle": "^4.4",
-    "heimrichhannot/contao-filter-bundle": "^1.0.0-beta108",
+    "heimrichhannot/contao-filter-bundle": "^1.0-beta",
     "heimrichhannot/contao-head-bundle": "^1.0",
     "heimrichhannot/contao-utils-bundle": "^2.1",
     "heimrichhannot/contao-status_messages": "^1.0",
