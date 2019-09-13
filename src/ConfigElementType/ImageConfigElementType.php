@@ -18,6 +18,9 @@ use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 
 class ImageConfigElementType implements ReaderConfigElementTypeInterface
 {
+    const TYPE = 'image';
+    const RANDOM_IMAGE_PLACEHOLDERS_SESSION_KEY = 'huh.random-image-placeholders';
+
     /**
      * @var ContaoFrameworkInterface
      */
@@ -58,6 +61,31 @@ class ImageConfigElementType implements ReaderConfigElementTypeInterface
                     $image = $readerConfigElement->placeholderImage;
 
                     break;
+
+                case ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_RANDOM:
+                    $images = StringUtil::deserialize($readerConfigElement->placeholderImages, true);
+
+                    $session = System::getContainer()->get('session');
+
+                    $randomImagePlaceholders = [];
+
+                    if (!$session->has(static::RANDOM_IMAGE_PLACEHOLDERS_SESSION_KEY)) {
+                        $session->set(static::RANDOM_IMAGE_PLACEHOLDERS_SESSION_KEY, $randomImagePlaceholders);
+                    } else {
+                        $randomImagePlaceholders = $session->get(static::RANDOM_IMAGE_PLACEHOLDERS_SESSION_KEY);
+                    }
+
+                    if (null !== ($readerConfig = System::getContainer()->get('huh.utils.model')->findModelInstanceByPk('tl_reader_config', $readerConfigElement->pid))) {
+                        $key = $readerConfig->dataContainer.'_'.$item->getRawValue('id');
+
+                        if (isset($randomImagePlaceholders[$key])) {
+                            $image = $randomImagePlaceholders[$key];
+                        } elseif (null !== ($randomKey = array_rand($images))) {
+                            $image = $randomImagePlaceholders[$key] = $images[$randomKey];
+                        }
+
+                        $session->set(static::RANDOM_IMAGE_PLACEHOLDERS_SESSION_KEY, $randomImagePlaceholders);
+                    }
             }
         } else {
             return;

@@ -30,10 +30,12 @@ class ReaderConfigElement
     const PLACEHOLDER_IMAGE_MODE_NONE = 'none';
     const PLACEHOLDER_IMAGE_MODE_GENDERED = 'gendered';
     const PLACEHOLDER_IMAGE_MODE_SIMPLE = 'simple';
+    const PLACEHOLDER_IMAGE_MODE_RANDOM = 'random';
 
     const PLACEHOLDER_IMAGE_MODES = [
         self::PLACEHOLDER_IMAGE_MODE_GENDERED,
         self::PLACEHOLDER_IMAGE_MODE_SIMPLE,
+        self::PLACEHOLDER_IMAGE_MODE_RANDOM,
     ];
 
     /** @var ContaoFrameworkInterface */

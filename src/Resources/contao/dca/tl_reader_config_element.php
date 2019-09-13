@@ -73,7 +73,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         ],
     ],
     'palettes'    => [
-        '__selector__'                                                             => [
+        '__selector__' => [
             'type',
             'placeholderImageMode',
             'addRedirectConditions',
@@ -88,23 +88,23 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'commentOverridePalette',
             'commentHideFields'
         ],
-        'default'                                                                  => '{title_type_legend},title,type;',
+        'default'      => '{title_type_legend},title,type;',
     ],
     'subpalettes' => [
-        'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE => 'placeholderImage',
-        'placeholderImageMode_'
-        . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED                       => 'genderField,placeholderImage,placeholderImageFemale',
-        'addRedirectConditions'                                                                                           => 'redirectConditions',
-        'addRedirectParam'                                                                                                => 'redirectParams',
-        'syndicationMail'                                                                                                 => 'mailSubjectLabel,mailBodyLabel',
-        'syndicationPinterest'                                                                                            => 'imageSelectorField,imageField,imgSize',
-        'syndicationPrint'                                                                                                => 'syndicationPrintTemplate',
-        'syndicationPdf'                                                                                                  => 'syndicationPdfReader,syndicationPdfTemplate,syndicationPdfFontDirectories,syndicationPdfMasterTemplate,syndicationPdfPageMargin',
-        'syndicationIcs'                                                                                                  => 'syndicationIcsTitleField,syndicationIcsDescriptionField,syndicationIcsLocationField,syndicationIcsUrlField,syndicationIcsStartDateField,syndicationIcsEndDateField,syndicationIcsAddTime',
-        'syndicationIcsAddTime'                                                                                           => 'syndicationIcsAddTimeField,syndicationIcsStartTimeField,syndicationIcsEndTimeField',
-        'addMemberGroups'                                                                                                 => 'memberGroups',
-        'commentOverridePalette'                                                                                          => 'commentPalette',
-        'commentHideFields'                                                                                               => 'commentHideFieldsPalette'
+        'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE   => 'placeholderImage',
+        'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED => 'genderField,placeholderImage,placeholderImageFemale',
+        'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_RANDOM   => 'placeholderImages',
+        'addRedirectConditions'                                                                                             => 'redirectConditions',
+        'addRedirectParam'                                                                                                  => 'redirectParams',
+        'syndicationMail'                                                                                                   => 'mailSubjectLabel,mailBodyLabel',
+        'syndicationPinterest'                                                                                              => 'imageSelectorField,imageField,imgSize',
+        'syndicationPrint'                                                                                                  => 'syndicationPrintTemplate',
+        'syndicationPdf'                                                                                                    => 'syndicationPdfReader,syndicationPdfTemplate,syndicationPdfFontDirectories,syndicationPdfMasterTemplate,syndicationPdfPageMargin',
+        'syndicationIcs'                                                                                                    => 'syndicationIcsTitleField,syndicationIcsDescriptionField,syndicationIcsLocationField,syndicationIcsUrlField,syndicationIcsStartDateField,syndicationIcsEndDateField,syndicationIcsAddTime',
+        'syndicationIcsAddTime'                                                                                             => 'syndicationIcsAddTimeField,syndicationIcsStartTimeField,syndicationIcsEndTimeField',
+        'addMemberGroups'                                                                                                   => 'memberGroups',
+        'commentOverridePalette'                                                                                            => 'commentPalette',
+        'commentHideFields'                                                                                                 => 'commentHideFieldsPalette'
     ],
     'fields'      => [
         'id'                             => [
@@ -135,14 +135,14 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'sql'       => "varchar(255) NOT NULL default ''",
         ],
         'type'                           => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['type'],
-            'exclude'   => true,
-            'filter'    => true,
-            'inputType' => 'select',
-            'options_callback'   => [\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer::class, 'getConfigElementTypes'],
-            'reference' => &$GLOBALS['TL_LANG']['tl_reader_config_element']['reference'],
-            'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'submitOnChange' => true],
-            'sql'       => "varchar(64) NOT NULL default ''",
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['type'],
+            'exclude'          => true,
+            'filter'           => true,
+            'inputType'        => 'select',
+            'options_callback' => [\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer::class, 'getConfigElementTypes'],
+            'reference'        => &$GLOBALS['TL_LANG']['tl_reader_config_element']['reference'],
+            'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'submitOnChange' => true],
+            'sql'              => "varchar(64) NOT NULL default ''",
         ],
         'typeSelectorField'              => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['typeSelectorField'],
@@ -212,7 +212,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50'],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
-        'syndicationIcsLocationField'     => [
+        'syndicationIcsLocationField'    => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationIcsLocationField'],
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
@@ -291,7 +291,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50'],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
-        'syndicationIcsUrlField'     => [
+        'syndicationIcsUrlField'         => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationIcsUrlField'],
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
@@ -363,6 +363,13 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'exclude'          => true,
             'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
             'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'placeholderImages'       => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['placeholderImages'],
+            'exclude'   => true,
+            'inputType' => 'fileTree',
+            'eval'      => ['tl_class' => 'w50 autoheight', 'fieldType' => 'checkbox', 'filesOnly' => true, 'extensions' => Config::get('validImageTypes'), 'mandatory' => true, 'multiple' => true],
+            'sql'       => "blob NULL",
         ],
         // security
         'addRedirectConditions'          => [

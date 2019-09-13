@@ -149,6 +149,8 @@ class ReaderConfigRegistry
             return null;
         }
 
+        $readerConfig->rootId = $readerConfig->id;
+
         if (!$readerConfig->parentReaderConfig) {
             return $readerConfig;
         }
@@ -173,6 +175,9 @@ class ReaderConfigRegistry
                 );
             }
         }
+
+        $computedReaderConfig->id = $readerConfigPk;
+        $computedReaderConfig->rootId = $rootReaderConfig->id;
 
         return $computedReaderConfig;
     }

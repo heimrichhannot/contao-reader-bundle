@@ -29,6 +29,8 @@ $lang['placeholderImageFemale'][0] = 'Platzhalterbild (weiblich)';
 $lang['placeholderImageFemale'][1] = 'Wählen Sie hier ein Platzhalterbild für weibliche Instanzen aus.';
 $lang['genderField'][0]            = 'Geschlecht-Feld';
 $lang['genderField'][1]            = 'Wählen Sie hier das Feld aus, das das Geschlecht der Instanz enthält.';
+$lang['placeholderImages'][0]      = 'Platzhalterbilder';
+$lang['placeholderImages'][1]      = 'Wählen Sie hier Platzhalterbilder aus.';
 
 $lang['listModule']    = ['Listen Modul', 'Wählen Sie ein Listen Module aus.'];
 $lang['initialFilter'] = ['Initialer Filter', ''];
@@ -217,11 +219,9 @@ $lang['reference'] = [
     \HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType::getType()     => 'Kommentar',
 ];
 
-if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('HeimrichHannot\ListBundle\HeimrichHannotContaoListBundle'))
-{
-    $lang['reference'][\HeimrichHannot\ListBundle\Backend\ListConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE] = 'einfach';
-    $lang['reference'][\HeimrichHannot\ListBundle\Backend\ListConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED] = 'geschlechtsspezifisch';
-}
+$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE]   = 'einfach';
+$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED] = 'geschlechtsspezifisch';
+$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_RANDOM]   = 'zufällig';
 
 /**
  * Legends
