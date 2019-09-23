@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.1] - 2019-09-23
+
+#### Fxied
+- inheritance issues
+
 ## [1.1.0] - 2019-09-13
 
 #### Added

@@ -250,7 +250,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
 
         // add reader config element data
         /** @var ReaderConfigElementModel[]|array $readerConfigElements */
-        if (null !== ($readerConfigElements = $this->_manager->getReaderConfigElementRegistry()->findBy(['tl_reader_config_element.pid=?'], [$readerConfig->id]))) {
+        if (null !== ($readerConfigElements = $this->_manager->getReaderConfigElementRegistry()->findBy(['tl_reader_config_element.pid=?'], [$readerConfig->rootId]))) {
             foreach ($readerConfigElements as $readerConfigElement) {
                 if ($readerConfigElementType = $this->_manager->getReaderConfigElementRegistry()->getReaderConfigElementType($readerConfigElement->type)) {
                     $readerConfigElementType->addToListItemData(new ReaderConfigElementData($this, $readerConfigElement));
