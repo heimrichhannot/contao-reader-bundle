@@ -205,6 +205,13 @@ $lang['commentOverridePalette'][1] = 'Wählen Sie diese Option, wenn Sie die Pal
 $lang['commentHideFields'][0] = 'Felder verstecken';
 $lang['commentHideFields'][1] = 'Wählen Sie hier Felder, die im Kommentar-Formular versteckt dargestellt werden sollen.';
 
+// submission form
+$lang['submissionReader'][0]       = 'Einsendungsleser';
+$lang['submissionReader'][1]       = 'Wählen Sie hier ein Modul vom Typ "Einsendungsleser" aus.';
+$lang['emailField'][0]             = 'E-Mail-Feld';
+$lang['emailField'][1]             = 'Wählen Sie hier das Feld aus, an das die E-Mail verschickt werden soll.';
+$lang['submissionFormExplanation']    = 'Die E-Mail-Adresse, an die das Formular verschickt wird, finden Sie im Notification-Center-Token ##form_value_submission_form_email##.';
+
 
 /**
  * Reference
@@ -217,6 +224,7 @@ $lang['reference'] = [
     \HeimrichHannot\ReaderBundle\ConfigElementType\ListConfigElementType::getType()        => 'Liste',
     \HeimrichHannot\ReaderBundle\ConfigElementType\DeleteConfigElementType::getType()      => 'Löschen',
     \HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType::getType()     => 'Kommentar',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\SubmissionFormConfigElementType::TYPE       => 'Kontaktformular',
 ];
 
 $lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE]   = 'einfach';

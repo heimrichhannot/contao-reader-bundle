@@ -253,7 +253,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
         if (null !== ($readerConfigElements = $this->_manager->getReaderConfigElementRegistry()->findBy(['tl_reader_config_element.pid=?'], [$readerConfig->rootId]))) {
             foreach ($readerConfigElements as $readerConfigElement) {
                 if ($readerConfigElementType = $this->_manager->getReaderConfigElementRegistry()->getReaderConfigElementType($readerConfigElement->type)) {
-                    $readerConfigElementType->addToListItemData(new ReaderConfigElementData($this, $readerConfigElement));
+                    $readerConfigElementType->addToReaderItemData(new ReaderConfigElementData($this, $readerConfigElement));
                 } else {
                     if (null === ($class = $this->_manager->getReaderConfigElementRegistry()->getElementClassByName($readerConfigElement->type))) {
                         continue;

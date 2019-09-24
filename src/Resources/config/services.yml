@@ -138,3 +138,4 @@ services:
   HeimrichHannot\ReaderBundle\ConfigElementType\RedirectionConfigElementType: ~
   HeimrichHannot\ReaderBundle\ConfigElementType\DeleteConfigElementType: ~
   HeimrichHannot\ReaderBundle\ConfigElementType\NavigationConfigElementType: ~
+  HeimrichHannot\ReaderBundle\ConfigElementType\SubmissionFormConfigElementType: ~

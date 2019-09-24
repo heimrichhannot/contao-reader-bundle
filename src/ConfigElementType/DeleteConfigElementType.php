@@ -80,6 +80,16 @@ class DeleteConfigElementType extends RedirectionConfigElementType
         return '{config_legend},name,jumpTo,addRedirectConditions,addRedirectParam,addAutoItem,addMemberGroups,deleteClass,deleteJumpTo;';
     }
 
+    /**
+     * Update the item data.
+     *
+     * @param ReaderConfigElementData $configElementData
+     */
+    public function addToReaderItemData(ReaderConfigElementData $configElementData): void
+    {
+        $this->addToItemData($configElementData->getItem(), $configElementData->getReaderConfigElement());
+    }
+
     protected function getDeleteClassByName(string $name)
     {
         $config = System::getContainer()->getParameter('huh.reader');

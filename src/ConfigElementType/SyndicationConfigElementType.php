@@ -97,7 +97,7 @@ class SyndicationConfigElementType implements ReaderConfigElementTypeInterface
      *
      * @param ReaderConfigElementData $configElementData
      */
-    public function addToListItemData(ReaderConfigElementData $configElementData): void
+    public function addToReaderItemData(ReaderConfigElementData $configElementData): void
     {
         $this->addToItemData($configElementData->getItem(), $configElementData->getReaderConfigElement());
     }

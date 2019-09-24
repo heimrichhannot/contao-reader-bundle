@@ -28,3 +28,6 @@ huh.reader.element.mail.subject.syndication.default: 'Artikel Empfehlung: %title
 
 # Config element mail subject labels
 huh.reader.element.mail.body.syndication.default: 'Schau dir diesen interessanten Artikel an: %url%'
+
+# Misc
+huh.reader.misc.contact: Kontakt

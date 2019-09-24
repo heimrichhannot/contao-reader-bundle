@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2019-09-24
+
+#### Added
+- submission form config element type
+
 ## [1.1.1] - 2019-09-23
 
 #### Fxied

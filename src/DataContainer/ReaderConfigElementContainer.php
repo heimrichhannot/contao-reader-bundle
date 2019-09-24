@@ -35,9 +35,9 @@ class ReaderConfigElementContainer
     /**
      * Update dca palettes with config element types palettes.
      *
-     * @param $dcTable
+     * @param $dc
      */
-    public function onLoadCallback($dcTable)
+    public function onLoadCallback($dc)
     {
         $configElementTypes = $this->configElementTypeRegistry->getReaderConfigElementTypes();
 
@@ -46,7 +46,7 @@ class ReaderConfigElementContainer
         }
 
         foreach ($configElementTypes as $listConfigElementType) {
-            $palette = '{title_type_legend},title,type;'.$listConfigElementType->getPalette();
+            $palette = '{title_type_legend},title,type,templateVariable;'.$listConfigElementType->getPalette();
             $GLOBALS['TL_DCA'][ReaderConfigElementModel::getTable()]['palettes'][$listConfigElementType::getType()] = $palette;
         }
     }
