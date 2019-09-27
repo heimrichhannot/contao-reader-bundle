@@ -85,6 +85,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'addShowConditions',
             'addFieldDependentRedirect',
             'addOverview',
+            'overviewMode',
             'customJumpToOverviewLabel'
         ],
         'default'      => '{general_legend},title,parentReaderConfig;'
@@ -102,7 +103,8 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
         'addStartAndStop'                                                                         => 'startField,stopField',
         'addShowConditions'                                                                       => 'showFieldConditions',
         'addFieldDependentRedirect'                                                               => 'fieldDependentJumpTo,redirectFieldConditions',
-        'addOverview'                                                                             => 'jumpToOverview,customJumpToOverviewLabel',
+        'addOverview'                                                                             => 'overviewMode,customJumpToOverviewLabel',
+        'overviewMode_jumpTo'                                                                     => 'jumpToOverview',
         'customJumpToOverviewLabel'                                                               => 'jumpToOverviewLabel'
     ],
     'fields'      => [
@@ -358,9 +360,17 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'exclude'   => true,
             'inputType' => 'checkbox',
             'search'    => true,
-            'default'   => true,
-            'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
+            'eval'      => ['tl_class' => 'clr w50', 'submitOnChange' => true],
             'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'overviewMode' => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['overviewMode'],
+            'exclude'   => true,
+            'inputType' => 'select',
+            'options'    => ['history','jumpTo'],
+            'reference' => &$GLOBALS['TL_LANG']['tl_reader_config']['overviewMode']['reference'],
+            'eval'      => ['tl_class' => 'clr w50', 'submitOnChange' => true, 'includeBlankOption' => true, 'mandatory' => true],
+            'sql'       => "varchar(32) NOT NULL default ''",
         ],
         'jumpToOverview'               => [
             'label'      => &$GLOBALS['TL_LANG']['tl_reader_config']['jumpToOverview'],
@@ -375,7 +385,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['customJumpToOverviewLabel'],
             'exclude'   => true,
             'inputType' => 'checkbox',
-            'eval'      => ['submitOnChange' => true, 'tl_class' => 'w50'],
+            'eval'      => ['submitOnChange' => true, 'tl_class' => 'clr w50'],
             'sql'       => "char(1) NOT NULL default ''",
         ],
         'jumpToOverviewLabel'                  => [

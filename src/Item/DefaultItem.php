@@ -59,6 +59,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
      */
     protected $_jumpToOverviewLabel;
 
+
     /**
      * @var DataContainer
      */
@@ -313,14 +314,17 @@ class DefaultItem implements ItemInterface, \JsonSerializable
     public function addJumpToOverview(ReaderConfigModel $readerConfig): void
     {
         $this->setAddOverview($readerConfig->addOverview);
+        $this->setJumpToOverviewLabel($this->getTranslatedJumpToOverviewLabel($readerConfig));
+
+        if('history' == $readerConfig->overviewMode) {
+            return;
+        }
 
         $pageJumpTo = System::getContainer()->get('huh.utils.url')->getJumpToPageObject($readerConfig->jumpToOverview);
 
         if (null !== $pageJumpTo) {
             $this->setJumpToOverview($pageJumpTo->getAbsoluteUrl());
         }
-
-        $this->setJumpToOverviewLabel($this->getTranslatedJumpToOverviewLabel($readerConfig));
     }
 
     /**
@@ -359,10 +363,11 @@ class DefaultItem implements ItemInterface, \JsonSerializable
     /**
      * @return bool
      */
-    public function getAddOverview(): bool
+    public function getAddOverview(): ?bool
     {
         return $this->_addOverview;
     }
+
 
     /**
      * @param string $label

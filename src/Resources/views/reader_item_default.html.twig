@@ -6,7 +6,7 @@
     {% endfor %}
     {% if addOverview|default %}
         <div class="overview">
-            <a href="{{ jumpToOverview }}" role="button">{{ jumpToOverviewLabel }}</a>
+            <a {% if jumpToOverview|default %}href="{{ jumpToOverview }}"{% else %}onclick="history.go(-1);"{% endif %} role="button">{{ jumpToOverviewLabel }}</a>
         </div>
     {% endif %}
 </div>

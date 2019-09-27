@@ -71,6 +71,11 @@ $lang['customJumpToOverviewLabel'][0] = 'Label für "zur Übersicht" überschrei
 $lang['customJumpToOverviewLabel'][1] = '';
 $lang['jumpToOverviewLabel'][0] = 'Label für "zur Übersicht"';
 $lang['jumpToOverviewLabel'][1] = '';
+$lang['overviewMode'][0] = 'Link-Modus';
+$lang['overviewMode'][1] = 'Wählen Sie hier den Modus, nachdem der Link erzeugt wird.';
+$lang['overviewMode']['reference']['history'] = 'vorherige Seite';
+$lang['overviewMode']['reference']['jumpTo'] = 'Seite definieren';
+
 
 // misc
 $lang['headTags'][0]         = '&lt;head&gt; Tags';
