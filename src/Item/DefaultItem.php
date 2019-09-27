@@ -52,9 +52,6 @@ class DefaultItem implements ItemInterface, \JsonSerializable
      */
     protected $_addOverview = false;
 
-    /**
-     * @var string
-     */
     protected $_jumpToOverview;
 
     /**
@@ -354,7 +351,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
     /**
      * @param bool $addOverview
      */
-    public function setAddOverview(bool $addOverview)
+    public function setAddOverview(bool $addOverview): void
     {
         $this->_addOverview = $addOverview;
     }
@@ -370,15 +367,15 @@ class DefaultItem implements ItemInterface, \JsonSerializable
     /**
      * @param string $label
      */
-    public function setJumpToOverviewLabel(string $label)
+    public function setJumpToOverviewLabel(string $label): void
     {
         $this->_jumpToOverviewLabel = $label;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getJumpToOverviewLabel(): string
+    public function getJumpToOverviewLabel(): ?string
     {
         return $this->_jumpToOverviewLabel;
     }
