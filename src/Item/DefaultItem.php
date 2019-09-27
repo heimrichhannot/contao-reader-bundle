@@ -8,18 +8,24 @@
 
 namespace HeimrichHannot\ReaderBundle\Item;
 
+use Contao\Controller;
 use Contao\DataContainer;
 use Contao\StringUtil;
 use Contao\System;
+use HeimrichHannot\FilterBundle\Model\FilterConfigElementModel;
 use HeimrichHannot\ReaderBundle\ConfigElementType\ConfigElementType;
 use HeimrichHannot\ReaderBundle\ConfigElementType\ReaderConfigElementData;
 use HeimrichHannot\ReaderBundle\Manager\ReaderManagerInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
+use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
 use HeimrichHannot\UtilsBundle\Event\RenderTwigTemplateEvent;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class DefaultItem implements ItemInterface, \JsonSerializable
 {
+    const JUMP_TO_OVERVIEW_LABEL_DEFAULT = 'huh.reader.label.overview.default';
+
     /**
      * Current Item Manager.
      *
@@ -40,6 +46,21 @@ class DefaultItem implements ItemInterface, \JsonSerializable
      * @var array
      */
     protected $_formatted = [];
+
+    /**
+     * @var bool
+     */
+    protected $_addOverview = false;
+
+    /**
+     * @var string
+     */
+    protected $_jumpToOverview;
+
+    /**
+     * @var string
+     */
+    protected $_jumpToOverviewLabel;
 
     /**
      * @var DataContainer
@@ -268,6 +289,11 @@ class DefaultItem implements ItemInterface, \JsonSerializable
             }
         }
 
+        if($readerConfig->addOverview) {
+            $this->addJumpToOverview($readerConfig);
+        }
+
+
         $twig = $this->_manager->getTwig();
 
         $context = $this->jsonSerialize();
@@ -285,10 +311,86 @@ class DefaultItem implements ItemInterface, \JsonSerializable
     }
 
     /**
+     * @param ReaderConfigModel $readerConfig
+     */
+    public function addJumpToOverview(ReaderConfigModel $readerConfig): void
+    {
+        $this->setAddOverview($readerConfig->addOverview);
+
+        $pageJumpTo = System::getContainer()->get('huh.utils.url')->getJumpToPageObject($readerConfig->jumpToOverview);
+
+        if (null !== $pageJumpTo) {
+            $this->setJumpToOverview($pageJumpTo->getAbsoluteUrl());
+        }
+
+        $this->setJumpToOverviewLabel($this->getTranslatedJumpToOverviewLabel($readerConfig));
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function jsonSerialize()
     {
         return System::getContainer()->get('huh.utils.class')->jsonSerialize($this, $this->getFormatted());
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getJumpToOverview(): ?string
+    {
+        return $this->_jumpToOverview;
+    }
+
+    /**
+     * @param string $jumpToOverview
+     */
+    public function setJumpToOverview(string $jumpToOverview): void
+    {
+        $this->_jumpToOverview = $jumpToOverview;
+    }
+
+    /**
+     * @param bool $addOverview
+     */
+    public function setAddOverview(bool $addOverview)
+    {
+        $this->_addOverview = $addOverview;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getAddOverview(): bool
+    {
+        return $this->_addOverview;
+    }
+
+    /**
+     * @param string $label
+     */
+    public function setJumpToOverviewLabel(string $label)
+    {
+        $this->_jumpToOverviewLabel = $label;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJumpToOverviewLabel(): string
+    {
+        return $this->_jumpToOverviewLabel;
+    }
+
+    /**
+     * @param ReaderConfigModel $readerConfigModel
+     * @return string
+     */
+    public function getTranslatedJumpToOverviewLabel(ReaderConfigModel $readerConfig): string
+    {
+        $label = $readerConfig->customJumpToOverviewLabel ? $readerConfig->jumpToOverviewLabel : static::JUMP_TO_OVERVIEW_LABEL_DEFAULT;
+
+        return System::getContainer()->get('translator')->trans($label);
     }
 }

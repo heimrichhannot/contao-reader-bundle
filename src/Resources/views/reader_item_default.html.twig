@@ -4,4 +4,9 @@
             {{ field }}: {{ value }}
         </div>
     {% endfor %}
+    {% if addOverview|default %}
+        <div class="overview">
+            <a href="{{ jumpToOverview }}" role="button">{{ jumpToOverviewLabel }}</a>
+        </div>
+    {% endif %}
 </div>

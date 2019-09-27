@@ -84,10 +84,12 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'addStartAndStop',
             'addShowConditions',
             'addFieldDependentRedirect',
+            'addOverview',
+            'customJumpToOverviewLabel'
         ],
         'default'      => '{general_legend},title,parentReaderConfig;'
             . '{config_legend},dataContainer,filter,manager,item,limitFormattedFields,itemRetrievalMode,hideUnpublishedItems;'
-            . '{security_legend},addShowConditions;' . '{jumpto_legend},addFieldDependentRedirect;'
+            . '{security_legend},addShowConditions;' . '{jumpto_legend},addFieldDependentRedirect,addOverview;'
             . '{misc_legend},headTags,addDcMultilingualSupport;' . '{template_legend},itemTemplate;'
     ],
     'subpalettes' => [
@@ -100,6 +102,8 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
         'addStartAndStop'                                                                         => 'startField,stopField',
         'addShowConditions'                                                                       => 'showFieldConditions',
         'addFieldDependentRedirect'                                                               => 'fieldDependentJumpTo,redirectFieldConditions',
+        'addOverview'                                                                             => 'jumpToOverview,customJumpToOverviewLabel',
+        'customJumpToOverviewLabel'                                                               => 'jumpToOverviewLabel'
     ],
     'fields'      => [
         'id'                         => [
@@ -348,7 +352,42 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'options_callback' => ['huh.reader.choice.template.item', 'getCachedChoices'],
             'eval'             => ['tl_class' => 'w50 clr', 'includeBlankOption' => true],
             'sql'              => "varchar(128) NOT NULL default ''",
-        ]
+        ],
+        'addOverview' => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['addOverview'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'search'    => true,
+            'default'   => true,
+            'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'jumpToOverview'               => [
+            'label'      => &$GLOBALS['TL_LANG']['tl_reader_config']['jumpToOverview'],
+            'exclude'    => true,
+            'inputType'  => 'pageTree',
+            'foreignKey' => 'tl_page.title',
+            'eval'       => ['fieldType' => 'radio', 'tl_class' => 'clr', 'mandatory' => true],
+            'sql'        => "int(10) unsigned NOT NULL default '0'",
+            'relation'   => ['type' => 'hasOne', 'load' => 'eager'],
+        ],
+        'customJumpToOverviewLabel'            => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['customJumpToOverviewLabel'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['submitOnChange' => true, 'tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'jumpToOverviewLabel'                  => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config']['jumpToOverviewLabel'],
+            'exclude'          => true,
+            'inputType'        => 'select',
+            'options_callback' => function (\DataContainer $dc) {
+                return \Contao\System::getContainer()->get('huh.utils.choice.message')->getCachedChoices('huh.reader.label.overview');
+            },
+            'eval'             => ['chosen' => true, 'mandatory' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
+            'sql'              => "varchar(128) NOT NULL default ''",
+        ],
     ]
 ];
 
