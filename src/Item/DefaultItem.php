@@ -8,11 +8,9 @@
 
 namespace HeimrichHannot\ReaderBundle\Item;
 
-use Contao\Controller;
 use Contao\DataContainer;
 use Contao\StringUtil;
 use Contao\System;
-use HeimrichHannot\FilterBundle\Model\FilterConfigElementModel;
 use HeimrichHannot\ReaderBundle\ConfigElementType\ConfigElementType;
 use HeimrichHannot\ReaderBundle\ConfigElementType\ReaderConfigElementData;
 use HeimrichHannot\ReaderBundle\Manager\ReaderManagerInterface;
@@ -20,7 +18,6 @@ use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
 use HeimrichHannot\UtilsBundle\Event\RenderTwigTemplateEvent;
-use Symfony\Component\Form\FormBuilderInterface;
 
 class DefaultItem implements ItemInterface, \JsonSerializable
 {
@@ -58,7 +55,6 @@ class DefaultItem implements ItemInterface, \JsonSerializable
      * @var string
      */
     protected $_jumpToOverviewLabel;
-
 
     /**
      * @var DataContainer
@@ -287,10 +283,9 @@ class DefaultItem implements ItemInterface, \JsonSerializable
             }
         }
 
-        if($readerConfig->addOverview) {
+        if ($readerConfig->addOverview) {
             $this->addJumpToOverview($readerConfig);
         }
-
 
         $twig = $this->_manager->getTwig();
 
@@ -316,7 +311,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
         $this->setAddOverview($readerConfig->addOverview);
         $this->setJumpToOverviewLabel($this->getTranslatedJumpToOverviewLabel($readerConfig));
 
-        if('history' == $readerConfig->overviewMode) {
+        if ('history' == $readerConfig->overviewMode) {
             return;
         }
 
@@ -334,7 +329,6 @@ class DefaultItem implements ItemInterface, \JsonSerializable
     {
         return System::getContainer()->get('huh.utils.class')->jsonSerialize($this, $this->getFormatted());
     }
-
 
     /**
      * @return string
@@ -368,7 +362,6 @@ class DefaultItem implements ItemInterface, \JsonSerializable
         return $this->_addOverview;
     }
 
-
     /**
      * @param string $label
      */
@@ -387,6 +380,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
 
     /**
      * @param ReaderConfigModel $readerConfigModel
+     *
      * @return string
      */
     public function getTranslatedJumpToOverviewLabel(ReaderConfigModel $readerConfig): string

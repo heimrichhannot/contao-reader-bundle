@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.3.3] - 2019-10-01
+
+#### Fixed
+- submission form
+
 ## [1.3.2] - 2019-09-27
 
 #### Added

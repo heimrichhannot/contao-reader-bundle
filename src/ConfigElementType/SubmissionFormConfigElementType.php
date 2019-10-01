@@ -28,6 +28,8 @@ class SubmissionFormConfigElementType implements ReaderConfigElementTypeInterfac
      */
     private $modelUtil;
 
+    private static $count = 0;
+
     public function __construct(ModelUtil $modelUtil, Environment $twig)
     {
         $this->modelUtil = $modelUtil;
@@ -72,6 +74,10 @@ class SubmissionFormConfigElementType implements ReaderConfigElementTypeInterfac
         if (!class_exists($class)) {
             return '';
         }
+
+        // the form might be more than one time on the page
+        $moduleModel->formHybridUseCustomFormIdSuffix = true;
+        $moduleModel->formHybridCustomFormIdSuffix = ++static::$count;
 
         /** @var Module $module */
         $module = new $class($moduleModel);
