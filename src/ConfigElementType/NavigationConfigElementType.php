@@ -112,7 +112,7 @@ class NavigationConfigElementType implements ReaderConfigElementTypeInterface
      */
     protected function getListFilterNavigationItems(ItemInterface $item, ReaderConfigElementModel $readerConfigElement): ?array
     {
-        if (null === ($listConfig = System::getContainer()->get('huh.list.list-config-registry')->findByPk($readerConfigElement->listConfig))) {
+        if (null === ($listConfig = System::getContainer()->get('huh.list.list-config-registry')->computeListConfig($readerConfigElement->listConfig))) {
             return null;
         }
 
@@ -126,7 +126,7 @@ class NavigationConfigElementType implements ReaderConfigElementTypeInterface
 
         $filterConfig->initQueryBuilder();
 
-        return $this->getItems($filterConfig, $item, $readerConfigElement, $listConfig->sortingField, $listConfig->sortingDirection);
+        return $this->getItems($filterConfig, $item, $readerConfigElement, $readerConfigElement->sortingField, $readerConfigElement->sortingDirection);
     }
 
     /**
@@ -140,7 +140,7 @@ class NavigationConfigElementType implements ReaderConfigElementTypeInterface
      *
      * @return array
      */
-    protected function getItems(FilterConfig $filterConfig, ItemInterface $item, ReaderConfigElementModel $readerConfigElement, string $sortingField, string $sortingDirection): array
+    protected function getItems(FilterConfig $filterConfig, ItemInterface $item, ReaderConfigElementModel $readerConfigElement, ?string $sortingField, ?string $sortingDirection): array
     {
         $items = [];
 
