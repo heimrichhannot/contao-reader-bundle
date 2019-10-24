@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.4.0] - 2019-10-24
+
+#### Changed
+- made filter optional again
+
+#### Fixed
+- comment request token esi issue in prod mode
+
 ## [1.3.4] - 2019-10-22
 
 #### Fixed

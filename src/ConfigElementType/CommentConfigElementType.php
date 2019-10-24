@@ -9,6 +9,7 @@
 namespace HeimrichHannot\ReaderBundle\ConfigElementType;
 
 use Contao\Comments;
+use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\FrontendTemplate;
 use Contao\FrontendUser;
@@ -51,7 +52,8 @@ class CommentConfigElementType implements ReaderConfigElementTypeInterface
             $template->hiddenFields = $this->getHiddenFields($readerConfigElement);
         }
 
-        $item->setFormattedValue('comments', $template->parse());
+        // replace insert tags because of request token esi issue in prod mode
+        $item->setFormattedValue('comments', Controller::replaceInsertTags($template->parse()));
     }
 
     /**

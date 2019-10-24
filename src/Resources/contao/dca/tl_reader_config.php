@@ -173,7 +173,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'inputType'  => 'select',
             'foreignKey' => 'tl_filter_config.title',
             'relation'   => ['type' => 'belongsTo', 'load' => 'eager'],
-            'eval'       => ['tl_class' => 'w50 clr', 'includeBlankOption' => true, 'chosen' => true, 'mandatory' => true],
+            'eval'       => ['tl_class' => 'w50 clr', 'includeBlankOption' => true, 'chosen' => true],
             'sql'        => "int(10) NOT NULL default '0'",
         ],
         'manager'                    => [
@@ -324,22 +324,18 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'inputType' => 'multiColumnEditor',
             'eval'      => [
                 'multiColumnEditor' => [
-                    // set to true if the rows should be sortable (backend only atm)
                     'sortable' => false,
-                    // defaults to false
                     'fields'   => [
-                        // place your fields here as you would normally in your DCA
-                        // (sql is not required)
                         'service' => [
                             'label'     => $GLOBALS['TL_LANG']['tl_reader_config']['headTags_service'],
                             'inputType' => 'select',
                             'options'   => array_values(\Contao\System::getContainer()->getParameter('huh.head.tags')),
-                            'eval'      => ['groupStyle' => 'width:20%', 'includeBlankOption' => true, 'decodeEntities' => true]
+                            'eval'      => ['groupStyle' => 'width:50%', 'includeBlankOption' => true, 'decodeEntities' => true, 'chosen' => true]
                         ],
                         'pattern' => [
                             'label'     => $GLOBALS['TL_LANG']['tl_reader_config']['headTags_pattern'],
                             'inputType' => 'text',
-                            'eval'      => ['groupStyle' => 'width:70%']
+                            'eval'      => ['groupStyle' => 'width:40%']
                         ]
                     ]
                 ],
@@ -352,7 +348,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'exclude'          => true,
             'inputType'        => 'select',
             'options_callback' => ['huh.reader.choice.template.item', 'getCachedChoices'],
-            'eval'             => ['tl_class' => 'w50 clr', 'includeBlankOption' => true],
+            'eval'             => ['tl_class' => 'long clr', 'includeBlankOption' => true, 'chosen' => true],
             'sql'              => "varchar(128) NOT NULL default ''",
         ],
         'addOverview' => [

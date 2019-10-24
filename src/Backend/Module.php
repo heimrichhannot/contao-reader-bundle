@@ -46,6 +46,10 @@ class Module
             return [];
         }
 
+        if (null === ($readerConfig = System::getContainer()->get('huh.utils.model')->findModelInstanceByPk('tl_reader_config', $readerConfigElement->pid))) {
+            return [];
+        }
+
         if ('' === $readerConfigElement->listModule || null === ($listModule = ModuleModel::findById($readerConfigElement->listModule))) {
             return [];
         }
@@ -54,14 +58,15 @@ class Module
             return [];
         }
 
-        if (null === ($filterConfig = System::getContainer()->get('huh.filter.manager')->findById($listConfig->filter))) {
-            return [];
+        if (null !== ($filterConfig = System::getContainer()->get('huh.filter.manager')->findById($listConfig->filter))) {
+            $filter = (object) $filterConfig->getFilter();
+            $table = $filter->dataContainer;
+        } else {
+            $table = $readerConfig->dataContainer;
         }
 
-        $filter = (object) $filterConfig->getFilter();
-
         return System::getContainer()->get('huh.utils.choice.field')->getCachedChoices([
-            'dataContainer' => $filter->dataContainer,
+            'dataContainer' => $table,
         ]);
     }
 }
