@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.0] - 2019-11-21
+
+- added video config element
+- fixed issues in image config element
+
 ## [1.4.0] - 2019-10-24
 
 #### Changed

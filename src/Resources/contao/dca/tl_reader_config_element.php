@@ -144,6 +144,14 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'submitOnChange' => true],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
+        'templateVariable'          => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['templateVariable'],
+            'exclude'   => true,
+            'search'    => true,
+            'inputType' => 'text',
+            'eval'      => ['maxlength' => 255, 'tl_class' => 'w50'],
+            'sql'       => "varchar(255) NOT NULL default ''"
+        ],
         'typeSelectorField'              => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['typeSelectorField'],
             'inputType'        => 'select',
@@ -187,6 +195,99 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'exclude'          => true,
             'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50'],
             'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'videoSelectorField'             => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoSelectorField'],
+            'inputType'        => 'select',
+            'options_callback' => function (DataContainer $dc) {
+                return System::getContainer()->get('huh.reader.util.reader-config-element-util')->getCheckboxFields($dc);
+            },
+            'exclude'          => true,
+            'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'videoField'                     => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoField'],
+            'inputType'        => 'select',
+            'options_callback' => function (DataContainer $dc) {
+                return $dc->activeRecord->pid > 0 ? System::getContainer()
+                    ->get('huh.reader.util.reader-config-util')
+                    ->getFields($dc->activeRecord->pid) : [];
+            },
+            'exclude'          => true,
+            'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'posterImageSelectorField'             => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['posterImageSelectorField'],
+            'inputType'        => 'select',
+            'options_callback' => function (DataContainer $dc) {
+                return System::getContainer()->get('huh.reader.util.reader-config-element-util')->getCheckboxFields($dc);
+            },
+            'exclude'          => true,
+            'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'posterImageField'                     => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['posterImageField'],
+            'inputType'        => 'select',
+            'options_callback' => function (DataContainer $dc) {
+                return $dc->activeRecord->pid > 0 ? System::getContainer()
+                    ->get('huh.reader.util.reader-config-util')
+                    ->getFields($dc->activeRecord->pid) : [];
+            },
+            'exclude'          => true,
+            'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'renderPosterAsImg' => [
+            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config_element']['renderPosterAsImg'],
+            'exclude'                 => true,
+            'inputType'               => 'checkbox',
+            'eval'                    => ['tl_class' => 'w50'],
+            'sql'                     => "char(1) NOT NULL default ''"
+        ],
+        'videoPlaysInline' => [
+            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoPlaysInline'],
+            'exclude'                 => true,
+            'inputType'               => 'checkbox',
+            'eval'                    => ['tl_class' => 'w50'],
+            'sql'                     => "char(1) NOT NULL default ''"
+        ],
+        'videoAutoplay' => [
+            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoAutoplay'],
+            'exclude'                 => true,
+            'inputType'               => 'checkbox',
+            'eval'                    => ['tl_class' => 'w50'],
+            'sql'                     => "char(1) NOT NULL default ''"
+        ],
+        'videoLoop' => [
+            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoLoop'],
+            'exclude'                 => true,
+            'inputType'               => 'checkbox',
+            'eval'                    => ['tl_class' => 'w50'],
+            'sql'                     => "char(1) NOT NULL default ''"
+        ],
+        'videoMuted' => [
+            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoMuted'],
+            'exclude'                 => true,
+            'inputType'               => 'checkbox',
+            'eval'                    => ['tl_class' => 'w50'],
+            'sql'                     => "char(1) NOT NULL default ''"
+        ],
+        'videoControls' => [
+            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoControls'],
+            'exclude'                 => true,
+            'inputType'               => 'checkbox',
+            'eval'                    => ['tl_class' => 'w50'],
+            'sql'                     => "char(1) NOT NULL default '1'"
+        ],
+        'videoPreload' => [
+            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoPreload'],
+            'exclude'                 => true,
+            'inputType'               => 'checkbox',
+            'eval'                    => ['tl_class' => 'w50'],
+            'sql'                     => "char(1) NOT NULL default ''"
         ],
         'syndicationIcsTitleField'       => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationIcsTitleField'],

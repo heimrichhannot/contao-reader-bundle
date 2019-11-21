@@ -13,6 +13,8 @@ $lang['typeSelectorField'][0] = 'Selektor-Feld';
 $lang['typeSelectorField'][1] = 'Wählen Sie hier das Feld aus, das den boolschen Selektor für den Typ enthält.';
 $lang['typeField'][0]         = 'Feld';
 $lang['typeField'][1]         = 'Wählen Sie hier das Feld aus, das die Referenz zum Typ enthält.';
+$lang['templateVariable'][0]  = 'Template-Variable';
+$lang['templateVariable'][1]  = 'Geben Sie hier den Namen für die Template-Variable ein. Unter diesem Namen wird das Objekt für das Template sichtbar gemacht.';
 
 // image
 $lang['imageSelectorField'][0]     = 'Selektor-Feld';
@@ -31,6 +33,30 @@ $lang['genderField'][0]            = 'Geschlecht-Feld';
 $lang['genderField'][1]            = 'Wählen Sie hier das Feld aus, das das Geschlecht der Instanz enthält.';
 $lang['placeholderImages'][0]      = 'Platzhalterbilder';
 $lang['placeholderImages'][1]      = 'Wählen Sie hier Platzhalterbilder aus.';
+
+// video
+$lang['videoSelectorField'][0]       = 'Selektor-Feld';
+$lang['videoSelectorField'][1]       = 'Wählen Sie hier das Feld aus, das den boolschen Selektor für das Video enthält.';
+$lang['videoField'][0]               = 'Feld';
+$lang['videoField'][1]               = 'Wählen Sie hier das Feld aus, das die Referenz zur Videodatei enthält.';
+$lang['posterImageSelectorField'][0] = 'Poster-Selektor-Feld';
+$lang['posterImageSelectorField'][1] = 'Wählen Sie hier das Feld aus, das den boolschen Selektor für das Poster-Bild enthält.';
+$lang['posterImageField'][0]         = 'Poster-Feld';
+$lang['posterImageField'][1]         = 'Wählen Sie hier das Feld aus, das die Referenz zur Poster-Bilddatei enthält.';
+$lang['renderPosterAsImg'][0]        = 'Poster als &lt;img&gt;-Element ausgeben';
+$lang['renderPosterAsImg'][1]        = 'Wählen Sie diese Option, um den Poster als &lt;img&gt;-Element auszugeben.';
+$lang['videoPlaysInline'][0]         = 'HTML-Attribut "playsinline" vergeben';
+$lang['videoPlaysInline'][1]         = 'Wählen Sie diese Option, um dem Video-Element das entsprechende HTML-Attribut zu geben.';
+$lang['videoAutoplay'][0]            = 'HTML-Attribut "autoplay" vergeben';
+$lang['videoAutoplay'][1]            = 'Wählen Sie diese Option, um dem Video-Element das entsprechende HTML-Attribut zu geben.';
+$lang['videoLoop'][0]                = 'HTML-Attribut "loop" vergeben';
+$lang['videoLoop'][1]                = 'Wählen Sie diese Option, um dem Video-Element das entsprechende HTML-Attribut zu geben.';
+$lang['videoMuted'][0]               = 'HTML-Attribut "muted" vergeben';
+$lang['videoMuted'][1]               = 'Wählen Sie diese Option, um dem Video-Element das entsprechende HTML-Attribut zu geben.';
+$lang['videoControls'][0]            = 'HTML-Attribut "controls" vergeben';
+$lang['videoControls'][1]            = 'Wählen Sie diese Option, um dem Video-Element das entsprechende HTML-Attribut zu geben.';
+$lang['videoPreload'][0]             = 'HTML-Attribut "preload" vergeben';
+$lang['videoPreload'][1]             = 'Wählen Sie diese Option, um dem Video-Element das entsprechende HTML-Attribut zu geben.';
 
 $lang['listModule']    = ['Listen Modul', 'Wählen Sie ein Listen Module aus.'];
 $lang['initialFilter'] = ['Initialer Filter', ''];
@@ -210,7 +236,7 @@ $lang['submissionReader'][0]       = 'Einsendungsleser';
 $lang['submissionReader'][1]       = 'Wählen Sie hier ein Modul vom Typ "Einsendungsleser" aus.';
 $lang['emailField'][0]             = 'E-Mail-Feld';
 $lang['emailField'][1]             = 'Wählen Sie hier das Feld aus, an das die E-Mail verschickt werden soll.';
-$lang['submissionFormExplanation']    = 'Die E-Mail-Adresse, an die das Formular verschickt wird, finden Sie im Notification-Center-Token ##form_value_submission_form_email##.';
+$lang['submissionFormExplanation'] = 'Die E-Mail-Adresse, an die das Formular verschickt wird, finden Sie im Notification-Center-Token ##form_value_submission_form_email##.';
 
 
 /**
@@ -218,13 +244,14 @@ $lang['submissionFormExplanation']    = 'Die E-Mail-Adresse, an die das Formular
  */
 $lang['reference'] = [
     \HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType::getType()       => 'Bild',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\VideoConfigElementType::getType()       => 'Video',
     \HeimrichHannot\ReaderBundle\ConfigElementType\RedirectionConfigElementType::getType() => 'Weiterleitung',
     \HeimrichHannot\ReaderBundle\ConfigElementType\NavigationConfigElementType::getType()  => 'Navigation',
     \HeimrichHannot\ReaderBundle\ConfigElementType\SyndicationConfigElementType::getType() => 'Syndikationen',
     \HeimrichHannot\ReaderBundle\ConfigElementType\ListConfigElementType::getType()        => 'Liste',
     \HeimrichHannot\ReaderBundle\ConfigElementType\DeleteConfigElementType::getType()      => 'Löschen',
     \HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType::getType()     => 'Kommentar',
-    \HeimrichHannot\ReaderBundle\ConfigElementType\SubmissionFormConfigElementType::TYPE       => 'Kontaktformular',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\SubmissionFormConfigElementType::TYPE   => 'Kontaktformular',
 ];
 
 $lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE]   = 'einfach';

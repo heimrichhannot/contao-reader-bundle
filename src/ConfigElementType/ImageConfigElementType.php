@@ -10,6 +10,7 @@ namespace HeimrichHannot\ReaderBundle\ConfigElementType;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\FilesModel;
+use Contao\Model;
 use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement;
@@ -35,11 +36,12 @@ class ImageConfigElementType implements ReaderConfigElementTypeInterface
     {
         $image = null;
 
-        if ($item->getRawValue($readerConfigElement->imageSelectorField) && $item->getRawValue($readerConfigElement->imageField)) {
+        if ($readerConfigElement->imageSelectorField && $item->getRawValue($readerConfigElement->imageSelectorField)
+            && $item->getRawValue($readerConfigElement->imageField)) {
             $imageSelectorField = $readerConfigElement->imageSelectorField;
             $image = $item->getRawValue($readerConfigElement->imageField);
             $imageField = $readerConfigElement->imageField;
-        } elseif (!$readerConfigElement->imageSelectorField && $item->getRawValue($readerConfigElement->imageField)) {
+        } elseif (!$readerConfigElement->imageSelectorField && $readerConfigElement->imageField && $item->getRawValue($readerConfigElement->imageField)) {
             $imageSelectorField = '';
             $image = $item->getRawValue($readerConfigElement->imageField);
             $imageField = $readerConfigElement->imageField;
@@ -49,11 +51,7 @@ class ImageConfigElementType implements ReaderConfigElementTypeInterface
 
             switch ($readerConfigElement->placeholderImageMode) {
                 case ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED:
-                    if ($item->getRawValue($readerConfigElement->genderField) && 'female' == $item->getRawValue($readerConfigElement->genderField)) {
-                        $image = $readerConfigElement->placeholderImageFemale;
-                    } else {
-                        $image = $readerConfigElement->placeholderImage;
-                    }
+                    $image = $this->getGenderedPlaceholderImage($item, $readerConfigElement);
 
                     break;
 
@@ -91,13 +89,24 @@ class ImageConfigElementType implements ReaderConfigElementTypeInterface
             return;
         }
 
-        /**
-         * @var FilesModel
-         */
-        $imageFile = $this->framework->getAdapter(FilesModel::class)->findByUuid($image);
+        /** @var FilesModel $filesModel */
+        $filesModel = $this->framework->getAdapter(FilesModel::class);
 
-        if (null !== $imageFile
-            && file_exists(System::getContainer()->get('huh.utils.container')->getProjectDir().'/'.$imageFile->path)) {
+        // support for multifileupload
+        $image = StringUtil::deserialize($image);
+
+        if (\is_array($image)) {
+            $image = array_values($image)[0];
+        }
+
+        if (null === ($imageFile = $filesModel->findByUuid($image))) {
+            $uuid = StringUtil::deserialize($image, true)[0];
+            $imageFile = $filesModel->findByUuid($uuid);
+        }
+
+        $projectDir = System::getContainer()->get('huh.utils.container')->getProjectDir();
+
+        if (null !== $imageFile && file_exists($projectDir.'/'.$imageFile->path) && getimagesize($projectDir.'/'.$imageFile->path)) {
             $imageArray = $item->getRaw();
 
             // Override the default image size
@@ -111,14 +120,31 @@ class ImageConfigElementType implements ReaderConfigElementTypeInterface
 
             $imageArray[$imageField] = $imageFile->path;
 
-            $templateData['images'] = $item->images ?? [];
-            $templateData['images'] = $item->getFormattedValue('images') ?? [];
-            $templateData['images'][$imageField] = [];
+            $templateData = [];
+            $templateData['images'] = $item->getFormattedValue('images') ?: [];
+            $templateData['images'][$readerConfigElement->templateVariable ?: $imageField] = [];
 
-            System::getContainer()->get('huh.utils.image')->addToTemplateData($imageField, $imageSelectorField, $templateData['images'][$imageField], $imageArray, null, null, null, $imageFile);
+            System::getContainer()->get('huh.utils.image')->addToTemplateData($imageField, $imageSelectorField, $templateData['images'][$readerConfigElement->templateVariable ?: $imageField], $imageArray, null, null, null, $imageFile);
 
             $item->setFormattedValue('images', $templateData['images']);
         }
+    }
+
+    /**
+     * @param ItemInterface            $item
+     * @param ReaderConfigElementModel $listConfigElement
+     *
+     * @return string
+     */
+    public function getGenderedPlaceholderImage(ItemInterface $item, Model $listConfigElement): string
+    {
+        if ($item->getRawValue($listConfigElement->genderField) && 'female' == $item->getRawValue($listConfigElement->genderField)) {
+            $image = $listConfigElement->placeholderImageFemale;
+        } else {
+            $image = $listConfigElement->placeholderImage;
+        }
+
+        return $image;
     }
 
     /**
