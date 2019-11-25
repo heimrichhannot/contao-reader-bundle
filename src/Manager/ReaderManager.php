@@ -28,7 +28,6 @@ use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\ReaderBundle\QueryBuilder\ReaderQueryBuilder;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry;
-use HeimrichHannot\Request\Request;
 use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
 use HeimrichHannot\UtilsBundle\Form\FormUtil;
@@ -369,7 +368,7 @@ class ReaderManager implements ReaderManagerInterface
             $description = str_replace("\n", ' ', $description);
             $description = \StringUtil::substr($description, 320);
 
-            System::getContainer()->get('huh.head.tag.meta_description')->setContent(trim($description));
+            $this->container->get('huh.head.tag.meta_description')->setContent(trim($description));
         }
     }
 
@@ -389,12 +388,12 @@ class ReaderManager implements ReaderManagerInterface
             $service = $config['service'];
             $pattern = $config['pattern'] ?? '';
 
-            if (!System::getContainer()->has($service)) {
+            if (!$this->container->has($service)) {
                 continue;
             }
 
             $value = preg_replace_callback('@%([^%]+)%@i', function (array $matches) use ($item) {
-                return System::getContainer()->get('huh.utils.form')->prepareSpecialValueForOutput($matches[1], $item->{$matches[1]}, $this->getDataContainer());
+                return $this->formUtil->prepareSpecialValueForOutput($matches[1], $item->{$matches[1]}, $this->getDataContainer());
             }, $pattern);
 
             switch ($service) {
@@ -405,7 +404,7 @@ class ReaderManager implements ReaderManagerInterface
                     break;
 
                 default:
-                    System::getContainer()->get($service)->setContent($value);
+                    $this->container->get($service)->setContent($value);
             }
         }
     }
@@ -506,7 +505,7 @@ class ReaderManager implements ReaderManagerInterface
      */
     public function getItemClassByName(string $name)
     {
-        $config = System::getContainer()->getParameter('huh.reader');
+        $config = $this->container->getParameter('huh.reader');
 
         if (!isset($config['reader']['items'])) {
             return null;
@@ -528,10 +527,10 @@ class ReaderManager implements ReaderManagerInterface
      */
     public function getItemTemplateByName(string $name)
     {
-        $config = System::getContainer()->getParameter('huh.reader');
+        $config = $this->container->getParameter('huh.reader');
 
         if (!isset($config['reader']['templates']['item'])) {
-            return System::getContainer()->get('huh.utils.template')->getTemplate($name);
+            return $this->container->get('huh.utils.template')->getTemplate($name);
         }
 
         $templates = $config['reader']['templates']['item'];
@@ -542,7 +541,7 @@ class ReaderManager implements ReaderManagerInterface
             }
         }
 
-        return System::getContainer()->get('huh.utils.template')->getTemplate($name);
+        return $this->container->get('huh.utils.template')->getTemplate($name);
     }
 
     /**
@@ -581,14 +580,14 @@ class ReaderManager implements ReaderManagerInterface
     {
         return $GLOBALS['TL_LANGUAGE'] !== $dca['config']['fallbackLang']
                && $readerConfig->addDcMultilingualSupport
-               && System::getContainer()->get('huh.utils.container')->isBundleActive('Terminal42\DcMultilingualBundle\Terminal42DcMultilingualBundle');
+               && $this->containerUtil->isBundleActive('Terminal42\DcMultilingualBundle\Terminal42DcMultilingualBundle');
     }
 
     public function isDcMultilingualUtilsActive(ReaderConfigModel $readerConfig, array $dca)
     {
         return $GLOBALS['TL_LANGUAGE'] !== $dca['config']['fallbackLang']
                && $readerConfig->addDcMultilingualSupport
-               && System::getContainer()->get('huh.utils.container')->isBundleActive('HeimrichHannot\DcMultilingualUtilsBundle\ContaoDcMultilingualUtilsBundle');
+               && $this->containerUtil->isBundleActive('HeimrichHannot\DcMultilingualUtilsBundle\ContaoDcMultilingualUtilsBundle');
     }
 
     /**
@@ -600,7 +599,7 @@ class ReaderManager implements ReaderManagerInterface
     {
         global $objPage;
 
-        $objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($pageTitle));
+        $objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($pageTitle));
     }
 
     /**

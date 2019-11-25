@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.1] - 2019-11-25
+- updated some code in ReaderManager
+
 ## [1.5.0] - 2019-11-21
 
 - added video config element
