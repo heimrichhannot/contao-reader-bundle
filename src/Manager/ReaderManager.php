@@ -576,18 +576,19 @@ class ReaderManager implements ReaderManagerInterface
         return $this->formUtil;
     }
 
-    public function isDcMultilingualActive(ReaderConfigModel $readerConfig, array $dca)
+    public function isDcMultilingualActive(ReaderConfigModel $readerConfig, array $dca, string $table)
     {
         return $GLOBALS['TL_LANGUAGE'] !== $dca['config']['fallbackLang']
                && $readerConfig->addDcMultilingualSupport
-               && $this->containerUtil->isBundleActive('Terminal42\DcMultilingualBundle\Terminal42DcMultilingualBundle');
+               && System::getContainer()->get('huh.utils.dca')->isDcMultilingual($table);
     }
 
-    public function isDcMultilingualUtilsActive(ReaderConfigModel $readerConfig, array $dca)
+    public function isDcMultilingualUtilsActive(ReaderConfigModel $readerConfig, array $dca, string $table)
     {
         return $GLOBALS['TL_LANGUAGE'] !== $dca['config']['fallbackLang']
                && $readerConfig->addDcMultilingualSupport
-               && $this->containerUtil->isBundleActive('HeimrichHannot\DcMultilingualUtilsBundle\ContaoDcMultilingualUtilsBundle');
+               && $this->containerUtil->isBundleActive('HeimrichHannot\DcMultilingualUtilsBundle\ContaoDcMultilingualUtilsBundle')
+               && System::getContainer()->get('huh.utils.dca')->isDcMultilingual($table);
     }
 
     /**
@@ -638,7 +639,7 @@ class ReaderManager implements ReaderManagerInterface
             }
 
             // get the parent record for dc_multilingual-based entities
-            if ($this->isDcMultilingualActive($readerConfig, $dca)) {
+            if ($this->isDcMultilingualActive($readerConfig, $dca, $readerConfig->dataContainer)) {
                 $instance = $this->database->prepare('SELECT * FROM '.$readerConfig->dataContainer.' WHERE '.$readerConfig->dataContainer.'.'.$field.'=?')->limit(1)->execute($autoItem);
 
                 if ($instance->numRows > 0) {
@@ -696,7 +697,7 @@ class ReaderManager implements ReaderManagerInterface
         $dca = &$GLOBALS['TL_DCA'][$readerConfig->dataContainer];
         $dbFields = $this->database->getFieldNames($readerConfig->dataContainer);
 
-        if ($this->isDcMultilingualActive($readerConfig, $dca)) {
+        if ($this->isDcMultilingualActive($readerConfig, $dca, $readerConfig->dataContainer)) {
             $suffixedTable = $readerConfig->dataContainer.ReaderManagerInterface::DC_MULTILINGUAL_SUFFIX;
 
             $queryBuilder->innerJoin($readerConfig->dataContainer, $readerConfig->dataContainer, $suffixedTable, $readerConfig->dataContainer.'.id = '.$suffixedTable.'.'.$dca['config']['langPid'].' AND '.$suffixedTable.'.language = "'.$GLOBALS['TL_LANGUAGE'].'"');
@@ -719,7 +720,7 @@ class ReaderManager implements ReaderManagerInterface
             $fields = implode(', ', $fieldNames);
 
             // add support for dc multilingual utils
-            if ($this->isDcMultilingualUtilsActive($readerConfig, $dca)) {
+            if ($this->isDcMultilingualUtilsActive($readerConfig, $dca, $readerConfig->dataContainer)) {
                 if (isset($dca['config']['langPublished']) && isset($dca['fields'][$dca['config']['langPublished']]) && \is_array($dca['fields'][$dca['config']['langPublished']])) {
                     $and = $queryBuilder->expr()->andX();
 
