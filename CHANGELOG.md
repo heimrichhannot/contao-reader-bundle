@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.4] - 2019-12-11
+
+- fixed frontend cron behavior
+
 ## [1.5.3] - 2019-12-09
 
 - translation

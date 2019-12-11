@@ -30,7 +30,7 @@ class AdjustFilterValueEventListener
             return;
         }
 
-        if (System::getContainer()->get('huh.utils.container')->isBackend()) {
+        if (System::getContainer()->get('huh.utils.container')->isBackend() || System::getContainer()->get('huh.utils.container')->isFrontendCron()) {
             return;
         }
 
