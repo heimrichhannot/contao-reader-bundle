@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.1] - 2020-01-23
+- updated deps 
+
 ## [1.6.0] - 2020-01-23
 - added field value dependent placeholder images 
 
