@@ -8,6 +8,8 @@
 
 namespace HeimrichHannot\ReaderBundle\ConfigElementType;
 
+use Contao\Config;
+use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\FilesModel;
 use Contao\Model;
@@ -35,13 +37,14 @@ class ImageConfigElementType implements ReaderConfigElementTypeInterface
     public function addToItemData(ItemInterface $item, ReaderConfigElementModel $readerConfigElement)
     {
         $image = null;
+        $validImageType = $this->isValidImageType($item, $readerConfigElement);
 
-        if ($readerConfigElement->imageSelectorField && $item->getRawValue($readerConfigElement->imageSelectorField)
+        if ($readerConfigElement->imageSelectorField && $item->getRawValue($readerConfigElement->imageSelectorField && $validImageType)
             && $item->getRawValue($readerConfigElement->imageField)) {
             $imageSelectorField = $readerConfigElement->imageSelectorField;
             $image = $item->getRawValue($readerConfigElement->imageField);
             $imageField = $readerConfigElement->imageField;
-        } elseif (!$readerConfigElement->imageSelectorField && $readerConfigElement->imageField && $item->getRawValue($readerConfigElement->imageField)) {
+        } elseif (!$readerConfigElement->imageSelectorField && $readerConfigElement->imageField && $item->getRawValue($readerConfigElement->imageField) && $validImageType) {
             $imageSelectorField = '';
             $image = $item->getRawValue($readerConfigElement->imageField);
             $imageField = $readerConfigElement->imageField;
@@ -83,6 +86,22 @@ class ImageConfigElementType implements ReaderConfigElementTypeInterface
                         }
 
                         $session->set(static::RANDOM_IMAGE_PLACEHOLDERS_SESSION_KEY, $randomImagePlaceholders);
+                    }
+
+                    break;
+                case ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_FIELD:
+                    if (empty($placeholderConfig = StringUtil::deserialize($readerConfigElement->fieldDependentPlaceholderConfig,
+                        true))) {
+                        return;
+                    }
+
+                    foreach ($placeholderConfig as $config) {
+                        if (!System::getContainer()->get('huh.utils.comparison')->compareValue($config['operator'],
+                            $item->{$config['field']}, Controller::replaceInsertTags($config['value']))) {
+                            continue;
+                        }
+
+                        $image = $config['placeholderImage'];
                     }
             }
         } else {
@@ -175,5 +194,26 @@ class ImageConfigElementType implements ReaderConfigElementTypeInterface
     public function addToReaderItemData(ReaderConfigElementData $configElementData): void
     {
         $this->addToItemData($configElementData->getItem(), $configElementData->getReaderConfigElement());
+    }
+
+    /**
+     * @param ItemInterface $item
+     * @param ReaderConfigElementModel $readerConfigElement
+     * @return bool
+     * @throws \Exception
+     */
+    protected function isValidImageType(ItemInterface $item, ReaderConfigElementModel $readerConfigElement): bool
+    {
+        if (!$readerConfigElement->imageField || !$item->getRawValue($readerConfigElement->imageField)) {
+            return false;
+        }
+
+        $uuid = StringUtil::deserialize($item->getRawValue($readerConfigElement->imageField), true)[0];
+
+        if (null === ($file = System::getContainer()->get('huh.utils.file')->getFileFromUuid($uuid))) {
+            return false;
+        }
+
+        return \in_array($file->getModel()->extension, explode(',', Config::get('validImageTypes')), true);
     }
 }

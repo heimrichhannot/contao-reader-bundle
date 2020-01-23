@@ -17,22 +17,28 @@ $lang['templateVariable'][0]  = 'Template-Variable';
 $lang['templateVariable'][1]  = 'Geben Sie hier den Namen für die Template-Variable ein. Unter diesem Namen wird das Objekt für das Template sichtbar gemacht.';
 
 // image
-$lang['imageSelectorField'][0]     = 'Selektor-Feld';
-$lang['imageSelectorField'][1]     = 'Wählen Sie hier das Feld aus, das den boolschen Selektor für das Bild enthält.';
-$lang['imageField'][0]             = 'Feld';
-$lang['imageField'][1]             = 'Wählen Sie hier das Feld aus, das die Referenz zur Bilddatei enthält.';
-$lang['orderField'][0]             = 'Sortier-Feld';
-$lang['orderField'][1]             = 'Wählen Sie hier das Feld aus, das die Sortierung der Bilddateien enthält.';
-$lang['placeholderImageMode'][0]   = 'Platzhalterbildmodus';
-$lang['placeholderImageMode'][1]   = 'Wählen Sie diese Option, wenn Sie für den Fall, dass die ausgegebene Instanz kein Bild enthält, ein Platzhalterbild hinzufügen möchten.';
-$lang['placeholderImage'][0]       = 'Platzhalterbild';
-$lang['placeholderImage'][1]       = 'Wählen Sie hier ein Platzhalterbild aus.';
-$lang['placeholderImageFemale'][0] = 'Platzhalterbild (weiblich)';
-$lang['placeholderImageFemale'][1] = 'Wählen Sie hier ein Platzhalterbild für weibliche Instanzen aus.';
-$lang['genderField'][0]            = 'Geschlecht-Feld';
-$lang['genderField'][1]            = 'Wählen Sie hier das Feld aus, das das Geschlecht der Instanz enthält.';
-$lang['placeholderImages'][0]      = 'Platzhalterbilder';
-$lang['placeholderImages'][1]      = 'Wählen Sie hier Platzhalterbilder aus.';
+$lang['imageSelectorField'][0]                               = 'Selektor-Feld';
+$lang['imageSelectorField'][1]                               = 'Wählen Sie hier das Feld aus, das den boolschen Selektor für das Bild enthält.';
+$lang['imageField'][0]                                       = 'Feld';
+$lang['imageField'][1]                                       = 'Wählen Sie hier das Feld aus, das die Referenz zur Bilddatei enthält.';
+$lang['orderField'][0]                                       = 'Sortier-Feld';
+$lang['orderField'][1]                                       = 'Wählen Sie hier das Feld aus, das die Sortierung der Bilddateien enthält.';
+$lang['placeholderImageMode'][0]                             = 'Platzhalterbildmodus';
+$lang['placeholderImageMode'][1]                             = 'Wählen Sie diese Option, wenn Sie für den Fall, dass die ausgegebene Instanz kein Bild enthält, ein Platzhalterbild hinzufügen möchten.';
+$lang['placeholderImage'][0]                                 = 'Platzhalterbild';
+$lang['placeholderImage'][1]                                 = 'Wählen Sie hier ein Platzhalterbild aus.';
+$lang['placeholderImageFemale'][0]                           = 'Platzhalterbild (weiblich)';
+$lang['placeholderImageFemale'][1]                           = 'Wählen Sie hier ein Platzhalterbild für weibliche Instanzen aus.';
+$lang['genderField'][0]                                      = 'Geschlecht-Feld';
+$lang['genderField'][1]                                      = 'Wählen Sie hier das Feld aus, das das Geschlecht der Instanz enthält.';
+$lang['placeholderImages'][0]                                = 'Platzhalterbilder';
+$lang['placeholderImages'][1]                                = 'Wählen Sie hier Platzhalterbilder aus.';
+$lang['fieldDependentPlaceholderConfig'][0]                  = 'Platzhalterkonfiguration';
+$lang['fieldDependentPlaceholderConfig'][1]                  = 'Definieren Sie hier die Platzhalterbilder für die jeweiligen Feldwerte';
+$lang['fieldDependentPlaceholderConfig']['field']            = 'Feld';
+$lang['fieldDependentPlaceholderConfig']['operator']         = 'Operator';
+$lang['fieldDependentPlaceholderConfig']['value']            = 'Wert';
+$lang['fieldDependentPlaceholderConfig']['placeholderImage'] = 'Bild';
 
 // video
 $lang['videoSelectorField'][0]       = 'Selektor-Feld';
@@ -257,6 +263,7 @@ $lang['reference'] = [
 $lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE]   = 'einfach';
 $lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED] = 'geschlechtsspezifisch';
 $lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_RANDOM]   = 'zufällig';
+$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_FIELD]    = 'feldabhängig';
 
 /**
  * Legends

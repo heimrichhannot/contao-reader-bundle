@@ -94,6 +94,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE   => 'placeholderImage',
         'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED => 'genderField,placeholderImage,placeholderImageFemale',
         'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_RANDOM   => 'placeholderImages',
+        'placeholderImageMode_' . \HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_FIELD    => 'fieldDependentPlaceholderConfig',
         'addRedirectConditions'                                                                                             => 'redirectConditions',
         'addRedirectParam'                                                                                                  => 'redirectParams',
         'syndicationMail'                                                                                                   => 'mailSubjectLabel,mailBodyLabel',
@@ -1089,6 +1090,47 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
             ],
             'sql'       => "blob NULL",
         ],
+        'fieldDependentPlaceholderConfig' => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['fieldDependentPlaceholderConfig'],
+            'inputType' => 'multiColumnEditor',
+            'eval'      => [
+                'tl_class'          => 'long clr',
+                'multiColumnEditor' => [
+                    'minRowCount' => 0,
+                    'fields'      => [
+                        'field' => [
+                            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['fieldDependentPlaceholderConfig']['field'],
+                            'inputType' => 'select',
+                            'options_callback' => function (DataContainer $dc) {
+                                return $dc->activeRecord->pid > 0 ? System::getContainer()
+                                    ->get('huh.reader.util.reader-config-util')
+                                    ->getFields($dc->activeRecord->pid) : [];
+                            },
+                            'eval'      => ['style' => 'width: 200px', 'mandatory' => true, 'includeBlankOption' => true],
+                        ],
+                        'operator' => [
+                            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['fieldDependentPlaceholderConfig']['operator'],
+                            'inputType' => 'select',
+                            'options'   => \HeimrichHannot\UtilsBundle\Comparison\CompareUtil::PHP_OPERATORS,
+                            'reference' => &$GLOBALS['TL_LANG']['MSC']['phpOperators'],
+                            'eval'      => ['style' => 'width: 200px', 'mandatory' => true, 'includeBlankOption' => true],
+                        ],
+                        'value' => [
+                            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['fieldDependentPlaceholderConfig']['value'],
+                            'inputType' => 'text',
+                            'eval'      => ['style' => 'width: 200px'],
+                        ],
+                        'placeholderImage' => [
+                            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['fieldDependentPlaceholderConfig']['placeholderImage'],
+                            'exclude'   => true,
+                            'inputType' => 'fileTree',
+                            'eval'      => ['style' => 'width: 200px', 'tl_class' => 'w50 autoheight', 'fieldType' => 'radio', 'filesOnly' => true, 'extensions' => Config::get('validImageTypes'), 'mandatory' => true],
+                        ]
+                    ]
+                ]
+            ],
+            'sql'       => "blob NULL"
+        ]
     ]);
 }
 
