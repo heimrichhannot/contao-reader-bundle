@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.2] - 2020-01-27
+- fixed syntax error in ImageConfigElementType
+
 ## [1.6.1] - 2020-01-23
 - updated deps 
 

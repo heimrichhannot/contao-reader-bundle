@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2019 Heimrich & Hannot GmbH
+ * Copyright (c) 2020 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -37,7 +37,7 @@ class ReaderConfigElement
         self::PLACEHOLDER_IMAGE_MODE_GENDERED,
         self::PLACEHOLDER_IMAGE_MODE_SIMPLE,
         self::PLACEHOLDER_IMAGE_MODE_RANDOM,
-        self::PLACEHOLDER_IMAGE_MODE_FIELD
+        self::PLACEHOLDER_IMAGE_MODE_FIELD,
     ];
 
     /** @var ContaoFrameworkInterface */

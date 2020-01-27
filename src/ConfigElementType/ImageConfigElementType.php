@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2019 Heimrich & Hannot GmbH
+ * Copyright (c) 2020 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -39,7 +39,7 @@ class ImageConfigElementType implements ReaderConfigElementTypeInterface
         $image = null;
         $validImageType = $this->isValidImageType($item, $readerConfigElement);
 
-        if ($readerConfigElement->imageSelectorField && $item->getRawValue($readerConfigElement->imageSelectorField && $validImageType)
+        if ($readerConfigElement->imageSelectorField && $item->getRawValue($readerConfigElement->imageSelectorField) && $validImageType
             && $item->getRawValue($readerConfigElement->imageField)) {
             $imageSelectorField = $readerConfigElement->imageSelectorField;
             $image = $item->getRawValue($readerConfigElement->imageField);
@@ -89,6 +89,7 @@ class ImageConfigElementType implements ReaderConfigElementTypeInterface
                     }
 
                     break;
+
                 case ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_FIELD:
                     if (empty($placeholderConfig = StringUtil::deserialize($readerConfigElement->fieldDependentPlaceholderConfig,
                         true))) {
@@ -197,10 +198,12 @@ class ImageConfigElementType implements ReaderConfigElementTypeInterface
     }
 
     /**
-     * @param ItemInterface $item
+     * @param ItemInterface            $item
      * @param ReaderConfigElementModel $readerConfigElement
-     * @return bool
+     *
      * @throws \Exception
+     *
+     * @return bool
      */
     protected function isValidImageType(ItemInterface $item, ReaderConfigElementModel $readerConfigElement): bool
     {
