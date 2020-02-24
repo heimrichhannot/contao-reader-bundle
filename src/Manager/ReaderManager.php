@@ -23,6 +23,7 @@ use HeimrichHannot\EntityFilterBundle\Backend\EntityFilter;
 use HeimrichHannot\FilterBundle\Config\FilterConfig;
 use HeimrichHannot\FilterBundle\Manager\FilterManager;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfig;
+use HeimrichHannot\ReaderBundle\Event\ReaderModifyQueryBuilderEvent;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\ReaderBundle\QueryBuilder\ReaderQueryBuilder;
@@ -126,6 +127,10 @@ class ReaderManager implements ReaderManagerInterface
      * @var ContainerInterface
      */
     private $container;
+    /**
+     * @var object|\Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher|\Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher|null
+     */
+    private $_dispatcher;
 
     public function __construct(
         ContainerInterface $container,
@@ -155,6 +160,7 @@ class ReaderManager implements ReaderManagerInterface
         $this->twig = $twig;
         $this->database = $framework->createInstance(Database::class);
         $this->container = $container;
+        $this->_dispatcher = System::getContainer()->get('event_dispatcher');
     }
 
     /**
@@ -285,7 +291,7 @@ class ReaderManager implements ReaderManagerInterface
             $itemConditions = StringUtil::deserialize($readerConfig->showFieldConditions, true);
 
             if (!empty($itemConditions)) {
-                list($whereCondition, $values) = $this->entityFilter->computeSqlCondition($itemConditions, $readerConfig->dataContainer);
+                [$whereCondition, $values] = $this->entityFilter->computeSqlCondition($itemConditions, $readerConfig->dataContainer);
 
                 $statement = $this->database->prepare("SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND $readerConfig->dataContainer.id=?");
 
@@ -315,7 +321,7 @@ class ReaderManager implements ReaderManagerInterface
         $itemConditions = StringUtil::deserialize($readerConfig->redirectFieldConditions, true);
 
         if (!empty($itemConditions)) {
-            list($whereCondition, $values) = $this->entityFilter->computeSqlCondition($itemConditions, $readerConfig->dataContainer);
+            [$whereCondition, $values] = $this->entityFilter->computeSqlCondition($itemConditions, $readerConfig->dataContainer);
 
             $statement = $this->database->prepare("SELECT * FROM $readerConfig->dataContainer WHERE ($whereCondition) AND $readerConfig->dataContainer.id=?");
 
@@ -658,6 +664,8 @@ class ReaderManager implements ReaderManagerInterface
             $fields = $this->addDcMultilingualSupport($readerConfig, $queryBuilder);
 
             $queryBuilder->setParameter(':autoItem', $autoItem);
+
+            $this->_dispatcher->dispatch(ReaderModifyQueryBuilderEvent::NAME, new ReaderModifyQueryBuilderEvent($queryBuilder, $this, $readerConfig, $fields));
 
             $queryBuilder->select($fields);
 

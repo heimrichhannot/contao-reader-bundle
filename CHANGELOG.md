@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.7.0] - 2020-02-24
+- added new event `ReaderModifyQueryBuilderEvent`
+
 ## [1.6.2] - 2020-01-27
 - fixed syntax error in ImageConfigElementType
 
