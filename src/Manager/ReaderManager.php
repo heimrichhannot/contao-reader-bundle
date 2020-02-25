@@ -24,6 +24,7 @@ use HeimrichHannot\FilterBundle\Config\FilterConfig;
 use HeimrichHannot\FilterBundle\Manager\FilterManager;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfig;
 use HeimrichHannot\ReaderBundle\Event\ReaderModifyQueryBuilderEvent;
+use HeimrichHannot\ReaderBundle\Event\ReaderModifyRetrievedItemEvent;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\ReaderBundle\QueryBuilder\ReaderQueryBuilder;
@@ -665,11 +666,15 @@ class ReaderManager implements ReaderManagerInterface
 
             $queryBuilder->setParameter(':autoItem', $autoItem);
 
-            $this->_dispatcher->dispatch(ReaderModifyQueryBuilderEvent::NAME, new ReaderModifyQueryBuilderEvent($queryBuilder, $this, $readerConfig, $fields));
+            $event = $this->_dispatcher->dispatch(ReaderModifyQueryBuilderEvent::NAME, new ReaderModifyQueryBuilderEvent($queryBuilder, $this, $readerConfig, $fields));
 
-            $queryBuilder->select($fields);
+            $queryBuilder->select($event->getFields());
 
             $item = $queryBuilder->execute()->fetch() ?: null;
+
+            $event = $this->_dispatcher->dispatch(ReaderModifyRetrievedItemEvent::NAME, new ReaderModifyRetrievedItemEvent($item, $queryBuilder, $this, $readerConfig, $fields));
+
+            $item = $event->getItem();
         }
 
         return $item;
