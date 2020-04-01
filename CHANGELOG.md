@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.8.2] - 2020-04-01
+- fixed image config element labels
+
 ## [1.8.1] - 2020-03-13
 - fixed load_callback to support callables
 

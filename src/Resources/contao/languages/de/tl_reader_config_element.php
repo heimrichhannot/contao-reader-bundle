@@ -35,10 +35,10 @@ $lang['placeholderImages'][0]                                = 'Platzhalterbilde
 $lang['placeholderImages'][1]                                = 'Wählen Sie hier Platzhalterbilder aus.';
 $lang['fieldDependentPlaceholderConfig'][0]                  = 'Platzhalterkonfiguration';
 $lang['fieldDependentPlaceholderConfig'][1]                  = 'Definieren Sie hier die Platzhalterbilder für die jeweiligen Feldwerte';
-$lang['fieldDependentPlaceholderConfig']['field']            = 'Feld';
-$lang['fieldDependentPlaceholderConfig']['operator']         = 'Operator';
-$lang['fieldDependentPlaceholderConfig']['value']            = 'Wert';
-$lang['fieldDependentPlaceholderConfig']['placeholderImage'] = 'Bild';
+$lang['fieldDependentPlaceholderConfig']['field']            = ['Feld', ''];
+$lang['fieldDependentPlaceholderConfig']['operator']         = ['Operator', ''];
+$lang['fieldDependentPlaceholderConfig']['value']            = ['Wert', ''];
+$lang['fieldDependentPlaceholderConfig']['placeholderImage'] = ['Bild', ''];
 
 // video
 $lang['videoSelectorField'][0]       = 'Selektor-Feld';
