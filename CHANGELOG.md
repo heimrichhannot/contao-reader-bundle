@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.8.3] - 2020-04-06
+- fixed an missing service alias
+
 ## [1.8.2] - 2020-04-01
 - fixed image config element labels
 

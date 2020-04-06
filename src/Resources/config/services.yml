@@ -99,6 +99,7 @@ services:
     arguments:
       - "@contao.framework"
       - "@doctrine.dbal.default_connection"
+  HeimrichHannot\ReaderBundle\QueryBuilder\ReaderQueryBuilder: '@huh.reader.query_builder'
 
   twig.extension.text:
     class: Twig_Extensions_Extension_Text
