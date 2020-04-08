@@ -75,7 +75,8 @@ $lang['overviewMode'][0] = 'Link-Modus';
 $lang['overviewMode'][1] = 'Wählen Sie hier den Modus, nachdem der Link erzeugt wird.';
 $lang['overviewMode']['reference']['history'] = 'vorherige Seite';
 $lang['overviewMode']['reference']['jumpTo'] = 'Seite definieren';
-
+$lang['disable404'][0]                    = '404-Weiterleitung deaktivieren';
+$lang['disable404'][1]                    = 'Wählen Sie diese Option, wenn nicht zu einer 404-Seite weitergeleitet werden soll, wenn kein Item gefunden wurde.';
 
 // misc
 $lang['headTags'][0]         = '&lt;head&gt; Tags';

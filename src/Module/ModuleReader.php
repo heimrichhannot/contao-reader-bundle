@@ -106,7 +106,7 @@ class ModuleReader extends Module
         }
 
         // throw a 404 if no item found
-        if (null === $this->item) {
+        if (null === $this->item && !$this->readerConfig->disable404) {
             throw new PageNotFoundException('Page not found: '.Environment::get('uri'));
         }
 
@@ -140,6 +140,8 @@ class ModuleReader extends Module
         $this->manager->doFieldDependentRedirect();
         $this->manager->setHeadTags();
 
-        $this->Template->item = $this->manager->getItem()->parse();
+        if(null !== $this->item) {
+            $this->Template->item = $this->manager->getItem()->parse();
+        }
     }
 }

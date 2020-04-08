@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.8.4] - 2020-04-08
+- added `disable404` in reader config
+
 ## [1.8.3] - 2020-04-06
 - fixed an missing service alias
 

@@ -90,7 +90,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
         ],
         'default'      => '{general_legend},title,parentReaderConfig;'
             . '{config_legend},dataContainer,filter,manager,item,limitFormattedFields,itemRetrievalMode,hideUnpublishedItems;'
-            . '{security_legend},addShowConditions;' . '{jumpto_legend},addFieldDependentRedirect,addOverview;'
+            . '{security_legend},addShowConditions;' . '{jumpto_legend},addFieldDependentRedirect,addOverview,disable404;'
             . '{misc_legend},headTags,addDcMultilingualSupport;' . '{template_legend},itemTemplate;'
     ],
     'subpalettes' => [
@@ -394,6 +394,13 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'eval'             => ['chosen' => true, 'mandatory' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
             'sql'              => "varchar(128) NOT NULL default ''",
         ],
+        'disable404' => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['disable404'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'clr w50'],
+            'sql'       => "char(1) NOT NULL default ''",
+        ]
     ]
 ];
 
