@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.8.5] - 2020-04-08
+- fixed missing public attribute on service
+
 ## [1.8.4] - 2020-04-08
 - added `disable404` in reader config
 

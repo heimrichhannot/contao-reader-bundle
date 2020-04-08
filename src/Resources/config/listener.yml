@@ -1,6 +1,7 @@
 services:
   huh.reader.listener.callback.readerconfigelement:
     class: HeimrichHannot\ReaderBundle\EventListener\ReaderConfigCallbackListener
+    public: true
     arguments: ['@contao.framework', '@translator', '@huh.utils.model']
 
   HeimrichHannot\ReaderBundle\EventListener\AdjustFilterValueEventListener:

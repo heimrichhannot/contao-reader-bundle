@@ -140,7 +140,7 @@ class ModuleReader extends Module
         $this->manager->doFieldDependentRedirect();
         $this->manager->setHeadTags();
 
-        if(null !== $this->item) {
+        if (null !== $this->item) {
             $this->Template->item = $this->manager->getItem()->parse();
         }
     }
