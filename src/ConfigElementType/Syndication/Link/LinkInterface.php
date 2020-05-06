@@ -17,15 +17,11 @@ interface LinkInterface
 
     /**
      * Get the href attribute.
-     *
-     * @return string
      */
     public function getHref(): string;
 
     /**
      * Set the href attribute.
-     *
-     * @param string $href
      *
      * @return LinkInterface
      */
@@ -33,8 +29,6 @@ interface LinkInterface
 
     /**
      * Get the css class attribute.
-     *
-     * @return string
      */
     public function getCssClass(): string;
 
@@ -49,15 +43,11 @@ interface LinkInterface
 
     /**
      * Get the title attribute.
-     *
-     * @return string
      */
     public function getTitle(): string;
 
     /**
      * Set the title attribute.
-     *
-     * @param string $title
      *
      * @return LinkInterface
      */
@@ -65,15 +55,11 @@ interface LinkInterface
 
     /**
      * Get the link content.
-     *
-     * @return string
      */
     public function getContent(): string;
 
     /**
      * Set the link content.
-     *
-     * @param string $content
      *
      * @return LinkInterface
      */
@@ -81,15 +67,11 @@ interface LinkInterface
 
     /**
      * Get the target attribute.
-     *
-     * @return string
      */
     public function getTarget(): string;
 
     /**
      * Set the link target.
-     *
-     * @param string $target
      *
      * @return LinkInterface
      */
@@ -97,15 +79,11 @@ interface LinkInterface
 
     /**
      * Get the name attribute.
-     *
-     * @return string
      */
     public function getName(): string;
 
     /**
      * Set the name attribute.
-     *
-     * @param string $name
      *
      * @return LinkInterface
      */
@@ -113,15 +91,11 @@ interface LinkInterface
 
     /**
      * Get the rel attribute.
-     *
-     * @return string
      */
     public function getRel(): string;
 
     /**
      * Set the rel attribute.
-     *
-     * @param string $rel
      *
      * @return LinkInterface
      */
@@ -129,15 +103,11 @@ interface LinkInterface
 
     /**
      * Get the onclick attribute.
-     *
-     * @return string
      */
     public function getOnClick(): string;
 
     /**
      * Set the onclick attribute.
-     *
-     * @param string $onclick
      *
      * @return LinkInterface
      */
@@ -146,24 +116,17 @@ interface LinkInterface
     /**
      * Set the additional attribute.
      *
-     * @param array $attributes
-     *
      * @return LinkInterface
      */
     public function setAttributes(array $attributes): self;
 
     /**
      * Get the additional attributes.
-     *
-     * @return array
      */
     public function getAttributes(): array;
 
     /**
      * Add an additional attribute.
-     *
-     * @param string $key
-     * @param string $value
      *
      * @return LinkInterface
      */
@@ -173,8 +136,6 @@ interface LinkInterface
      * Remove an additional attribute.
      *
      * @param $key
-     *
-     * @return bool
      */
     public function removeAttribute($key): bool;
 }

@@ -43,7 +43,6 @@ class ReaderConfigRegistry
      *
      * @param mixed $column
      * @param mixed $value
-     * @param array $options
      *
      * @return \Contao\Model\Collection|ReaderConfigModel|null
      */
@@ -62,7 +61,6 @@ class ReaderConfigRegistry
      *
      * @param mixed $column
      * @param mixed $value
-     * @param array $options
      *
      * @return \Contao\Model\Collection|ReaderConfigModel|null
      */
@@ -81,7 +79,6 @@ class ReaderConfigRegistry
      *
      * @param mixed $column
      * @param mixed $value
-     * @param array $options
      *
      * @return \Contao\Model\Collection|ReaderConfigModel|null
      */
@@ -96,8 +93,6 @@ class ReaderConfigRegistry
 
     /**
      * Returns the filter associated to a reader config.
-     *
-     * @param int $readerConfigPk
      *
      * @return array|null
      */
@@ -138,8 +133,6 @@ class ReaderConfigRegistry
 
     /**
      * Computes the reader config respecting the reader config hierarchy (sub reader configs can override parts of their ancestors).
-     *
-     * @param int $readerConfigPk
      *
      * @return ReaderConfigModel|null
      */
@@ -185,11 +178,7 @@ class ReaderConfigRegistry
     /**
      * Get the reader manager.
      *
-     * @param string $name
-     *
      * @throws \Exception
-     *
-     * @return ReaderManagerInterface|null
      */
     public function getReaderManagerByName(string $name): ?ReaderManagerInterface
     {

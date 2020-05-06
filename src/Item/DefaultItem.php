@@ -64,8 +64,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
     /**
      * DefaultItem constructor.
      *
-     * @param ReaderManagerInterface $_manager
-     * @param array                  $data     Raw item data
+     * @param array $data Raw item data
      */
     public function __construct(ReaderManagerInterface $_manager, array $data = [])
     {
@@ -96,8 +95,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
     /**
      * Magic setter.
      *
-     * @param string $name
-     * @param        $value
+     * @param $value
      */
     public function __set(string $name, $value)
     {
@@ -308,9 +306,6 @@ class DefaultItem implements ItemInterface, \JsonSerializable
         return $twig->render($this->_manager->getItemTemplateByName($event->getTemplate()), $event->getContext());
     }
 
-    /**
-     * @param ReaderConfigModel $readerConfig
-     */
     public function addJumpToOverview(ReaderConfigModel $readerConfig): void
     {
         $this->setAddOverview($readerConfig->addOverview);
@@ -343,17 +338,11 @@ class DefaultItem implements ItemInterface, \JsonSerializable
         return $this->_jumpToOverview;
     }
 
-    /**
-     * @param string $jumpToOverview
-     */
     public function setJumpToOverview(string $jumpToOverview): void
     {
         $this->_jumpToOverview = $jumpToOverview;
     }
 
-    /**
-     * @param bool $addOverview
-     */
     public function setAddOverview(bool $addOverview): void
     {
         $this->_addOverview = $addOverview;
@@ -367,17 +356,11 @@ class DefaultItem implements ItemInterface, \JsonSerializable
         return $this->_addOverview;
     }
 
-    /**
-     * @param string $label
-     */
     public function setJumpToOverviewLabel(string $label): void
     {
         $this->_jumpToOverviewLabel = $label;
     }
 
-    /**
-     * @return string|null
-     */
     public function getJumpToOverviewLabel(): ?string
     {
         return $this->_jumpToOverviewLabel;
@@ -385,8 +368,6 @@ class DefaultItem implements ItemInterface, \JsonSerializable
 
     /**
      * @param ReaderConfigModel $readerConfigModel
-     *
-     * @return string
      */
     public function getTranslatedJumpToOverviewLabel(ReaderConfigModel $readerConfig): string
     {

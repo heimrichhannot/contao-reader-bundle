@@ -82,8 +82,6 @@ class DeleteConfigElementType extends RedirectionConfigElementType
 
     /**
      * Update the item data.
-     *
-     * @param ReaderConfigElementData $configElementData
      */
     public function addToReaderItemData(ReaderConfigElementData $configElementData): void
     {

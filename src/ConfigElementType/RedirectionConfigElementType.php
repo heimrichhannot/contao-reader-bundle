@@ -30,9 +30,6 @@ class RedirectionConfigElementType implements ReaderConfigElementTypeInterface
     }
 
     /**
-     * @param ItemInterface            $item
-     * @param ReaderConfigElementModel $readerConfigElement
-     *
      * @return void|null
      */
     public function addToItemData(ItemInterface $item, ReaderConfigElementModel $readerConfigElement)
@@ -102,8 +99,6 @@ class RedirectionConfigElementType implements ReaderConfigElementTypeInterface
 
     /**
      * Return the reader config element type alias.
-     *
-     * @return string
      */
     public static function getType(): string
     {
@@ -112,8 +107,6 @@ class RedirectionConfigElementType implements ReaderConfigElementTypeInterface
 
     /**
      * Return the reader config element type palette.
-     *
-     * @return string
      */
     public function getPalette(): string
     {
@@ -122,8 +115,6 @@ class RedirectionConfigElementType implements ReaderConfigElementTypeInterface
 
     /**
      * Update the item data.
-     *
-     * @param ReaderConfigElementData $configElementData
      */
     public function addToReaderItemData(ReaderConfigElementData $configElementData): void
     {

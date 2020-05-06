@@ -13,10 +13,6 @@ use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 
 class TestClass
 {
-    /**
-     * @param ItemInterface            $item
-     * @param ReaderConfigElementModel $readerConfigElement
-     */
     public function delete(ItemInterface $item, ReaderConfigElementModel &$readerConfigElement)
     {
         $readerConfigElement->isDeleted = true;

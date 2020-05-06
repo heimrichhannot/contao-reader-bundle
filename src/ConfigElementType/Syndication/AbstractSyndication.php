@@ -51,9 +51,6 @@ abstract class AbstractSyndication
 
     /**
      * AbstractSyndication constructor.
-     *
-     * @param ItemInterface            $item
-     * @param ReaderConfigElementModel $readerConfigElement
      */
     public function __construct(ItemInterface $item, ReaderConfigElementModel $readerConfigElement)
     {
@@ -79,22 +76,16 @@ abstract class AbstractSyndication
 
     /**
      * Generate the syndication link.
-     *
-     * @return LinkInterface
      */
     abstract public function generate(): LinkInterface;
 
     /**
      * Determine if syndication is enabled, check against $readerConfigElement property for example.
-     *
-     * @return bool
      */
     abstract public function isEnabled(): bool;
 
     /**
      * Get current item title.
-     *
-     * @return string
      */
     public function getTitle(): string
     {
@@ -103,8 +94,6 @@ abstract class AbstractSyndication
 
     /**
      * Set current item title.
-     *
-     * @param string $title
      *
      * @return AbstractSyndication
      */
@@ -117,8 +106,6 @@ abstract class AbstractSyndication
 
     /**
      * Get current item url.
-     *
-     * @return string
      */
     public function getUrl(): string
     {
@@ -127,8 +114,6 @@ abstract class AbstractSyndication
 
     /**
      * Get current item url.
-     *
-     * @param string $url
      *
      * @return AbstractSyndication
      */

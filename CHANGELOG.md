@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.8.6] - 2020-05-06
+- added generated id to generated markup
+
 ## [1.8.5] - 2020-04-08
 - fixed missing public attribute on service
 

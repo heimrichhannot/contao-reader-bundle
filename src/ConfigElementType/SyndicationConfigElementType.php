@@ -74,8 +74,6 @@ class SyndicationConfigElementType implements ReaderConfigElementTypeInterface
 
     /**
      * Return the reader config element type alias.
-     *
-     * @return string
      */
     public static function getType(): string
     {
@@ -84,8 +82,6 @@ class SyndicationConfigElementType implements ReaderConfigElementTypeInterface
 
     /**
      * Return the reader config element type palette.
-     *
-     * @return string
      */
     public function getPalette(): string
     {
@@ -94,8 +90,6 @@ class SyndicationConfigElementType implements ReaderConfigElementTypeInterface
 
     /**
      * Update the item data.
-     *
-     * @param ReaderConfigElementData $configElementData
      */
     public function addToReaderItemData(ReaderConfigElementData $configElementData): void
     {

@@ -20,8 +20,6 @@ class Module
     const MODULE_READER = 'huhreader';
 
     /**
-     * @param DataContainer $dc
-     *
      * @return array
      *
      * @todo Move to EventListener
@@ -35,8 +33,6 @@ class Module
 
     /**
      * Get fields by.
-     *
-     * @param DataContainer $dc
      *
      * @return array|mixed
      */

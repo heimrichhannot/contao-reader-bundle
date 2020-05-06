@@ -58,8 +58,6 @@ class CommentConfigElementType implements ReaderConfigElementTypeInterface
 
     /**
      * Return the reader config element type alias.
-     *
-     * @return string
      */
     public static function getType(): string
     {
@@ -68,8 +66,6 @@ class CommentConfigElementType implements ReaderConfigElementTypeInterface
 
     /**
      * Return the reader config element type palette.
-     *
-     * @return string
      */
     public function getPalette(): string
     {
@@ -78,8 +74,6 @@ class CommentConfigElementType implements ReaderConfigElementTypeInterface
 
     /**
      * Update the item data.
-     *
-     * @param ReaderConfigElementData $configElementData
      */
     public function addToReaderItemData(ReaderConfigElementData $configElementData): void
     {
@@ -87,8 +81,6 @@ class CommentConfigElementType implements ReaderConfigElementTypeInterface
     }
 
     /**
-     * @param ReaderConfigElementModel $config
-     *
      * @return FrontendTemplate
      */
     protected function getCommentTemplate(ReaderConfigElementModel $config)
@@ -97,8 +89,6 @@ class CommentConfigElementType implements ReaderConfigElementTypeInterface
     }
 
     /**
-     * @param ReaderConfigElementModel $config
-     *
      * @return \stdClass
      */
     protected function getCommentConfig(ReaderConfigElementModel $config)
@@ -116,8 +106,6 @@ class CommentConfigElementType implements ReaderConfigElementTypeInterface
     }
 
     /**
-     * @param ReaderConfigElementModel $config
-     *
      * @return array
      */
     protected function getCommentNotifies(ReaderConfigElementModel $config)
@@ -139,9 +127,6 @@ class CommentConfigElementType implements ReaderConfigElementTypeInterface
 
     /**
      * remove not used fields from palette.
-     *
-     * @param array                    $standardFields
-     * @param ReaderConfigElementModel $config
      *
      * @return array
      */
@@ -165,8 +150,6 @@ class CommentConfigElementType implements ReaderConfigElementTypeInterface
     }
 
     /**
-     * @param ReaderConfigElementModel $config
-     *
      * @return array
      */
     protected function getOverridePaletteFields(ReaderConfigElementModel $config)

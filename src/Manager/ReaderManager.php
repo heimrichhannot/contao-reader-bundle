@@ -600,8 +600,6 @@ class ReaderManager implements ReaderManagerInterface
 
     /**
      * Modify current page title.
-     *
-     * @param string $pageTitle
      */
     protected function modifyPageTitle(string $pageTitle)
     {

@@ -53,8 +53,6 @@ class NavigationConfigElementType implements ReaderConfigElementTypeInterface
 
     /**
      * Return the reader config element type alias.
-     *
-     * @return string
      */
     public static function getType(): string
     {
@@ -63,8 +61,6 @@ class NavigationConfigElementType implements ReaderConfigElementTypeInterface
 
     /**
      * Return the reader config element type palette.
-     *
-     * @return string
      */
     public function getPalette(): string
     {
@@ -73,8 +69,6 @@ class NavigationConfigElementType implements ReaderConfigElementTypeInterface
 
     /**
      * Update the item data.
-     *
-     * @param ReaderConfigElementData $configElementData
      */
     public function addToReaderItemData(ReaderConfigElementData $configElementData): void
     {
@@ -83,11 +77,6 @@ class NavigationConfigElementType implements ReaderConfigElementTypeInterface
 
     /**
      * Render reader filter based navigation.
-     *
-     * @param ItemInterface            $item
-     * @param ReaderConfigElementModel $readerConfigElement
-     *
-     * @return array|null
      */
     protected function getReaderFilterNavigationItems(ItemInterface $item, ReaderConfigElementModel $readerConfigElement): ?array
     {
@@ -104,11 +93,6 @@ class NavigationConfigElementType implements ReaderConfigElementTypeInterface
 
     /**
      * Render list filter based navigation.
-     *
-     * @param ItemInterface            $item
-     * @param ReaderConfigElementModel $readerConfigElement
-     *
-     * @return array|null
      */
     protected function getListFilterNavigationItems(ItemInterface $item, ReaderConfigElementModel $readerConfigElement): ?array
     {
@@ -132,13 +116,8 @@ class NavigationConfigElementType implements ReaderConfigElementTypeInterface
     /**
      * Get the navigation items.
      *
-     * @param FilterConfig             $filterConfig
-     * @param ItemInterface            $item
-     * @param ReaderConfigElementModel $readerConfigElement
-     * @param string                   $sortingField
-     * @param string                   $sortingDirection
-     *
-     * @return array
+     * @param string $sortingField
+     * @param string $sortingDirection
      */
     protected function getItems(FilterConfig $filterConfig, ItemInterface $item, ReaderConfigElementModel $readerConfigElement, ?string $sortingField, ?string $sortingDirection): array
     {

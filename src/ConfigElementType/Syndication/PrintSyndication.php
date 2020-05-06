@@ -21,9 +21,6 @@ class PrintSyndication extends AbstractSyndication
 
     /**
      * AbstractSyndication constructor.
-     *
-     * @param ItemInterface            $item
-     * @param ReaderConfigElementModel $readerConfigElement
      */
     public function __construct(ItemInterface $item, ReaderConfigElementModel $readerConfigElement)
     {

@@ -38,10 +38,6 @@ abstract class AbstractPdfReader
 
     /**
      * AbstractPdfReader constructor.
-     *
-     * @param ItemInterface            $item
-     * @param ReaderConfigElementModel $readerConfigElement
-     * @param AbstractSyndication      $syndication
      */
     public function __construct(ItemInterface $item, ReaderConfigElementModel $readerConfigElement, AbstractSyndication $syndication)
     {
@@ -52,8 +48,6 @@ abstract class AbstractPdfReader
 
     /**
      * Get pdf file name.
-     *
-     * @return string
      */
     abstract public function getFileName(): string;
 
@@ -75,65 +69,41 @@ abstract class AbstractPdfReader
         $pdf->generate($this->download);
     }
 
-    /**
-     * @return ItemInterface
-     */
     public function getItem(): ItemInterface
     {
         return $this->item;
     }
 
-    /**
-     * @param ItemInterface $item
-     */
     public function setItem(ItemInterface $item)
     {
         $this->item = $item;
     }
 
-    /**
-     * @return ReaderConfigElementModel
-     */
     public function getReaderConfigElement(): ReaderConfigElementModel
     {
         return $this->readerConfigElement;
     }
 
-    /**
-     * @param ReaderConfigElementModel $readerConfigElement
-     */
     public function setReaderConfigElement(ReaderConfigElementModel $readerConfigElement)
     {
         $this->readerConfigElement = $readerConfigElement;
     }
 
-    /**
-     * @return AbstractSyndication
-     */
     public function getSyndication(): AbstractSyndication
     {
         return $this->syndication;
     }
 
-    /**
-     * @param AbstractSyndication $syndication
-     */
     public function setSyndication(AbstractSyndication $syndication)
     {
         $this->syndication = $syndication;
     }
 
-    /**
-     * @return bool
-     */
     public function isDownload(): bool
     {
         return $this->download;
     }
 
-    /**
-     * @param bool $download
-     */
     public function setDownload(bool $download)
     {
         $this->download = $download;
@@ -141,15 +111,11 @@ abstract class AbstractPdfReader
 
     /**
      * Compile the html.
-     *
-     * @return string
      */
     abstract protected function compile(): string;
 
     /**
      * Get the config.
-     *
-     * @return array
      */
     protected function getConfig(): array
     {

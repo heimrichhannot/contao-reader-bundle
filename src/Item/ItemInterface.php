@@ -22,15 +22,11 @@ interface ItemInterface
 
     /**
      * Get entire raw item data.
-     *
-     * @return array
      */
     public function getRaw(): array;
 
     /**
      * Set entire raw item data.
-     *
-     * @param array $data
      */
     public function setRaw(array $data = []): void;
 
@@ -53,15 +49,11 @@ interface ItemInterface
 
     /**
      * Get the entire formatted data.
-     *
-     * @return array
      */
     public function getFormatted(): array;
 
     /**
      * Set entire formatted item data.
-     *
-     * @param array $data
      */
     public function setFormatted(array $data = []): void;
 
@@ -84,22 +76,16 @@ interface ItemInterface
 
     /**
      * Get the reader manager.
-     *
-     * @return ReaderManagerInterface
      */
     public function getManager(): ReaderManagerInterface;
 
     /**
      * Get the reader config dataContainer name.
-     *
-     * @return string
      */
     public function getDataContainer(): string;
 
     /**
      * Get the current module data.
-     *
-     * @return array
      */
     public function getModule(): array;
 
@@ -107,8 +93,6 @@ interface ItemInterface
      * Get the details url if available.
      *
      * @param bool $external Determine if external urls should be returned as well (required by search index)
-     *
-     * @return string|null
      */
     public function getDetailsUrl(bool $external = true): ?string;
 

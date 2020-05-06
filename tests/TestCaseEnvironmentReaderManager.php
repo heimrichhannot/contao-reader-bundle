@@ -243,8 +243,6 @@ abstract class TestCaseEnvironmentReaderManager extends TestCaseEnvironment
 
     /**
      * Mocks a request scope matcher.
-     *
-     * @return ScopeMatcher
      */
     protected function mockScopeMatcher(): ScopeMatcher
     {

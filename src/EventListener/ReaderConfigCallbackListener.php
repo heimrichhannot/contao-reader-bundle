@@ -43,8 +43,6 @@ class ReaderConfigCallbackListener
 
     /**
      * onload_callback.
-     *
-     * @param DC_Table $dc
      */
     public function updateLabel(DC_Table $dc)
     {

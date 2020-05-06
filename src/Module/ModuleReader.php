@@ -63,8 +63,7 @@ class ModuleReader extends Module
     /**
      * ModuleReader constructor.
      *
-     * @param ModuleModel $objModule
-     * @param string      $strColumn
+     * @param string $strColumn
      */
     public function __construct(ModuleModel $objModule, $strColumn = 'main')
     {
@@ -126,6 +125,7 @@ class ModuleReader extends Module
 
         // add class to every reader template
         $cssID = $this->cssID;
+        $cssID[0] = $cssID[0] ?: 'huh-reader-'.$this->id;
         $cssID[1] = $cssID[1].($cssID[1] ? ' ' : '').'huh-reader';
 
         $this->cssID = $cssID;

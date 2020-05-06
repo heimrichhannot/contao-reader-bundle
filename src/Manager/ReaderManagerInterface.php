@@ -23,22 +23,16 @@ interface ReaderManagerInterface
 
     /**
      * Set the current module data.
-     *
-     * @param array $moduleData
      */
     public function setModuleData(array $moduleData): void;
 
     /**
      * Get current module data.
-     *
-     * @return array
      */
     public function getModuleData(): array;
 
     /**
      * Get the reader config model.
-     *
-     * @return ReaderConfigModel
      */
     public function getReaderConfig(): ReaderConfigModel;
 
@@ -51,8 +45,6 @@ interface ReaderManagerInterface
 
     /**
      * Get the query builder.
-     *
-     * @return QueryBuilder
      */
     public function getQueryBuilder(): QueryBuilder;
 
@@ -65,8 +57,6 @@ interface ReaderManagerInterface
 
     /**
      * Retrieve the current item model from given conditions (auto_item…).
-     *
-     * @return ItemInterface|null
      */
     public function retrieveItem(): ?ItemInterface;
 
@@ -94,36 +84,26 @@ interface ReaderManagerInterface
 
     /**
      * Set current DataContainer instance.
-     *
-     * @param DataContainer $dc
      */
     public function setDataContainer(DataContainer $dc): void;
 
     /**
      * Get the current data container.
-     *
-     * @return DataContainer|null
      */
     public function getDataContainer(): ?DataContainer;
 
     /**
      * Set the current item.
-     *
-     * @param ItemInterface $item
      */
     public function setItem(ItemInterface $item): void;
 
     /**
      * Get the current item.
-     *
-     * @return ItemInterface
      */
     public function getItem(): ItemInterface;
 
     /**
      * Get current reader config element registry.
-     *
-     * @return ReaderConfigElementRegistry
      */
     public function getReaderConfigElementRegistry(): ReaderConfigElementRegistry;
 
@@ -147,22 +127,16 @@ interface ReaderManagerInterface
 
     /**
      * Get current twig environment.
-     *
-     * @return \Twig_Environment
      */
     public function getTwig(): \Twig_Environment;
 
     /**
      * Get the contao framework.
-     *
-     * @return ContaoFrameworkInterface
      */
     public function getFramework(): ContaoFrameworkInterface;
 
     /**
      * Get current form utils.
-     *
-     * @return FormUtil
      */
     public function getFormUtil(): FormUtil;
 }

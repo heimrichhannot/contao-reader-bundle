@@ -37,8 +37,6 @@ class ReaderConfigElementRegistry
 
     /**
      * Add a list config element type to the registry.
-     *
-     * @param ReaderConfigElementTypeInterface $type
      */
     public function addReaderConfigElementType(ReaderConfigElementTypeInterface $type): void
     {
@@ -56,8 +54,6 @@ class ReaderConfigElementRegistry
     /**
      * Get a list config element type from the registry.
      *
-     * @param string $type
-     *
      * @return array|ReaderConfigElementTypeInterface[]
      */
     public function getReaderConfigElementType(string $type): ?ReaderConfigElementTypeInterface
@@ -70,7 +66,6 @@ class ReaderConfigElementRegistry
      *
      * @param mixed $column
      * @param mixed $value
-     * @param array $options
      *
      * @return \Contao\Model\Collection|ReaderConfigElementModel|null
      */
@@ -85,7 +80,6 @@ class ReaderConfigElementRegistry
      *
      * @param mixed $column
      * @param mixed $value
-     * @param array $options
      *
      * @return \Contao\Model\Collection|ReaderConfigElementModel|null
      */
@@ -100,7 +94,6 @@ class ReaderConfigElementRegistry
      *
      * @param mixed $column
      * @param mixed $value
-     * @param array $options
      *
      * @return \Contao\Model\Collection|ReaderConfigElementModel|null
      */

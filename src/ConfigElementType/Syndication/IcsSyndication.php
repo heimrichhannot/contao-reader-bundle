@@ -24,10 +24,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class IcsSyndication extends AbstractSyndication
 {
-    /**
-     * @param ItemInterface            $item
-     * @param ReaderConfigElementModel $readerConfigElement
-     */
     public function __construct(ItemInterface $item, ReaderConfigElementModel $readerConfigElement)
     {
         parent::__construct($item, $readerConfigElement);

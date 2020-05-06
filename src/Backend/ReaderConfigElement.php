@@ -74,8 +74,7 @@ class ReaderConfigElement
 
             case 'create':
                 if (!\strlen(Input::get('pid')) || !\in_array(Input::get('pid'), $root)) {
-                    throw new AccessDeniedException('Not enough permissions to create reader_config_element items in reader_config_element archive ID '
-                                                    .Input::get('pid').'.');
+                    throw new AccessDeniedException('Not enough permissions to create reader_config_element items in reader_config_element archive ID '.Input::get('pid').'.');
                 }
 
                 break;
@@ -83,8 +82,7 @@ class ReaderConfigElement
             case 'cut':
             case 'copy':
                 if (!\in_array(Input::get('pid'), $root)) {
-                    throw new AccessDeniedException('Not enough permissions to '.Input::get('act').' reader_config_element item ID '.$id
-                                                    .' to reader_config_element archive ID '.Input::get('pid').'.');
+                    throw new AccessDeniedException('Not enough permissions to '.Input::get('act').' reader_config_element item ID '.$id.' to reader_config_element archive ID '.Input::get('pid').'.');
                 }
             // no break STATEMENT HERE
 
@@ -100,8 +98,7 @@ class ReaderConfigElement
                 }
 
                 if (!\in_array($objArchive->pid, $root)) {
-                    throw new AccessDeniedException('Not enough permissions to '.Input::get('act').' reader_config_element item ID '.$id
-                                                    .' of reader_config_element archive ID '.$objArchive->pid.'.');
+                    throw new AccessDeniedException('Not enough permissions to '.Input::get('act').' reader_config_element item ID '.$id.' of reader_config_element archive ID '.$objArchive->pid.'.');
                 }
 
                 break;

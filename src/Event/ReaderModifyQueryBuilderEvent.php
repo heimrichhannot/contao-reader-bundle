@@ -36,11 +36,6 @@ class ReaderModifyQueryBuilderEvent extends Event
      */
     private $fields;
 
-    /**
-     * @param QueryBuilder           $queryBuilder
-     * @param ReaderManagerInterface $readerManager
-     * @param ReaderConfigModel      $readerConfig
-     */
     public function __construct(QueryBuilder $queryBuilder, ReaderManagerInterface $readerManager, ReaderConfigModel $readerConfig, string $fields)
     {
         $this->queryBuilder = $queryBuilder;
@@ -49,65 +44,41 @@ class ReaderModifyQueryBuilderEvent extends Event
         $this->fields = $fields;
     }
 
-    /**
-     * @return QueryBuilder
-     */
     public function getQueryBuilder(): QueryBuilder
     {
         return $this->queryBuilder;
     }
 
-    /**
-     * @param QueryBuilder $queryBuilder
-     */
     public function setQueryBuilder(QueryBuilder $queryBuilder): void
     {
         $this->queryBuilder = $queryBuilder;
     }
 
-    /**
-     * @return ReaderManagerInterface
-     */
     public function getReaderManager(): ReaderManagerInterface
     {
         return $this->readerManager;
     }
 
-    /**
-     * @param ReaderManagerInterface $readerManager
-     */
     public function setReaderManager(ReaderManagerInterface $readerManager): void
     {
         $this->readerManager = $readerManager;
     }
 
-    /**
-     * @return ReaderConfigModel
-     */
     public function getReaderConfig(): ReaderConfigModel
     {
         return $this->readerConfig;
     }
 
-    /**
-     * @param ReaderConfigModel $readerConfig
-     */
     public function setReaderConfig(ReaderConfigModel $readerConfig): void
     {
         $this->readerConfig = $readerConfig;
     }
 
-    /**
-     * @return string
-     */
     public function getFields(): string
     {
         return $this->fields;
     }
 
-    /**
-     * @param string $fields
-     */
     public function setFields(string $fields): void
     {
         $this->fields = $fields;
