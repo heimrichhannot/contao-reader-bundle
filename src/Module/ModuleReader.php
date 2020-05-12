@@ -126,7 +126,7 @@ class ModuleReader extends Module
         // add class to every reader template
         $cssID = $this->cssID;
         $cssID[0] = $cssID[0] ?: 'huh-reader-'.$this->id;
-        $cssID[1] = $cssID[1].($cssID[1] ? ' ' : '').'huh-reader';
+        $cssID[1] = $cssID[1].($cssID[1] ? ' ' : '').'huh-reader '.$readerConfig->dataContainer;
 
         $this->cssID = $cssID;
 

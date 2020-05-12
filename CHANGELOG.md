@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.8.7] - 2020-05-06
+- added table to generated markup for styling reasons
+
 ## [1.8.6] - 2020-05-06
 - added generated id to generated markup
 
