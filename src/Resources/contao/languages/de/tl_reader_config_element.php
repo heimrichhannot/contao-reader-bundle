@@ -155,6 +155,18 @@ $lang['mailSubjectLabel'][1] = 'Wählen Sie ein individuelles Label für die Ver
 $lang['mailBodyLabel'][0] = 'Label E-Mail Inhalt';
 $lang['mailBodyLabel'][1] = 'Wählen Sie ein individuelles Label für die Verwendung im Inhalt der E-Mail.';
 
+$lang['syndicationFeedback'][0] = 'E-Mail-Feedback-Syndikation aktivieren';
+$lang['syndicationFeedback'][1] = 'Aktivieren Sie die Syndikation für Feedback bzgl. des Beitrags per E-Mail.';
+
+$lang['feedbackEmail'][0] = 'Empfänger-E-Mail-Adresse';
+$lang['feedbackEmail'][1] = 'Geben Sie hier eine E-Mail-Adresse ein.';
+
+$lang['feedbackSubjectLabel'][0] = 'Label E-Mail Betreff';
+$lang['feedbackSubjectLabel'][1] = 'Wählen Sie ein individuelles Label für die Verwendung im Betreff der E-Mail.';
+
+$lang['feedbackBodyLabel'][0] = 'Label E-Mail Inhalt';
+$lang['feedbackBodyLabel'][1] = 'Wählen Sie ein individuelles Label für die Verwendung im Inhalt der E-Mail.';
+
 $lang['syndicationPdf'][0] = 'Pdf-Syndikation aktivieren';
 $lang['syndicationPdf'][1] = 'Aktivieren Sie die Syndikation und ermöglichen den Download des Beitrags als Pdf-Dokument.';
 

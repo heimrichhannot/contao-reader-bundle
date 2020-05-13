@@ -1,7 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.8.7] - 2020-05-06
+## [1.9.0] - 2020-05-13
+- added feedback syndication
+- added insert tag support to print syndication
+
+## [1.8.7] - 2020-05-12
 - added table to generated markup for styling reasons
 
 ## [1.8.6] - 2020-05-06

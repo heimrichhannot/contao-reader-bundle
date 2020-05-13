@@ -80,6 +80,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'addRedirectParam',
             'addMemberGroups',
             'syndicationMail',
+            'syndicationFeedback',
             'syndicationPinterest',
             'syndicationPrint',
             'syndicationPdf',
@@ -98,6 +99,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         'addRedirectConditions'                                                                                             => 'redirectConditions',
         'addRedirectParam'                                                                                                  => 'redirectParams',
         'syndicationMail'                                                                                                   => 'mailSubjectLabel,mailBodyLabel',
+        'syndicationFeedback'                                                                                               => 'feedbackEmail,feedbackSubjectLabel,feedbackBodyLabel',
         'syndicationPinterest'                                                                                              => 'imageSelectorField,imageField,imgSize',
         'syndicationPrint'                                                                                                  => 'syndicationPrintTemplate',
         'syndicationPdf'                                                                                                    => 'syndicationPdfReader,syndicationPdfTemplate,syndicationPdfFontDirectories,syndicationPdfMasterTemplate,syndicationPdfPageMargin',
@@ -145,7 +147,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'submitOnChange' => true],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
-        'templateVariable'          => [
+        'templateVariable'               => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['templateVariable'],
             'exclude'   => true,
             'search'    => true,
@@ -219,7 +221,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50'],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
-        'posterImageSelectorField'             => [
+        'posterImageSelectorField'       => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['posterImageSelectorField'],
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
@@ -229,7 +231,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
-        'posterImageField'                     => [
+        'posterImageField'               => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['posterImageField'],
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
@@ -241,54 +243,54 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50'],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
-        'renderPosterAsImg' => [
-            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config_element']['renderPosterAsImg'],
-            'exclude'                 => true,
-            'inputType'               => 'checkbox',
-            'eval'                    => ['tl_class' => 'w50'],
-            'sql'                     => "char(1) NOT NULL default ''"
+        'renderPosterAsImg'              => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['renderPosterAsImg'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''"
         ],
-        'videoPlaysInline' => [
-            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoPlaysInline'],
-            'exclude'                 => true,
-            'inputType'               => 'checkbox',
-            'eval'                    => ['tl_class' => 'w50'],
-            'sql'                     => "char(1) NOT NULL default ''"
+        'videoPlaysInline'               => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoPlaysInline'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''"
         ],
-        'videoAutoplay' => [
-            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoAutoplay'],
-            'exclude'                 => true,
-            'inputType'               => 'checkbox',
-            'eval'                    => ['tl_class' => 'w50'],
-            'sql'                     => "char(1) NOT NULL default ''"
+        'videoAutoplay'                  => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoAutoplay'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''"
         ],
-        'videoLoop' => [
-            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoLoop'],
-            'exclude'                 => true,
-            'inputType'               => 'checkbox',
-            'eval'                    => ['tl_class' => 'w50'],
-            'sql'                     => "char(1) NOT NULL default ''"
+        'videoLoop'                      => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoLoop'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''"
         ],
-        'videoMuted' => [
-            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoMuted'],
-            'exclude'                 => true,
-            'inputType'               => 'checkbox',
-            'eval'                    => ['tl_class' => 'w50'],
-            'sql'                     => "char(1) NOT NULL default ''"
+        'videoMuted'                     => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoMuted'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''"
         ],
-        'videoControls' => [
-            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoControls'],
-            'exclude'                 => true,
-            'inputType'               => 'checkbox',
-            'eval'                    => ['tl_class' => 'w50'],
-            'sql'                     => "char(1) NOT NULL default '1'"
+        'videoControls'                  => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoControls'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default '1'"
         ],
-        'videoPreload' => [
-            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoPreload'],
-            'exclude'                 => true,
-            'inputType'               => 'checkbox',
-            'eval'                    => ['tl_class' => 'w50'],
-            'sql'                     => "char(1) NOT NULL default ''"
+        'videoPreload'                   => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['videoPreload'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''"
         ],
         'syndicationIcsTitleField'       => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationIcsTitleField'],
@@ -466,7 +468,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
-        'placeholderImages'       => [
+        'placeholderImages'              => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['placeholderImages'],
             'exclude'   => true,
             'inputType' => 'fileTree',
@@ -708,6 +710,43 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'default'          => 'huh.reader.element.mail.body.syndication.default',
             'options_callback' => function (\DataContainer $dc) {
                 return \Contao\System::getContainer()->get('huh.utils.choice.message')->getCachedChoices('huh.reader.element.mail.body');
+            },
+            'eval'             => ['chosen' => true, 'mandatory' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'syndicationFeedback'            => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['syndicationFeedback'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'feedbackEmail' => [
+            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config_element']['feedbackEmail'],
+            'exclude'                 => true,
+            'search'                  => true,
+            'inputType'               => 'text',
+            'eval'                    => ['maxlength' => 64, 'tl_class' => 'w50', 'mandatory' => true, 'rgxp' => 'email'],
+            'sql'                     => "varchar(64) NOT NULL default ''"
+        ],
+        'feedbackSubjectLabel'           => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['feedbackSubjectLabel'],
+            'exclude'          => true,
+            'inputType'        => 'select',
+            'default'          => 'huh.reader.element.feedback.subject.syndication.default',
+            'options_callback' => function (\DataContainer $dc) {
+                return \Contao\System::getContainer()->get('huh.utils.choice.message')->getCachedChoices('huh.reader.element.feedback.subject');
+            },
+            'eval'             => ['chosen' => true, 'mandatory' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'feedbackBodyLabel'              => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['feedbackBodyLabel'],
+            'exclude'          => true,
+            'inputType'        => 'select',
+            'default'          => 'huh.reader.element.feedback.body.syndication.default',
+            'options_callback' => function (\DataContainer $dc) {
+                return \Contao\System::getContainer()->get('huh.utils.choice.message')->getCachedChoices('huh.reader.element.feedback.body');
             },
             'eval'             => ['chosen' => true, 'mandatory' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
             'sql'              => "varchar(64) NOT NULL default ''",
@@ -971,28 +1010,28 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'eval'      => ['multiple' => true, 'includeBlankOption' => true, 'tl_class' => 'w50 autoheight clr'],
             'sql'       => "blob NULL",
         ],
-        'submissionFormExplanation'       => [
+        'submissionFormExplanation'      => [
             'inputType' => 'explanation',
             'eval'      => [
                 'text'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['submissionFormExplanation'],
-                'class' => 'tl_info',
+                'class'    => 'tl_info',
                 'tl_class' => 'long',
             ]
         ],
-        'submissionReader' => [
-            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config_element']['submissionReader'],
-            'exclude'                 => true,
-            'filter'                  => true,
-            'inputType'               => 'select',
+        'submissionReader'               => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['submissionReader'],
+            'exclude'          => true,
+            'filter'           => true,
+            'inputType'        => 'select',
             'options_callback' => function () {
                 return System::getContainer()->get('huh.utils.choice.model_instance')->getCachedChoices([
                     'dataContainer' => 'tl_module'
                 ]);
             },
-            'eval'                    => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
-            'sql'                     => "varchar(64) NOT NULL default ''"
+            'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
+            'sql'              => "varchar(64) NOT NULL default ''"
         ],
-        'emailField'            => [
+        'emailField'                     => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['emailField'],
             'inputType'        => 'select',
             'options_callback' => function (DataContainer $dc) {
@@ -1012,7 +1051,7 @@ $dca = &$GLOBALS['TL_DCA']['tl_reader_config_element'];
 // list type
 if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('HeimrichHannot\ListBundle\HeimrichHannotContaoListBundle')) {
     $dca['fields'] = array_merge($dca['fields'], [
-        'sortingDirection' => [
+        'sortingDirection'                => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['sortingDirection'],
             'exclude'   => true,
             'filter'    => true,
@@ -1023,7 +1062,7 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
             'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true],
             'sql'       => "varchar(16) NOT NULL default ''",
         ],
-        'listModule'       => [
+        'listModule'                      => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['listModule'],
             'inputType'        => 'select',
             'exclude'          => true,
@@ -1039,7 +1078,7 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
             ],
             'sql'              => "int(10) unsigned NOT NULL default '0'",
         ],
-        'listName'         => [
+        'listName'                        => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['listName'],
             'exclude'   => true,
             'search'    => true,
@@ -1047,7 +1086,7 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
             'eval'      => ['maxlength' => 128, 'tl_class' => 'w50', 'mandatory' => true],
             'sql'       => "varchar(128) NOT NULL default ''",
         ],
-        'initialFilter'    => [
+        'initialFilter'                   => [
             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['initialFilter'],
             'inputType' => 'multiColumnEditor',
             'eval'      => [
@@ -1098,24 +1137,24 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
                 'multiColumnEditor' => [
                     'minRowCount' => 0,
                     'fields'      => [
-                        'field' => [
-                            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['fieldDependentPlaceholderConfig']['field'],
-                            'inputType' => 'select',
+                        'field'            => [
+                            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['fieldDependentPlaceholderConfig']['field'],
+                            'inputType'        => 'select',
                             'options_callback' => function (DataContainer $dc) {
                                 return $dc->activeRecord->pid > 0 ? System::getContainer()
                                     ->get('huh.reader.util.reader-config-util')
                                     ->getFields($dc->activeRecord->pid) : [];
                             },
-                            'eval'      => ['style' => 'width: 200px', 'mandatory' => true, 'includeBlankOption' => true],
+                            'eval'             => ['style' => 'width: 200px', 'mandatory' => true, 'includeBlankOption' => true],
                         ],
-                        'operator' => [
+                        'operator'         => [
                             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['fieldDependentPlaceholderConfig']['operator'],
                             'inputType' => 'select',
                             'options'   => \HeimrichHannot\UtilsBundle\Comparison\CompareUtil::PHP_OPERATORS,
                             'reference' => &$GLOBALS['TL_LANG']['MSC']['phpOperators'],
                             'eval'      => ['style' => 'width: 200px', 'mandatory' => true, 'includeBlankOption' => true],
                         ],
-                        'value' => [
+                        'value'            => [
                             'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['fieldDependentPlaceholderConfig']['value'],
                             'inputType' => 'text',
                             'eval'      => ['style' => 'width: 200px'],

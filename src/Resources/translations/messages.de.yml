@@ -18,16 +18,24 @@ huh.reader.element.title.pinterest: Auf Pinterest teilen
 huh.reader.element.title.reddit: Auf Reddit teilen
 huh.reader.element.title.whatsapp: Über WhatsApp teilen
 huh.reader.element.title.mail: Per E-Mail teilen
+huh.reader.element.title.feedback: Feedback per E-Mail senden
 huh.reader.element.title.pdf: Als PDF-herunterladen
 huh.reader.element.title.print: Diese Seite drucken
 huh.reader.element.title.ics: Kalendereintrag aus ICS-Datei erstellen
 
-
 # Config element mail subject labels
 huh.reader.element.mail.subject.syndication.default: 'Artikel Empfehlung: %title%'
+huh.reader.element.mail.subject.syndication.recommended_post: 'Empfohlener Beitrag: %title%'
 
 # Config element mail subject labels
 huh.reader.element.mail.body.syndication.default: 'Schau dir diesen interessanten Artikel an: %url%'
+huh.reader.element.mail.body.syndication.plain: '%url%'
+
+# Config element feedback subject labels
+huh.reader.element.feedback.subject.syndication.default: 'Feedback: %title%'
+
+# Config element feedback subject labels
+huh.reader.element.feedback.body.syndication.default: '%url%'
 
 # Misc
 huh.reder.misc.contact: Kontakt
