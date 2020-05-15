@@ -13,6 +13,8 @@ use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\ReaderBundle\ConfigElementType\ConfigElementType;
 use HeimrichHannot\ReaderBundle\ConfigElementType\ReaderConfigElementData;
+use HeimrichHannot\ReaderBundle\Event\ReaderAfterRenderEvent;
+use HeimrichHannot\ReaderBundle\Event\ReaderBeforeRenderEvent;
 use HeimrichHannot\ReaderBundle\Manager\ReaderManagerInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
@@ -295,15 +297,25 @@ class DefaultItem implements ItemInterface, \JsonSerializable
         $context = $this->jsonSerialize();
         $template = $readerConfig->itemTemplate ?: 'default';
 
+        $beforeRenderEvent = System::getContainer()->get('event_dispatcher')->dispatch(ReaderBeforeRenderEvent::NAME, new ReaderBeforeRenderEvent(
+            $context, $this, $readerConfig
+        ));
+
         /** @var RenderTwigTemplateEvent $event */
         $event = System::getContainer()->get('event_dispatcher')->dispatch(
             RenderTwigTemplateEvent::NAME,
             new RenderTwigTemplateEvent(
-                $template, $context
+                $template, $beforeRenderEvent->getTemplateData()
             )
         );
 
-        return $twig->render($this->_manager->getItemTemplateByName($event->getTemplate()), $event->getContext());
+        $rendered = $twig->render($this->_manager->getItemTemplateByName($event->getTemplate()), $event->getContext());
+
+        $afterRenderEvent = System::getContainer()->get('event_dispatcher')->dispatch(ReaderAfterRenderEvent::NAME, new ReaderAfterRenderEvent(
+            $rendered, $event->getContext(), $this, $readerConfig)
+        );
+
+        return $afterRenderEvent->getRendered();
     }
 
     public function addJumpToOverview(ReaderConfigModel $readerConfig): void

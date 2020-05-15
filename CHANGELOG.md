@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.10.0] - 2020-05-15
+- added `ReaderBeforeRenderEvent`
+- added `ReaderAfterRenderEvent`
+
 ## [1.9.0] - 2020-05-13
 - added feedback syndication
 - added insert tag support to print syndication
