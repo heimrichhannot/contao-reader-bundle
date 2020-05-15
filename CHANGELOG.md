@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.10.1] - 2020-05-15
+- fixed image config element for svg files
+
 ## [1.10.0] - 2020-05-15
 - added `ReaderBeforeRenderEvent`
 - added `ReaderAfterRenderEvent`
