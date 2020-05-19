@@ -8,12 +8,17 @@
 
 namespace HeimrichHannot\ReaderBundle\DataContainer;
 
+use Contao\StringUtil;
+use HeimrichHannot\ReaderBundle\ConfigElementType\RelatedConfigElementType;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ReaderConfigElementContainer
 {
+    const RELATED_CRITERIUM_TAGS = 'tags';
+    const RELATED_CRITERIUM_CATEGORIES = 'categories';
+
     /**
      * @var ReaderConfigElementRegistry
      */
@@ -32,6 +37,22 @@ class ReaderConfigElementContainer
         $this->container = $container;
     }
 
+    public function getRelatedCriteriaAsOptions()
+    {
+        $options = [];
+
+        if (class_exists('\Codefog\TagsBundle\CodefogTagsBundle')) {
+            $options[] = static::RELATED_CRITERIUM_TAGS;
+        }
+
+        // TODO
+//        if (class_exists('\HeimrichHannot\CategoriesBundle\CategoriesBundle')) {
+//            $options[] = static::RELATED_CRITERIUM_CATEGORIES;
+//        }
+
+        return $options;
+    }
+
     /**
      * Update dca palettes with config element types palettes.
      *
@@ -39,6 +60,10 @@ class ReaderConfigElementContainer
      */
     public function onLoadCallback($dc)
     {
+        if (null === ($readerConfigElement = $this->container->get('huh.utils.model')->findModelInstanceByPk('tl_reader_config_element', $dc->id))) {
+            return;
+        }
+
         $configElementTypes = $this->configElementTypeRegistry->getReaderConfigElementTypes();
 
         if (empty($configElementTypes)) {
@@ -48,6 +73,18 @@ class ReaderConfigElementContainer
         foreach ($configElementTypes as $listConfigElementType) {
             $palette = '{title_type_legend},title,type,templateVariable;'.$listConfigElementType->getPalette();
             $GLOBALS['TL_DCA'][ReaderConfigElementModel::getTable()]['palettes'][$listConfigElementType::getType()] = $palette;
+        }
+
+        // related
+        if ($readerConfigElement->type === RelatedConfigElementType::getType()) {
+            $criteria = StringUtil::deserialize($readerConfigElement->relatedCriteria, true);
+
+            if (\in_array(static::RELATED_CRITERIUM_TAGS, $criteria)) {
+                $GLOBALS['TL_DCA']['tl_list_config_element']['palettes'][RelatedConfigElementType::getType()] = str_replace(
+                    'relatedCriteria;', 'relatedCriteria,tagsField;',
+                    $GLOBALS['TL_DCA']['tl_list_config_element']['palettes'][RelatedConfigElementType::getType()]
+                );
+            }
         }
     }
 

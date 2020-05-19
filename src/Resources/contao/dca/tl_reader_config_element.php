@@ -87,7 +87,8 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'syndicationIcs',
             'syndicationIcsAddTime',
             'commentOverridePalette',
-            'commentHideFields'
+            'commentHideFields',
+            'tagsAddLink'
         ],
         'default'      => '{title_type_legend},title,type;',
     ],
@@ -107,7 +108,8 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         'syndicationIcsAddTime'                                                                                             => 'syndicationIcsAddTimeField,syndicationIcsStartTimeField,syndicationIcsEndTimeField',
         'addMemberGroups'                                                                                                   => 'memberGroups',
         'commentOverridePalette'                                                                                            => 'commentPalette',
-        'commentHideFields'                                                                                                 => 'commentHideFieldsPalette'
+        'commentHideFields'                                                                                                 => 'commentHideFieldsPalette',
+        'tagsAddLink'                                                                                                       => 'tagsFilter,tagsFilterElement,tagsJumpTo'
     ],
     'fields'      => [
         'id'                             => [
@@ -721,13 +723,13 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
             'sql'       => "char(1) NOT NULL default ''",
         ],
-        'feedbackEmail' => [
-            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config_element']['feedbackEmail'],
-            'exclude'                 => true,
-            'search'                  => true,
-            'inputType'               => 'text',
-            'eval'                    => ['maxlength' => 64, 'tl_class' => 'w50', 'mandatory' => true, 'rgxp' => 'email'],
-            'sql'                     => "varchar(64) NOT NULL default ''"
+        'feedbackEmail'                  => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['feedbackEmail'],
+            'exclude'   => true,
+            'search'    => true,
+            'inputType' => 'text',
+            'eval'      => ['maxlength' => 64, 'tl_class' => 'w50', 'mandatory' => true, 'rgxp' => 'email'],
+            'sql'       => "varchar(64) NOT NULL default ''"
         ],
         'feedbackSubjectLabel'           => [
             'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['feedbackSubjectLabel'],
@@ -1169,7 +1171,133 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
                 ]
             ],
             'sql'       => "blob NULL"
-        ]
+        ],
+        'relatedExplanation'              => [
+            'inputType' => 'explanation',
+            'eval'      => [
+                'text'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['relatedExplanation'],
+                'class'    => 'tl_info',
+                'tl_class' => 'long clr',
+            ]
+        ],
+        'relatedListModule'               => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['relatedListModule'],
+            'exclude'          => true,
+            'filter'           => true,
+            'inputType'        => 'select',
+            'options_callback' => function (\Contao\DataContainer $dc) {
+                return System::getContainer()->get('huh.utils.choice.model_instance')->getCachedChoices([
+                    'dataContainer' => 'tl_module',
+                    'labelPattern'  => '%name% (ID %id%)'
+                ]);
+            },
+            'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
+            'sql'              => "varchar(64) NOT NULL default ''"
+        ],
+        'relatedCriteriaExplanation'      => [
+            'inputType' => 'explanation',
+            'eval'      => [
+                'text'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['relatedCriteriaExplanation'],
+                'class'    => 'tl_info',
+                'tl_class' => 'long clr',
+            ]
+        ],
+        'relatedCriteria'                 => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['relatedCriteria'],
+            'exclude'          => true,
+            'filter'           => true,
+            'inputType'        => 'checkbox',
+            'options_callback' => [\HeimrichHannot\ListBundle\DataContainer\ListConfigElementContainer::class, 'getRelatedCriteriaAsOptions'],
+            'reference'        => &$GLOBALS['TL_LANG']['tl_reader_config_element']['reference'],
+            'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'multiple' => true, 'submitOnChange' => true],
+            'sql'              => "blob NULL"
+        ],
+        'tagsField'                       => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['tagsField'],
+            'inputType'        => 'select',
+            'options_callback' => function (DataContainer $dc) {
+                if (!$dc->activeRecord->pid) {
+                    return [];
+                }
+
+                if (null === ($readerConfig = System::getContainer()->get('huh.utils.model')->findModelInstanceByPk('tl_reader_config', $dc->activeRecord->pid)) || !$readerConfig->dataContainer) {
+                    return [];
+                }
+
+                return System::getContainer()->get('huh.utils.choice.field')->getCachedChoices([
+                    'dataContainer' => $readerConfig->dataContainer,
+                    'inputTypes'    => ['cfgTags']
+                ]);
+            },
+            'exclude'          => true,
+            'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'tagsTemplate'                    => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['tagsTemplate'],
+            'exclude'          => true,
+            'inputType'        => 'select',
+            'default'          => 'config_element_tags_default.html',
+            'options_callback' => function (\Contao\DataContainer $dc) {
+                return \Contao\System::getContainer()->get('huh.utils.choice.twig_template')->getCachedChoices(['config_element_tags_']);
+            },
+            'eval'             => ['tl_class' => 'w50', 'includeBlankOption' => true, 'mandatory' => true],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'tagsAddLink'                     => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config_element']['tagsAddLink'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
+            'sql'       => "char(1) NOT NULL default ''"
+        ],
+        'tagsFilter'                      => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['tagsFilter'],
+            'exclude'          => true,
+            'filter'           => true,
+            'inputType'        => 'select',
+            'options_callback' => function (\Contao\DataContainer $dc) {
+                return System::getContainer()->get('huh.utils.choice.model_instance')->getCachedChoices([
+                    'dataContainer' => 'tl_filter_config',
+                    'labelPattern'  => '%title% (ID %id%)'
+                ]);
+            },
+            'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true, 'submitOnChange' => true],
+            'sql'              => "varchar(64) NOT NULL default ''"
+        ],
+        'tagsFilterConfigElement'         => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['tagsFilterConfigElement'],
+            'exclude'          => true,
+            'filter'           => true,
+            'inputType'        => 'select',
+            'options_callback' => function (\Contao\DataContainer $dc) {
+                if (!$dc->activeRecord->tagsFilter) {
+                    return [];
+                }
+
+                return System::getContainer()->get('huh.utils.choice.model_instance')->getCachedChoices([
+                    'dataContainer' => 'tl_filter_config_element',
+                    'columns'       => [
+                        'tl_filter_config_element.pid=?'
+                    ],
+                    'values'        => [
+                        $dc->activeRecord->tagsFilter
+                    ],
+                    'labelPattern'  => '%title% (ID %id%)'
+                ]);
+            },
+            'eval'             => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
+            'sql'              => "varchar(64) NOT NULL default ''"
+        ],
+        'tagsJumpTo'                      => [
+            'label'      => &$GLOBALS['TL_LANG']['tl_reader_config_element']['tagsJumpTo'],
+            'exclude'    => true,
+            'inputType'  => 'pageTree',
+            'foreignKey' => 'tl_page.title',
+            'eval'       => ['fieldType' => 'radio', 'tl_class' => 'w50', 'mandatory' => true],
+            'sql'        => "int(10) unsigned NOT NULL default '0'",
+            'relation'   => ['type' => 'hasOne', 'load' => 'lazy']
+        ],
     ]);
 }
 

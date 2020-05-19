@@ -256,6 +256,40 @@ $lang['emailField'][0]             = 'E-Mail-Feld';
 $lang['emailField'][1]             = 'Wählen Sie hier das Feld aus, an das die E-Mail verschickt werden soll.';
 $lang['submissionFormExplanation'] = 'Die E-Mail-Adresse, an die das Formular verschickt wird, finden Sie im Notification-Center-Token ##form_value_submission_form_email##.';
 
+// related
+$lang['relatedExplanation'] = 'Um ähnliche Instanzen auszugeben, müssen Sie vorab erst eine Modul des Typs "Liste" samt Listenkonfiguration und Filter erstellen (<a href="https://github.com/heimrichhannot/contao-list-bundle" target="blank">heimrichhannot/contao-list-bundle</a> muss installiert sein). Die notwendigen Filter-Bedingungen für das Auffinden ähnlicher Instanzen werden durch dieses Listenkonfigurations-Element automatisch gesetzt. Der Filter in der Liste muss diese Filter-Konfigurationselemente also <strong>nicht</strong> setzen. In der Regel sollte sich in einem solchen Filter nur ein Filter-Element für die Prüfung des "Veröffentlicht"-Status befinden.';
+
+$lang['relatedListModule'][0] = 'Listenmodul';
+$lang['relatedListModule'][1] = 'Wählen Sie hier das Listenmodul aus, das die ähnlichen Instanzen ausgeben soll.';
+
+$lang['relatedCriteriaExplanation'] = 'Bitte installieren Sie eine oder mehrere der folgenden Erweiterungen, um entsprechende Kriterien zu vergeben:
+    <ul>
+        <li>- <a href="https://github.com/codefog/tags-bundle" target="blank">codefog/tags-bundle</a></li>
+        <!-- <li>- <a href="https://github.com/heimrichhannot/contao-categories-bundle" target="blank">heimrichhannot/contao-categories-bundle</a></li> -->
+    </ul>';
+
+$lang['relatedCriteria'][0] = 'Filterkriterien';
+$lang['relatedCriteria'][1] = 'Wählen Sie hier die Kriterien aus, die zum Auffinden ähnlicher Instanzen verwendet werden sollen.';
+
+// tags
+$lang['tagsField'][0] = 'Tags-Feld';
+$lang['tagsField'][1] = 'Wählen Sie hier ein Tags-Feld aus.';
+
+$lang['tagsAddLink'][0] = 'Schlagworte als Filter-Links darstellen';
+$lang['tagsAddLink'][1] = 'Wählen Sie diese Option, wenn die Schlagworte als Filter-Links dargestellt werden sollen. Auf der Zielseite sollte sich ein Modul vom Typ "Filter" bzw. "Liste" befinden.';
+
+$lang['tagsFilter'][0] = 'Filter';
+$lang['tagsFilter'][1] = 'Wählen Sie hier den Filter aus, der in der zu filternden Liste verknüpft ist.';
+
+$lang['tagsFilterConfigElement'][0] = 'Betroffenes Filter-Element';
+$lang['tagsFilterConfigElement'][1] = 'Wählen Sie hier das zu filternde Filter-Element aus.';
+
+$lang['tagsJumpTo'][0] = 'Weiterleitungsseite';
+$lang['tagsJumpTo'][1] = 'Wählen Sie hier die Seite aus, die den o.g. Filter nutzt.';
+
+$lang['tagsTemplate'][0] = 'Template';
+$lang['tagsTemplate'][1] = 'Wählen Sie hier das gewünschte Template aus.';
+
 
 /**
  * Reference
@@ -270,12 +304,16 @@ $lang['reference'] = [
     \HeimrichHannot\ReaderBundle\ConfigElementType\DeleteConfigElementType::getType()      => 'Löschen',
     \HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType::getType()     => 'Kommentar',
     \HeimrichHannot\ReaderBundle\ConfigElementType\SubmissionFormConfigElementType::TYPE   => 'Kontaktformular',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\RelatedConfigElementType::getType()     => 'Ähnliche Instanzen',
+    \HeimrichHannot\ReaderBundle\ConfigElementType\TagsConfigElementType::getType()        => 'Schlagworte'
 ];
 
-$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE]   = 'einfach';
-$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED] = 'geschlechtsspezifisch';
-$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_RANDOM]   = 'zufällig';
-$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_FIELD]    = 'feldabhängig';
+$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE]               = 'einfach';
+$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED]             = 'geschlechtsspezifisch';
+$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_RANDOM]               = 'zufällig';
+$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_FIELD]                = 'feldabhängig';
+$lang['reference'][\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer::RELATED_CRITERIUM_TAGS]       = 'Schlagworte';
+$lang['reference'][\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer::RELATED_CRITERIUM_CATEGORIES] = 'Kategorien';
 
 /**
  * Legends

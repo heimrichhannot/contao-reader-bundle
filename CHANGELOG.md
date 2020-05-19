@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.11.0] - 2020-05-19
+- added new list config elements: `RelatedConfigElementType`, `TagsConfigElementType`
+
 ## [1.10.1] - 2020-05-15
 - fixed image config element for svg files
 
