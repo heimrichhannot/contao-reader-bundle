@@ -109,7 +109,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         'addMemberGroups'                                                                                                   => 'memberGroups',
         'commentOverridePalette'                                                                                            => 'commentPalette',
         'commentHideFields'                                                                                                 => 'commentHideFieldsPalette',
-        'tagsAddLink'                                                                                                       => 'tagsFilter,tagsFilterElement,tagsJumpTo'
+        'tagsAddLink'                                                                                                       => 'tagsFilter,tagsFilterConfigElement,tagsJumpTo'
     ],
     'fields'      => [
         'id'                             => [
