@@ -9,7 +9,9 @@
 namespace HeimrichHannot\ReaderBundle\ConfigElementType;
 
 use Contao\Controller;
+use Contao\Database;
 use Contao\Model;
+use Contao\System;
 use HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
@@ -69,6 +71,7 @@ class RelatedConfigElementType implements ReaderConfigElementTypeInterface
         $GLOBALS['HUH_LIST_RELATED'] = [];
 
         $this->applyTagsFilter($configElement, $item);
+        $this->applyCategoriesFilter($configElement, $item);
 
         $result = Controller::getFrontendModule($configElement->relatedListModule);
 
@@ -83,6 +86,8 @@ class RelatedConfigElementType implements ReaderConfigElementTypeInterface
             return;
         }
 
+        $table = $item->getDataContainer();
+
         $criteria = \Contao\StringUtil::deserialize($configElement->relatedCriteria, true);
 
         if (empty($criteria)) {
@@ -90,10 +95,73 @@ class RelatedConfigElementType implements ReaderConfigElementTypeInterface
         }
 
         if (\in_array(ReaderConfigElementContainer::RELATED_CRITERIUM_TAGS, $criteria)) {
-            $GLOBALS['HUH_LIST_RELATED'][ReaderConfigElementContainer::RELATED_CRITERIUM_TAGS] = [
-                'field' => $configElement->tagsField,
-                'item' => $item,
-            ];
+            System::getContainer()->get('huh.utils.dca')->loadDc($table);
+
+            $source = $GLOBALS['TL_DCA'][$table]['fields'][$configElement->tagsField]['eval']['tagsManager'];
+
+            $nonTlTable = System::getContainer()->get('huh.utils.string')->removeLeadingString('tl_', $table);
+            $cfgTable = 'tl_cfg_tag_'.$nonTlTable;
+
+            $tagRecords = Database::getInstance()->prepare("SELECT t.id FROM tl_cfg_tag t INNER JOIN $cfgTable t2 ON t.id = t2.cfg_tag_id".
+                " WHERE t2.{$nonTlTable}_id=? AND t.source=?")->execute(
+                $item->getRawValue('id'),
+                $source
+            );
+
+            if ($tagRecords->numRows > 0) {
+                $relatedIds = Database::getInstance()->prepare(
+                    "SELECT t.* FROM $cfgTable t WHERE t.cfg_tag_id IN (".implode(',', $tagRecords->fetchEach('id')).')'
+                )->execute();
+
+                if ($relatedIds->numRows > 0) {
+                    $itemIds = $relatedIds->fetchEach($nonTlTable.'_id');
+
+                    // exclude the item itself
+                    $itemIds = array_diff($itemIds, [$item->getRawValue('id')]);
+
+                    $GLOBALS['HUH_LIST_RELATED'][ReaderConfigElementContainer::RELATED_CRITERIUM_TAGS] = [
+                        'itemIds' => $itemIds,
+                    ];
+                }
+            }
+        }
+    }
+
+    protected function applyCategoriesFilter(Model $configElement, ItemInterface $item)
+    {
+        if (!class_exists('\HeimrichHannot\CategoriesBundle\CategoriesBundle') || !$configElement->categoriesField) {
+            return;
+        }
+
+        $table = $item->getDataContainer();
+
+        $criteria = \Contao\StringUtil::deserialize($configElement->relatedCriteria, true);
+
+        if (empty($criteria)) {
+            return;
+        }
+
+        if (\in_array(ReaderConfigElementContainer::RELATED_CRITERIUM_CATEGORIES, $criteria)) {
+            $categories = System::getContainer()->get('huh.categories.manager')->findByEntityAndCategoryFieldAndTable(
+                $item->getRawValue('id'), $configElement->categoriesField, $table
+            );
+
+            if (null !== $categories) {
+                $relatedIds = Database::getInstance()->prepare(
+                    'SELECT t.* FROM tl_category_association t WHERE t.category IN ('.implode(',', $categories->fetchEach('id')).')'
+                )->execute();
+
+                if ($relatedIds->numRows > 0) {
+                    $itemIds = $relatedIds->fetchEach('entity');
+
+                    // exclude the item itself
+                    $itemIds = array_diff($itemIds, [$item->getRawValue('id')]);
+
+                    $GLOBALS['HUH_LIST_RELATED'][ReaderConfigElementContainer::RELATED_CRITERIUM_CATEGORIES] = [
+                        'itemIds' => $itemIds,
+                    ];
+                }
+            }
         }
     }
 }

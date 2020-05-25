@@ -1298,6 +1298,27 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
             'sql'        => "int(10) unsigned NOT NULL default '0'",
             'relation'   => ['type' => 'hasOne', 'load' => 'lazy']
         ],
+        'categoriesField'                       => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['categoriesField'],
+            'inputType'        => 'select',
+            'options_callback' => function (DataContainer $dc) {
+                if (!$dc->activeRecord->pid) {
+                    return [];
+                }
+
+                if (null === ($readerConfig = System::getContainer()->get('huh.utils.model')->findModelInstanceByPk('tl_reader_config', $dc->activeRecord->pid)) || !$readerConfig->dataContainer) {
+                    return [];
+                }
+
+                return System::getContainer()->get('huh.utils.choice.field')->getCachedChoices([
+                    'dataContainer' => $readerConfig->dataContainer,
+                    'inputTypes'    => ['categoryTree']
+                ]);
+            },
+            'exclude'          => true,
+            'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
     ]);
 }
 

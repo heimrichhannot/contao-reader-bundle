@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.12.0] - 2020-05-25
+- added category mode for `RelatedConfigElementType`
+
 ## [1.11.2] - 2020-05-25
 - fixed `TagsConfigElementType`
 - fixed auto_item bug when it starts with a minus
