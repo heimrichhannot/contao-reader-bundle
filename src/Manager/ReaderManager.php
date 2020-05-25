@@ -636,8 +636,7 @@ class ReaderManager implements ReaderManagerInterface
                 return $item;
             }
 
-            // mysql automatically casts string to number -> alias `10er-tagesticket` will be cast to 10 and wont match against alias but
-            if (is_numeric($autoItem)) {
+            if (is_numeric($autoItem) && !System::getContainer()->get('huh.utils.string')->startsWith($autoItem, '-')) {
                 $queryBuilder->where($queryBuilder->expr()->eq($readerConfig->dataContainer.'.'.$model->getPk(), ':autoItem'));
             } else {
                 $queryBuilder->where($queryBuilder->expr()->eq($readerConfig->dataContainer.'.'.$field, ':autoItem'));

@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.11.2] - 2020-05-25
+- fixed `TagsConfigElementType`
+- fixed auto_item bug when it starts with a minus
+
 ## [1.11.1] - 2020-05-20
 - fixed `TagsConfigElementType`
 
