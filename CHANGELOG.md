@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.12.1] - 2020-05-26
+- skipped dc for default template
+
 ## [1.12.0] - 2020-05-25
 - added category mode for `RelatedConfigElementType`
 
