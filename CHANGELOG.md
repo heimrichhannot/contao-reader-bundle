@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.13.0] - 2020-06-09
+- fixed missing feedback syndication in some templates
+
 ## [1.12.1] - 2020-05-26
 - skipped dc for default template
 
