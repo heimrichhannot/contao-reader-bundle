@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.14.0] - 2020-06-11
+- added adjusted `mod_breadcrumb_huh_reader` template
+
 ## [1.13.0] - 2020-06-09
 - fixed missing feedback syndication in some templates
 
