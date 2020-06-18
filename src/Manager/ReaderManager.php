@@ -15,6 +15,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
+use Contao\Environment;
 use Contao\Model;
 use Contao\StringUtil;
 use Contao\System;
@@ -414,6 +415,13 @@ class ReaderManager implements ReaderManagerInterface
                     $this->container->get($service)->setContent($value);
             }
         }
+    }
+
+    public function setCanonicalLink()
+    {
+        System::getContainer()->get('huh.head.tag.link_canonical')->setContent(
+            Environment::get('url').'/'.$this->getItem()->getDetailsUrl(true, true)
+        );
     }
 
     /**

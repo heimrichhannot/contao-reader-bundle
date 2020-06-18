@@ -256,7 +256,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function getDetailsUrl(bool $external = true): ?string
+    public function getDetailsUrl(bool $external = true, bool $isCanonical = false): ?string
     {
         return null;
     }

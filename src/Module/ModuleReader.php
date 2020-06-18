@@ -139,6 +139,7 @@ class ModuleReader extends Module
 
         $this->manager->doFieldDependentRedirect();
         $this->manager->setHeadTags();
+        $this->manager->setCanonicalLink();
 
         if (null !== $this->item) {
             $this->Template->item = $this->manager->getItem()->parse();

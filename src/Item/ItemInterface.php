@@ -94,7 +94,7 @@ interface ItemInterface
      *
      * @param bool $external Determine if external urls should be returned as well (required by search index)
      */
-    public function getDetailsUrl(bool $external = true): ?string;
+    public function getDetailsUrl(bool $external = true, bool $isCanonical = false): ?string;
 
     /**
      * @return mixed

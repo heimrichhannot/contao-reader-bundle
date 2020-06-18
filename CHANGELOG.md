@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.15.0] - 2020-06-18
+- corrected canonical link generation respecting the archive and/or category jumpTo
+
 ## [1.14.0] - 2020-06-11
 - added adjusted `mod_breadcrumb_huh_reader` template
 
