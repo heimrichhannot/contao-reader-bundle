@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.15.1] - 2020-06-23
+- fixed bug concerning dc_multilingual and frontend preview
+
 ## [1.15.0] - 2020-06-18
 - corrected canonical link generation respecting the archive and/or category jumpTo
 

@@ -739,7 +739,8 @@ class ReaderManager implements ReaderManagerInterface
 
             // add support for dc multilingual utils
             if ($this->isDcMultilingualUtilsActive($readerConfig, $dca, $readerConfig->dataContainer)) {
-                if (isset($dca['config']['langPublished']) && isset($dca['fields'][$dca['config']['langPublished']]) && \is_array($dca['fields'][$dca['config']['langPublished']])) {
+                if (!System::getContainer()->get('huh.utils.container')->isPreviewMode() &&
+                    isset($dca['config']['langPublished']) && isset($dca['fields'][$dca['config']['langPublished']]) && \is_array($dca['fields'][$dca['config']['langPublished']])) {
                     $and = $queryBuilder->expr()->andX();
 
                     if (isset($dca['config']['langStart']) && isset($dca['fields'][$dca['config']['langStart']]) && \is_array($dca['fields'][$dca['config']['langStart']])
