@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.15.2] - 2020-07-08
+- fixed bug concerning dc_multilingual and id order
+
 ## [1.15.1] - 2020-06-23
 - fixed bug concerning dc_multilingual and frontend preview
 
