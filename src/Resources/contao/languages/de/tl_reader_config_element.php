@@ -294,6 +294,10 @@ $lang['tagsJumpTo'][1] = 'Wählen Sie hier die Seite aus, die den o.g. Filter nu
 $lang['tagsTemplate'][0] = 'Template';
 $lang['tagsTemplate'][1] = 'Wählen Sie hier das gewünschte Template aus.';
 
+$lang['overrideTemplateContainerVariable'][0] = 'Template-Container-Variable überschreiben';
+$lang['overrideTemplateContainerVariable'][1] = 'Wählen Sie diese Option um die Variable anzupassen, in die Elemente diesen Typs zusammengefasst werden.';
+$lang['templateContainerVariable'][0] = 'Template-Container-Variable';
+$lang['templateContainerVariable'][1] = 'Tragen Sie hier den Namen der Variable ein, in der die Elemente diesen Typs zusammengefasst werden.';
 
 /**
  * Reference
@@ -324,6 +328,7 @@ $lang['reference'][\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElemen
  */
 $lang['title_type_legend'] = 'Titel & Typ';
 $lang['config_legend']     = 'Konfiguration';
+$lang['advanced_config']     = 'Erweitert';
 
 /**
  * Buttons

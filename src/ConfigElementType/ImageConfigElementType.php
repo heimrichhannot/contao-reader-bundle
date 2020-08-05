@@ -140,13 +140,19 @@ class ImageConfigElementType implements ReaderConfigElementTypeInterface
 
             $imageArray[$imageField] = $imageFile->path;
 
+            $templateContainer = ($readerConfigElement->overrideTemplateContainerVariable
+            && $readerConfigElement->templateContainerVariable
+                ? $readerConfigElement->templateContainerVariable : 'images');
+
             $templateData = [];
-            $templateData['images'] = $item->getFormattedValue('images') ?: [];
-            $templateData['images'][$readerConfigElement->templateVariable ?: $imageField] = [];
 
-            System::getContainer()->get('huh.utils.image')->addToTemplateData($imageField, $imageSelectorField, $templateData['images'][$readerConfigElement->templateVariable ?: $imageField], $imageArray, null, null, null, $imageFile);
+            $templateData[$templateContainer] = $item->getFormattedValue($templateContainer) ?: [];
+            $templateData[$templateContainer][$readerConfigElement->templateVariable ?: $imageField] = [];
 
-            $item->setFormattedValue('images', $templateData['images']);
+            System::getContainer()->get('huh.utils.image')->addToTemplateData($imageField, $imageSelectorField,
+                $templateData[$templateContainer][$readerConfigElement->templateVariable ?: $imageField], $imageArray, null, null, null, $imageFile);
+
+            $item->setFormattedValue($templateContainer, $templateData[$templateContainer]);
         }
     }
 
@@ -177,7 +183,7 @@ class ImageConfigElementType implements ReaderConfigElementTypeInterface
      */
     public function getPalette(): string
     {
-        return '{config_legend},imageSelectorField,imageField,imgSize,placeholderImageMode;';
+        return '{config_legend},imageSelectorField,imageField,imgSize,placeholderImageMode;{advanced_config},overrideTemplateContainerVariable;';
     }
 
     /**

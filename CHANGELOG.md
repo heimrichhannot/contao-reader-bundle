@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.16.0] - 2020-08-05
+- added customization of templateContainerVariable for config elements
+
 ## [1.15.2] - 2020-07-08
 - fixed bug concerning dc_multilingual and id order
 

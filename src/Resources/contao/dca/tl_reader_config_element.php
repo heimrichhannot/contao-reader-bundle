@@ -88,7 +88,8 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'syndicationIcsAddTime',
             'commentOverridePalette',
             'commentHideFields',
-            'tagsAddLink'
+            'tagsAddLink',
+            'overrideTemplateContainerVariable',
         ],
         'default'      => '{title_type_legend},title,type;',
     ],
@@ -109,7 +110,8 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         'addMemberGroups'                                                                                                   => 'memberGroups',
         'commentOverridePalette'                                                                                            => 'commentPalette',
         'commentHideFields'                                                                                                 => 'commentHideFieldsPalette',
-        'tagsAddLink'                                                                                                       => 'tagsFilter,tagsFilterConfigElement,tagsJumpTo'
+        'tagsAddLink'                                                                                                       => 'tagsFilter,tagsFilterConfigElement,tagsJumpTo',
+        'overrideTemplateContainerVariable' => 'templateContainerVariable',
     ],
     'fields'      => [
         'id'                             => [
@@ -186,7 +188,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
                 return System::getContainer()->get('huh.reader.util.reader-config-element-util')->getCheckboxFields($dc);
             },
             'exclude'          => true,
-            'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
+            'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight clr'],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
         'imageField'                     => [
@@ -1317,6 +1319,20 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
             },
             'exclude'          => true,
             'eval'             => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50'],
+            'sql'              => "varchar(64) NOT NULL default ''",
+        ],
+        'overrideTemplateContainerVariable' => [
+            'label'                   => &$GLOBALS['TL_LANG']['tl_reader_config_element']['overrideTemplateContainerVariable'],
+            'exclude'                 => true,
+            'inputType'               => 'checkbox',
+            'eval'                    => ['tl_class' => 'w50', 'submitOnChange' => true],
+            'sql'                     => "char(1) NOT NULL default ''"
+        ],
+        'templateContainerVariable'                      => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config_element']['templateContainerVariable'],
+            'inputType'        => 'text',
+            'exclude'          => true,
+            'eval'             => ['tl_class' => 'clr w50','mandatory' => true],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
     ]);

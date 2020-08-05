@@ -16,6 +16,11 @@ $lang['typeSelectorField'][1]     = 'Choose the field, which contains the boolea
 $lang['typeField'][0]             = 'Field';
 $lang['typeField'][1]             = 'Choose the field containing the reference for the type.';
 
+$lang['overrideTemplateContainerVariable'][0] = 'Override template container variable';
+$lang['overrideTemplateContainerVariable'][1] = 'Choose this options to set a custom container variable where images added to template';
+$lang['templateContainerVariable'][0] = 'Template container variable';
+$lang['templateContainerVariable'][1] = 'Set the container variable name, where elements of this type are collected.';
+
 
 /**
  * Reference
@@ -38,6 +43,9 @@ $lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLA
  * Legends
  */
 $lang['general_legend'] = 'General settings';
+$lang['title_type_legend'] = 'Title and type';
+$lang['config_legend']     = 'Configuration';
+$lang['advanced_config']     = 'Advanced';
 
 
 /**
