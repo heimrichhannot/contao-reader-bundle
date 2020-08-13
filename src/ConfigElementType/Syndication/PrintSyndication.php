@@ -59,7 +59,11 @@ class PrintSyndication extends AbstractSyndication
         $data['onload'] = sprintf('window.print();%s', (bool) System::getContainer()->get('huh.request')->query->get(static::PRINT_DEBUG_QUERY_PARAM) ? '' : 'setTimeout(window.close, 0);');
         $data['title'] = $this->getTitle();
 
-        die(System::getContainer()->get('huh.utils.string')->replaceInsertTags($this->item->getManager()->getTwig()->render(System::getContainer()->get('huh.utils.template')->getTemplate($this->readerConfigElement->syndicationPrintTemplate), $data)));
+        die(System::getContainer()->get('huh.utils.string')->replaceInsertTags(
+            $this->item->getManager()->getTwig()->render(System::getContainer()->get('huh.utils.template')->getTemplate(
+                $this->readerConfigElement->syndicationPrintTemplate),
+                $data))
+        );
     }
 
     /**

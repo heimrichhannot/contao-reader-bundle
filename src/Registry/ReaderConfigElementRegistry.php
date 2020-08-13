@@ -10,6 +10,7 @@ namespace HeimrichHannot\ReaderBundle\Registry;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\System;
+use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeInterface;
 use HeimrichHannot\ReaderBundle\ConfigElementType\ReaderConfigElementTypeInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
@@ -38,7 +39,7 @@ class ReaderConfigElementRegistry
     /**
      * Add a list config element type to the registry.
      */
-    public function addReaderConfigElementType(ReaderConfigElementTypeInterface $type): void
+    public function addReaderConfigElementType($type): void
     {
         $this->configElementTypes[$type::getType()] = $type;
     }
@@ -54,9 +55,9 @@ class ReaderConfigElementRegistry
     /**
      * Get a list config element type from the registry.
      *
-     * @return array|ReaderConfigElementTypeInterface[]
+     * @return array|ReaderConfigElementTypeInterface[]|ConfigElementTypeInterface[]
      */
-    public function getReaderConfigElementType(string $type): ?ReaderConfigElementTypeInterface
+    public function getReaderConfigElementType(string $type)
     {
         return isset($this->configElementTypes[$type]) ? $this->configElementTypes[$type] : null;
     }

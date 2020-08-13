@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.17.0] - 2020-08-13
+- added blocks to print and pdf twig templates
+- fixed usage of deprecated util service
+- fixed copypaste errors in readme
+
 ## [1.16.0] - 2020-08-05
 - added customization of templateContainerVariable for config elements
 

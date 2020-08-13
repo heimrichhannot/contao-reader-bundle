@@ -151,9 +151,9 @@ Class | Name | Description
 RenderTwigTemplateEvent | huh.utils.template.render | Will be fired before the reader item is rendered (in DefaultItem). If you've overriden the parse method in an custom item class, you need to implement the event dispatcher by yourself. The event is located in [Utils Bundle](https://github.com/heimrichhannot/contao-utils-bundle) and used here for better bundle interoperability.
 
 
-### List config elements
+### Reader config elements
 
-It is easy to add new list config elements.
+It is easy to add new reader config elements.
 
 1. Create a class that implements `HeimrichHannot\ReaderBundle\ConfigElementType\ReaderConfigElementTypeInterface`
 1. Register the class as service with service tag `huh.reader.config_element_type`

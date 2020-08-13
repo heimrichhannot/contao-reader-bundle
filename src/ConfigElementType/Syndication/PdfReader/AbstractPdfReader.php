@@ -56,7 +56,7 @@ abstract class AbstractPdfReader
      */
     public function generate()
     {
-        $pdf = System::getContainer()->get('huh.utils.pdf_writer')
+        $pdf = System::getContainer()->get('huh.utils.pdf.writer')
             ->mergeConfig($this->getConfig())
             ->setHtml($this->compile())
             ->addFontDirectories(StringUtil::trimsplit(',', $this->readerConfigElement->syndicationPdfFontDirectories))

@@ -1,6 +1,12 @@
 <?php
 
 /**
+ * Hooks
+ */
+$GLOBALS['TL_HOOKS']['parseFrontendTemplate'][] = [\HeimrichHannot\ReaderBundle\EventListener\ParseFrontendTemplateListener::class, '__invoke'];
+
+
+/**
  * Backend modules
  */
 

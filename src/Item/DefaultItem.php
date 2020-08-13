@@ -11,6 +11,7 @@ namespace HeimrichHannot\ReaderBundle\Item;
 use Contao\DataContainer;
 use Contao\StringUtil;
 use Contao\System;
+use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeInterface;
 use HeimrichHannot\ReaderBundle\ConfigElementType\ConfigElementType;
 use HeimrichHannot\ReaderBundle\ConfigElementType\ReaderConfigElementData;
 use HeimrichHannot\ReaderBundle\Event\ReaderAfterRenderEvent;
@@ -273,7 +274,12 @@ class DefaultItem implements ItemInterface, \JsonSerializable
         if (null !== ($readerConfigElements = $this->_manager->getReaderConfigElementRegistry()->findBy(['tl_reader_config_element.pid=?'], [$readerConfig->rootId]))) {
             foreach ($readerConfigElements as $readerConfigElement) {
                 if ($readerConfigElementType = $this->_manager->getReaderConfigElementRegistry()->getReaderConfigElementType($readerConfigElement->type)) {
-                    $readerConfigElementType->addToReaderItemData(new ReaderConfigElementData($this, $readerConfigElement));
+                    if ($readerConfigElementType instanceof ConfigElementTypeInterface) {
+                        $readerConfigElementType->applyConfiguration(new ReaderConfigElementData($this, $readerConfigElement));
+                    } else {
+                        $readerConfigElementType->addToReaderItemData(new ReaderConfigElementData($this, $readerConfigElement));
+                    }
+
                 } else {
                     if (null === ($class = $this->_manager->getReaderConfigElementRegistry()->getElementClassByName($readerConfigElement->type))) {
                         continue;

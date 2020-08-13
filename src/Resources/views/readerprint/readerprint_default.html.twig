@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="{{ language }}" {% if isRTL %} dir="rtl"{% endif %}>
 <head>
+    {% block head %}
     <meta charset="{{ charset }}">
     <title>{{ title }}</title>
     <base href="{{ base }}">
-    <style>
+    <style>{% block style %}
+
         *,
         *::before,
         *::after {
@@ -50,15 +52,18 @@
         @page {
             size: a3;
         }
-    </style>
+        {% endblock %}</style>
+    {% endblock %}
 </head>
 <body class="print" onload="{{ onload }}">
-<div class="item">
-    {% for field, value in formatted %}
-        <div class="{{ field|lower }}">
-            {{ field }}: {{ value }}
-        </div>
-    {% endfor %}
-</div>
+{% block body %}
+    <div class="item">
+        {% for field, value in formatted %}
+            <div class="{{ field|lower }}">
+                {{ field }}: {{ value }}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
 </body>
 </html>

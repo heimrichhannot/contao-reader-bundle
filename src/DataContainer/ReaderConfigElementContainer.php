@@ -9,6 +9,7 @@
 namespace HeimrichHannot\ReaderBundle\DataContainer;
 
 use Contao\StringUtil;
+use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeInterface;
 use HeimrichHannot\ReaderBundle\ConfigElementType\RelatedConfigElementType;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
@@ -18,6 +19,9 @@ class ReaderConfigElementContainer
 {
     const RELATED_CRITERIUM_TAGS = 'tags';
     const RELATED_CRITERIUM_CATEGORIES = 'categories';
+
+    const PREPEND_PALETTE = '{title_type_legend},title,type,templateVariable;';
+    const APPEND_PALETTE = '';
 
     /**
      * @var ReaderConfigElementRegistry
@@ -70,7 +74,11 @@ class ReaderConfigElementContainer
         }
 
         foreach ($configElementTypes as $listConfigElementType) {
-            $palette = '{title_type_legend},title,type,templateVariable;'.$listConfigElementType->getPalette();
+            if ($listConfigElementType instanceof ConfigElementTypeInterface) {
+                $palette = $listConfigElementType->getPalette(static::PREPEND_PALETTE, static::APPEND_PALETTE);
+            } else {
+                $palette = static::PREPEND_PALETTE.$listConfigElementType->getPalette().static::APPEND_PALETTE;
+            }
             $GLOBALS['TL_DCA'][ReaderConfigElementModel::getTable()]['palettes'][$listConfigElementType::getType()] = $palette;
         }
 
