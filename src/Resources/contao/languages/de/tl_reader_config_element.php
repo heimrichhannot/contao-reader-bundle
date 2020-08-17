@@ -1,104 +1,110 @@
 <?php
+
+/*
+ * Copyright (c) 2020 Heimrich & Hannot GmbH
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 $lang = &$GLOBALS['TL_LANG']['tl_reader_config_element'];
 
-/**
+/*
  * Fields
  */
-$lang['tstamp'][0]            = 'Änderungsdatum';
-$lang['title'][0]             = 'Titel';
-$lang['title'][1]             = 'Geben Sie hier einen Titel ein.';
-$lang['type'][0]              = 'Typ';
-$lang['type'][1]              = 'Wählen Sie hier den Typ des Elements aus.';
+$lang['tstamp'][0] = 'Änderungsdatum';
+$lang['title'][0] = 'Titel';
+$lang['title'][1] = 'Geben Sie hier einen Titel ein.';
+$lang['type'][0] = 'Typ';
+$lang['type'][1] = 'Wählen Sie hier den Typ des Elements aus.';
 $lang['typeSelectorField'][0] = 'Selektor-Feld';
 $lang['typeSelectorField'][1] = 'Wählen Sie hier das Feld aus, das den boolschen Selektor für den Typ enthält.';
-$lang['typeField'][0]         = 'Feld';
-$lang['typeField'][1]         = 'Wählen Sie hier das Feld aus, das die Referenz zum Typ enthält.';
-$lang['templateVariable'][0]  = 'Template-Variable';
-$lang['templateVariable'][1]  = 'Geben Sie hier den Namen für die Template-Variable ein. Unter diesem Namen wird das Objekt für das Template sichtbar gemacht.';
+$lang['typeField'][0] = 'Feld';
+$lang['typeField'][1] = 'Wählen Sie hier das Feld aus, das die Referenz zum Typ enthält.';
+$lang['templateVariable'][0] = 'Template-Variable';
+$lang['templateVariable'][1] = 'Geben Sie hier den Namen für die Template-Variable ein. Unter diesem Namen wird das Objekt für das Template sichtbar gemacht.';
 
 // image
-$lang['imageSelectorField'][0]                               = 'Selektor-Feld';
-$lang['imageSelectorField'][1]                               = 'Wählen Sie hier das Feld aus, das den boolschen Selektor für das Bild enthält.';
-$lang['imageField'][0]                                       = 'Feld';
-$lang['imageField'][1]                                       = 'Wählen Sie hier das Feld aus, das die Referenz zur Bilddatei enthält.';
-$lang['orderField'][0]                                       = 'Sortier-Feld';
-$lang['orderField'][1]                                       = 'Wählen Sie hier das Feld aus, das die Sortierung der Bilddateien enthält.';
-$lang['placeholderImageMode'][0]                             = 'Platzhalterbildmodus';
-$lang['placeholderImageMode'][1]                             = 'Wählen Sie diese Option, wenn Sie für den Fall, dass die ausgegebene Instanz kein Bild enthält, ein Platzhalterbild hinzufügen möchten.';
-$lang['placeholderImage'][0]                                 = 'Platzhalterbild';
-$lang['placeholderImage'][1]                                 = 'Wählen Sie hier ein Platzhalterbild aus.';
-$lang['placeholderImageFemale'][0]                           = 'Platzhalterbild (weiblich)';
-$lang['placeholderImageFemale'][1]                           = 'Wählen Sie hier ein Platzhalterbild für weibliche Instanzen aus.';
-$lang['genderField'][0]                                      = 'Geschlecht-Feld';
-$lang['genderField'][1]                                      = 'Wählen Sie hier das Feld aus, das das Geschlecht der Instanz enthält.';
-$lang['placeholderImages'][0]                                = 'Platzhalterbilder';
-$lang['placeholderImages'][1]                                = 'Wählen Sie hier Platzhalterbilder aus.';
-$lang['fieldDependentPlaceholderConfig'][0]                  = 'Platzhalterkonfiguration';
-$lang['fieldDependentPlaceholderConfig'][1]                  = 'Definieren Sie hier die Platzhalterbilder für die jeweiligen Feldwerte';
-$lang['fieldDependentPlaceholderConfig']['field']            = ['Feld', ''];
-$lang['fieldDependentPlaceholderConfig']['operator']         = ['Operator', ''];
-$lang['fieldDependentPlaceholderConfig']['value']            = ['Wert', ''];
+$lang['imageSelectorField'][0] = 'Selektor-Feld';
+$lang['imageSelectorField'][1] = 'Wählen Sie hier das Feld aus, das den boolschen Selektor für das Bild enthält.';
+$lang['imageField'][0] = 'Feld';
+$lang['imageField'][1] = 'Wählen Sie hier das Feld aus, das die Referenz zur Bilddatei enthält.';
+$lang['orderField'][0] = 'Sortier-Feld';
+$lang['orderField'][1] = 'Wählen Sie hier das Feld aus, das die Sortierung der Bilddateien enthält.';
+$lang['placeholderImageMode'][0] = 'Platzhalterbildmodus';
+$lang['placeholderImageMode'][1] = 'Wählen Sie diese Option, wenn Sie für den Fall, dass die ausgegebene Instanz kein Bild enthält, ein Platzhalterbild hinzufügen möchten.';
+$lang['placeholderImage'][0] = 'Platzhalterbild';
+$lang['placeholderImage'][1] = 'Wählen Sie hier ein Platzhalterbild aus.';
+$lang['placeholderImageFemale'][0] = 'Platzhalterbild (weiblich)';
+$lang['placeholderImageFemale'][1] = 'Wählen Sie hier ein Platzhalterbild für weibliche Instanzen aus.';
+$lang['genderField'][0] = 'Geschlecht-Feld';
+$lang['genderField'][1] = 'Wählen Sie hier das Feld aus, das das Geschlecht der Instanz enthält.';
+$lang['placeholderImages'][0] = 'Platzhalterbilder';
+$lang['placeholderImages'][1] = 'Wählen Sie hier Platzhalterbilder aus.';
+$lang['fieldDependentPlaceholderConfig'][0] = 'Platzhalterkonfiguration';
+$lang['fieldDependentPlaceholderConfig'][1] = 'Definieren Sie hier die Platzhalterbilder für die jeweiligen Feldwerte';
+$lang['fieldDependentPlaceholderConfig']['field'] = ['Feld', ''];
+$lang['fieldDependentPlaceholderConfig']['operator'] = ['Operator', ''];
+$lang['fieldDependentPlaceholderConfig']['value'] = ['Wert', ''];
 $lang['fieldDependentPlaceholderConfig']['placeholderImage'] = ['Bild', ''];
 
 // video
-$lang['videoSelectorField'][0]       = 'Selektor-Feld';
-$lang['videoSelectorField'][1]       = 'Wählen Sie hier das Feld aus, das den boolschen Selektor für das Video enthält.';
-$lang['videoField'][0]               = 'Feld';
-$lang['videoField'][1]               = 'Wählen Sie hier das Feld aus, das die Referenz zur Videodatei enthält.';
+$lang['videoSelectorField'][0] = 'Selektor-Feld';
+$lang['videoSelectorField'][1] = 'Wählen Sie hier das Feld aus, das den boolschen Selektor für das Video enthält.';
+$lang['videoField'][0] = 'Feld';
+$lang['videoField'][1] = 'Wählen Sie hier das Feld aus, das die Referenz zur Videodatei enthält.';
 $lang['posterImageSelectorField'][0] = 'Poster-Selektor-Feld';
 $lang['posterImageSelectorField'][1] = 'Wählen Sie hier das Feld aus, das den boolschen Selektor für das Poster-Bild enthält.';
-$lang['posterImageField'][0]         = 'Poster-Feld';
-$lang['posterImageField'][1]         = 'Wählen Sie hier das Feld aus, das die Referenz zur Poster-Bilddatei enthält.';
-$lang['renderPosterAsImg'][0]        = 'Poster als &lt;img&gt;-Element ausgeben';
-$lang['renderPosterAsImg'][1]        = 'Wählen Sie diese Option, um den Poster als &lt;img&gt;-Element auszugeben.';
-$lang['videoPlaysInline'][0]         = 'HTML-Attribut "playsinline" vergeben';
-$lang['videoPlaysInline'][1]         = 'Wählen Sie diese Option, um dem Video-Element das entsprechende HTML-Attribut zu geben.';
-$lang['videoAutoplay'][0]            = 'HTML-Attribut "autoplay" vergeben';
-$lang['videoAutoplay'][1]            = 'Wählen Sie diese Option, um dem Video-Element das entsprechende HTML-Attribut zu geben.';
-$lang['videoLoop'][0]                = 'HTML-Attribut "loop" vergeben';
-$lang['videoLoop'][1]                = 'Wählen Sie diese Option, um dem Video-Element das entsprechende HTML-Attribut zu geben.';
-$lang['videoMuted'][0]               = 'HTML-Attribut "muted" vergeben';
-$lang['videoMuted'][1]               = 'Wählen Sie diese Option, um dem Video-Element das entsprechende HTML-Attribut zu geben.';
-$lang['videoControls'][0]            = 'HTML-Attribut "controls" vergeben';
-$lang['videoControls'][1]            = 'Wählen Sie diese Option, um dem Video-Element das entsprechende HTML-Attribut zu geben.';
-$lang['videoPreload'][0]             = 'HTML-Attribut "preload" vergeben';
-$lang['videoPreload'][1]             = 'Wählen Sie diese Option, um dem Video-Element das entsprechende HTML-Attribut zu geben.';
+$lang['posterImageField'][0] = 'Poster-Feld';
+$lang['posterImageField'][1] = 'Wählen Sie hier das Feld aus, das die Referenz zur Poster-Bilddatei enthält.';
+$lang['renderPosterAsImg'][0] = 'Poster als &lt;img&gt;-Element ausgeben';
+$lang['renderPosterAsImg'][1] = 'Wählen Sie diese Option, um den Poster als &lt;img&gt;-Element auszugeben.';
+$lang['videoPlaysInline'][0] = 'HTML-Attribut "playsinline" vergeben';
+$lang['videoPlaysInline'][1] = 'Wählen Sie diese Option, um dem Video-Element das entsprechende HTML-Attribut zu geben.';
+$lang['videoAutoplay'][0] = 'HTML-Attribut "autoplay" vergeben';
+$lang['videoAutoplay'][1] = 'Wählen Sie diese Option, um dem Video-Element das entsprechende HTML-Attribut zu geben.';
+$lang['videoLoop'][0] = 'HTML-Attribut "loop" vergeben';
+$lang['videoLoop'][1] = 'Wählen Sie diese Option, um dem Video-Element das entsprechende HTML-Attribut zu geben.';
+$lang['videoMuted'][0] = 'HTML-Attribut "muted" vergeben';
+$lang['videoMuted'][1] = 'Wählen Sie diese Option, um dem Video-Element das entsprechende HTML-Attribut zu geben.';
+$lang['videoControls'][0] = 'HTML-Attribut "controls" vergeben';
+$lang['videoControls'][1] = 'Wählen Sie diese Option, um dem Video-Element das entsprechende HTML-Attribut zu geben.';
+$lang['videoPreload'][0] = 'HTML-Attribut "preload" vergeben';
+$lang['videoPreload'][1] = 'Wählen Sie diese Option, um dem Video-Element das entsprechende HTML-Attribut zu geben.';
 
-$lang['listModule']    = ['Listen Modul', 'Wählen Sie ein Listen Module aus.'];
+$lang['listModule'] = ['Listen Modul', 'Wählen Sie ein Listen Module aus.'];
 $lang['initialFilter'] = ['Initialer Filter', ''];
-$lang['selector']      = ['Selektor', 'Wählen Sie ein Feld aus, von dem der Wert übergeben werden soll.'];
+$lang['selector'] = ['Selektor', 'Wählen Sie ein Feld aus, von dem der Wert übergeben werden soll.'];
 $lang['filterElement'] = ['Filterelement', 'Wählen Sie ein Feld aus, nachdem gefiltert werden soll.'];
-$lang['listName']      = ['Listenname', 'Vergeben Sie einen einamligen Namen für Ihre Liste.'];
-$lang['deleteClass']   = ['Lösch-Klasse', 'Wählen Sie hier eine individuelle Lösch-Klasse aus.'];
-$lang['deleteParam']   = ['Lösch-Parameter', 'Parameter auswählen, anhand der Datensatz gelöscht wird.'];
+$lang['listName'] = ['Listenname', 'Vergeben Sie einen einamligen Namen für Ihre Liste.'];
+$lang['deleteClass'] = ['Lösch-Klasse', 'Wählen Sie hier eine individuelle Lösch-Klasse aus.'];
+$lang['deleteParam'] = ['Lösch-Parameter', 'Parameter auswählen, anhand der Datensatz gelöscht wird.'];
 
-$lang['name']             = ['Name', 'Vergeben Sie einen einamligen Namen für Ihre Weiterleitung, welcher im Template als Variable ausgegeben wird.'];
-$lang['jumpTo']           = ['Weiterleitungsseite', 'Wählen Sie eine Seite aus.'];
+$lang['name'] = ['Name', 'Vergeben Sie einen einamligen Namen für Ihre Weiterleitung, welcher im Template als Variable ausgegeben wird.'];
+$lang['jumpTo'] = ['Weiterleitungsseite', 'Wählen Sie eine Seite aus.'];
 $lang['addRedirectParam'] = ['Parameter hinzufügen', 'Wählen Sie diese Option um an die entsprechende Weiterleitungsurl Parameter hinzuzufügen.'];
-$lang['redirectParams']   = ['Weiterleitungsparameter', 'Wählen Sie Parameter aus, welche an die Url angehängt werden sollen.'];
-$lang['parameterType']    = ['Parametertyp', 'Wählen Sie einen Parametertype aus.'];
-$lang['name']             = ['Name', 'Wählen Sie den Namen des Parameters aus, welche an die Url angehängt werden sollen.'];
-$lang['defaultValue']     = ['Standardwert', 'Wählen Sie Parameter aus, welche an die Url angehängt werden sollen.'];
-$lang['addAutoItem']      = ['Auto Item hinzufügen', 'Das Auto Item an die Url anhängen.'];
-$lang['deleteJumpTo']     = ['Weiterleitungsseite nach dem Löschen', 'Wählen Sie eine Seite aus.'];
-$lang['field']            = ['Feldwert', 'Wählen Sie ein Feld aus.'];
-
+$lang['redirectParams'] = ['Weiterleitungsparameter', 'Wählen Sie Parameter aus, welche an die Url angehängt werden sollen.'];
+$lang['parameterType'] = ['Parametertyp', 'Wählen Sie einen Parametertype aus.'];
+$lang['name'] = ['Name', 'Wählen Sie den Namen des Parameters aus, welche an die Url angehängt werden sollen.'];
+$lang['defaultValue'] = ['Standardwert', 'Wählen Sie Parameter aus, welche an die Url angehängt werden sollen.'];
+$lang['addAutoItem'] = ['Auto Item hinzufügen', 'Das Auto Item an die Url anhängen.'];
+$lang['deleteJumpTo'] = ['Weiterleitungsseite nach dem Löschen', 'Wählen Sie eine Seite aus.'];
+$lang['field'] = ['Feldwert', 'Wählen Sie ein Feld aus.'];
 
 // security
 $lang['addRedirectConditions'][0] = 'Bedingungen für die Anzeige hinzufügen';
 $lang['addRedirectConditions'][1] = 'Wählen Sie diese Option, wenn Datensätze nur unter bestimmten Bedingungen angezeigt werden dürfen.';
-$lang['redirectConditions'][0]    = 'Instanzbedingungen';
-$lang['redirectConditions'][1]    = 'Definieren Sie hier Bedingungen, die eine Instanz erfüllen muss, damit sie angezeigt wird.';
+$lang['redirectConditions'][0] = 'Instanzbedingungen';
+$lang['redirectConditions'][1] = 'Definieren Sie hier Bedingungen, die eine Instanz erfüllen muss, damit sie angezeigt wird.';
 
 $lang['addDeleteConditions'][0] = 'Bedingungen für die Anzeige hinzufügen';
 $lang['addDeleteConditions'][1] = 'Wählen Sie diese Option, wenn Datensätze nur unter bestimmten Bedingungen angezeigt werden dürfen.';
-$lang['deleteConditions'][0]    = 'Löschbedingungen';
-$lang['deleteConditions'][1]    = 'Definieren Sie hier Bedingungen, die eine Instanz erfüllen muss, damit sie angezeigt wird.';
+$lang['deleteConditions'][0] = 'Löschbedingungen';
+$lang['deleteConditions'][1] = 'Definieren Sie hier Bedingungen, die eine Instanz erfüllen muss, damit sie angezeigt wird.';
 
 $lang['addMemberGroups'][0] = 'Löschen nur bestimmten Mitgliedergruppen erlauben.';
 $lang['addMemberGroups'][1] = 'Wählen Sie diese Option, wenn Datensätze nur von bestimmten Mitgliedergruppen gelöscht werden dürfen.';
-$lang['memberGroups'][0]    = 'Mitgliedergruppen';
-$lang['memberGroups'][1]    = 'Wählen Sie hier die Mitgliedergruppen aus, welche Datensätze löschen dürfen.';
+$lang['memberGroups'][0] = 'Mitgliedergruppen';
+$lang['memberGroups'][1] = 'Wählen Sie hier die Mitgliedergruppen aus, welche Datensätze löschen dürfen.';
 
 // navigation
 $lang['navigationTemplate'][0] = 'Navigations-Template';
@@ -250,10 +256,10 @@ $lang['commentHideFields'][0] = 'Felder verstecken';
 $lang['commentHideFields'][1] = 'Wählen Sie hier Felder, die im Kommentar-Formular versteckt dargestellt werden sollen.';
 
 // submission form
-$lang['submissionReader'][0]       = 'Einsendungsleser';
-$lang['submissionReader'][1]       = 'Wählen Sie hier ein Modul vom Typ "Einsendungsleser" aus.';
-$lang['emailField'][0]             = 'E-Mail-Feld';
-$lang['emailField'][1]             = 'Wählen Sie hier das Feld aus, an das die E-Mail verschickt werden soll.';
+$lang['submissionReader'][0] = 'Einsendungsleser';
+$lang['submissionReader'][1] = 'Wählen Sie hier ein Modul vom Typ "Einsendungsleser" aus.';
+$lang['emailField'][0] = 'E-Mail-Feld';
+$lang['emailField'][1] = 'Wählen Sie hier das Feld aus, an das die E-Mail verschickt werden soll.';
 $lang['submissionFormExplanation'] = 'Die E-Mail-Adresse, an die das Formular verschickt wird, finden Sie im Notification-Center-Token ##form_value_submission_form_email##.';
 
 // related
@@ -299,43 +305,41 @@ $lang['overrideTemplateContainerVariable'][1] = 'Wählen Sie diese Option um die
 $lang['templateContainerVariable'][0] = 'Template-Container-Variable';
 $lang['templateContainerVariable'][1] = 'Tragen Sie hier den Namen der Variable ein, in der die Elemente diesen Typs zusammengefasst werden.';
 
-/**
+/*
  * Reference
  */
-$lang['reference'] = [
-    \HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType::getType()       => 'Bild',
-    \HeimrichHannot\ReaderBundle\ConfigElementType\VideoConfigElementType::getType()       => 'Video',
-    \HeimrichHannot\ReaderBundle\ConfigElementType\RedirectionConfigElementType::getType() => 'Weiterleitung',
-    \HeimrichHannot\ReaderBundle\ConfigElementType\NavigationConfigElementType::getType()  => 'Navigation',
-    \HeimrichHannot\ReaderBundle\ConfigElementType\SyndicationConfigElementType::getType() => 'Syndikationen',
-    \HeimrichHannot\ReaderBundle\ConfigElementType\ListConfigElementType::getType()        => 'Liste',
-    \HeimrichHannot\ReaderBundle\ConfigElementType\DeleteConfigElementType::getType()      => 'Löschen',
-    \HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType::getType()     => 'Kommentar',
-    \HeimrichHannot\ReaderBundle\ConfigElementType\SubmissionFormConfigElementType::TYPE   => 'Kontaktformular',
-    \HeimrichHannot\ReaderBundle\ConfigElementType\RelatedConfigElementType::getType()     => 'Ähnliche Instanzen',
-    \HeimrichHannot\ReaderBundle\ConfigElementType\TagsConfigElementType::getType()        => 'Schlagworte'
-];
+$lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType::getType()] = 'Bild';
+$lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\VideoConfigElementType::getType()] = 'Video';
+$lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\RedirectionConfigElementType::getType()] = 'Weiterleitung';
+$lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\NavigationConfigElementType::getType()] = 'Navigation';
+$lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\SyndicationConfigElementType::getType()] = 'Syndikationen';
+$lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\ListConfigElementType::getType()] = 'Liste';
+$lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\DeleteConfigElementType::getType()] = 'Löschen';
+$lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType::getType()] = 'Kommentar';
+$lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\SubmissionFormConfigElementType::getType()] = 'Kontaktformular';
+$lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\RelatedConfigElementType::getType()] = 'Ähnliche Instanzen';
+$lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\TagsConfigElementType::getType()] = 'Schlagworte';
 
-$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE]               = 'einfach';
-$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED]             = 'geschlechtsspezifisch';
-$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_RANDOM]               = 'zufällig';
-$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_FIELD]                = 'feldabhängig';
-$lang['reference'][\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer::RELATED_CRITERIUM_TAGS]       = 'Schlagworte';
+$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_SIMPLE] = 'einfach';
+$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED] = 'geschlechtsspezifisch';
+$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_RANDOM] = 'zufällig';
+$lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_FIELD] = 'feldabhängig';
+$lang['reference'][\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer::RELATED_CRITERIUM_TAGS] = 'Schlagworte';
 $lang['reference'][\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer::RELATED_CRITERIUM_CATEGORIES] = 'Kategorien';
 
-/**
+/*
  * Legends
  */
 $lang['title_type_legend'] = 'Titel & Typ';
-$lang['config_legend']     = 'Konfiguration';
-$lang['advanced_config']     = 'Erweitert';
+$lang['config_legend'] = 'Konfiguration';
+$lang['advanced_config'] = 'Erweitert';
 
-/**
+/*
  * Buttons
  */
-$lang['new']    = ['Neues Leserkonfigurations-Element', 'Leserkonfigurations-Element erstellen'];
-$lang['edit']   = ['Leserkonfigurations-Element bearbeiten', 'Leserkonfigurations-Element ID %s bearbeiten'];
-$lang['copy']   = ['Leserkonfigurations-Element duplizieren', 'Leserkonfigurations-Element ID %s duplizieren'];
+$lang['new'] = ['Neues Leserkonfigurations-Element', 'Leserkonfigurations-Element erstellen'];
+$lang['edit'] = ['Leserkonfigurations-Element bearbeiten', 'Leserkonfigurations-Element ID %s bearbeiten'];
+$lang['copy'] = ['Leserkonfigurations-Element duplizieren', 'Leserkonfigurations-Element ID %s duplizieren'];
 $lang['delete'] = ['Leserkonfigurations-Element löschen', 'Leserkonfigurations-Element ID %s löschen'];
 $lang['toggle'] = ['Leserkonfigurations-Element veröffentlichen', 'Leserkonfigurations-Element ID %s veröffentlichen/verstecken'];
-$lang['show']   = ['Leserkonfigurations-Element Details', 'Leserkonfigurations-Element-Details ID %s anzeigen'];
+$lang['show'] = ['Leserkonfigurations-Element Details', 'Leserkonfigurations-Element-Details ID %s anzeigen'];
