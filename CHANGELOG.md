@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.18.0] - 2020-08-18
+- use PdfCreator for PDF syndication instead of deprecated PdfWriter
+
 ## [1.17.0] - 2020-08-13
 - added blocks to print and pdf twig templates
 - fixed usage of deprecated util service

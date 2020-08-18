@@ -13,6 +13,9 @@ use Contao\System;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\AbstractSyndication;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
+use HeimrichHannot\UtilsBundle\PdfCreator\AbstractPdfCreator;
+use HeimrichHannot\UtilsBundle\PdfCreator\Concrete\MpdfCreator;
+use HeimrichHannot\UtilsBundle\PdfCreator\PdfCreatorFactory;
 
 abstract class AbstractPdfReader
 {
@@ -56,17 +59,37 @@ abstract class AbstractPdfReader
      */
     public function generate()
     {
-        $pdf = System::getContainer()->get('huh.utils.pdf.writer')
-            ->mergeConfig($this->getConfig())
-            ->setHtml($this->compile())
-            ->addFontDirectories(StringUtil::trimsplit(',', $this->readerConfigElement->syndicationPdfFontDirectories))
-            ->setFileName($this->getFileName());
+        /** @var MpdfCreator|AbstractPdfCreator $pdf */
+        $pdf = PdfCreatorFactory::createInstance(MpdfCreator::getType());
+        $pdf->setHtmlContent($this->compile())
+            ->setFilename($this->getFileName())
+            ->setFormat('A4')
+            ->setOrientation($pdf::ORIENTATION_PORTRAIT)
+        ;
 
-        if (null !== ($masterTemplatePath = System::getContainer()->get('huh.utils.file')->getPathFromUuid($this->readerConfigElement->syndicationPdfMasterTemplate))) {
-            $pdf->setTemplate($masterTemplatePath);
+        if ($fontDirectories = StringUtil::trimsplit(',', $this->readerConfigElement->syndicationPdfFontDirectories)) {
+            $pdf->addFontDirectories($fontDirectories);
         }
 
-        $pdf->generate($this->download);
+        $margins = StringUtil::deserialize($this->readerConfigElement->syndicationPdfPageMargin, true);
+
+        if (!empty($margins)) {
+            $pdf->setMargins($margins['top'], $margins['right'], $margins['bottom'], $margins['left']);
+        }
+
+        if (null !== ($masterTemplatePath = System::getContainer()->get('huh.utils.file')->getPathFromUuid($this->readerConfigElement->syndicationPdfMasterTemplate))) {
+            $pdf->setTemplateFilePath($masterTemplatePath);
+        }
+
+        $pdf->setOutputMode($this->download ? $pdf::OUTPUT_MODE_DOWNLOAD : '');
+
+        $pdf->render();
+
+//        $config = [
+//            'mode' => \Config::get('characterSet'),
+//        ];
+
+//        $pdf->generate($this->download);
     }
 
     public function getItem(): ItemInterface
@@ -113,36 +136,4 @@ abstract class AbstractPdfReader
      * Compile the html.
      */
     abstract protected function compile(): string;
-
-    /**
-     * Get the config.
-     */
-    protected function getConfig(): array
-    {
-        $margins = StringUtil::deserialize($this->readerConfigElement->syndicationPdfPageMargin, true);
-
-        $config = [
-            'mode' => \Config::get('characterSet'),
-            'format' => 'A4',
-            'orientation' => 'P',
-        ];
-
-        if (!empty($margins['top'])) {
-            $config['margin_top'] = $margins['top'];
-        }
-
-        if (!empty($margins['right'])) {
-            $config['margin_right'] = $margins['right'];
-        }
-
-        if (!empty($margins['bottom'])) {
-            $config['margin_bottom'] = $margins['bottom'];
-        }
-
-        if (!empty($margins['left'])) {
-            $config['margin_left'] = $margins['left'];
-        }
-
-        return $config;
-    }
 }
