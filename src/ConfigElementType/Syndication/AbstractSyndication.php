@@ -9,7 +9,6 @@
 namespace HeimrichHannot\ReaderBundle\ConfigElementType\Syndication;
 
 use Contao\Controller;
-use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\LinkInterface;

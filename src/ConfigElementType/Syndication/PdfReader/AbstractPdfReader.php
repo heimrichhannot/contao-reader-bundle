@@ -68,6 +68,9 @@ abstract class AbstractPdfReader
         ;
 
         if ($fontDirectories = StringUtil::trimsplit(',', $this->readerConfigElement->syndicationPdfFontDirectories)) {
+            foreach ($fontDirectories as $key => $fontDirectory) {
+                $fontDirectories[$key] = System::getContainer()->getParameter('kernel.project_dir').\DIRECTORY_SEPARATOR.ltrim($fontDirectory, \DIRECTORY_SEPARATOR);
+            }
             $pdf->addFontDirectories($fontDirectories);
         }
 
@@ -84,12 +87,6 @@ abstract class AbstractPdfReader
         $pdf->setOutputMode($this->download ? $pdf::OUTPUT_MODE_DOWNLOAD : '');
 
         $pdf->render();
-
-//        $config = [
-//            'mode' => \Config::get('characterSet'),
-//        ];
-
-//        $pdf->generate($this->download);
     }
 
     public function getItem(): ItemInterface

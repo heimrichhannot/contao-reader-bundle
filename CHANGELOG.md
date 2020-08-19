@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.19.0] - 2020-08-19
+- added encore support to pdf and print syndication (added _encore templates for out of the box support)
+
 ## [1.18.0] - 2020-08-18
 - use PdfCreator for PDF syndication instead of deprecated PdfWriter
 
