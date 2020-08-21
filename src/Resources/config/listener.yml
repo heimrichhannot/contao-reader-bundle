@@ -7,7 +7,3 @@ services:
   HeimrichHannot\ReaderBundle\EventListener\AdjustFilterValueEventListener:
     tags:
       - { name: kernel.event_listener, event: huh.filter.event.adjust_filter_value_event, method: onAdjustFilterValue }
-
-  HeimrichHannot\ReaderBundle\EventListener\ParseFrontendTemplateListener:
-    autowire: true
-    public: true

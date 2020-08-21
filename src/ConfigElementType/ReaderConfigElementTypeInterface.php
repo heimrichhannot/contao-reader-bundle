@@ -8,6 +8,11 @@
 
 namespace HeimrichHannot\ReaderBundle\ConfigElementType;
 
+/**
+ * Interface ReaderConfigElementTypeInterface.
+ *
+ * @deprecated Use ConfigElementTypeInterface instead
+ */
 interface ReaderConfigElementTypeInterface
 {
     /**

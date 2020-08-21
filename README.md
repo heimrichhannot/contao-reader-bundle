@@ -155,7 +155,7 @@ RenderTwigTemplateEvent | huh.utils.template.render | Will be fired before the r
 
 It is easy to add new reader config elements.
 
-1. Create a class that implements `HeimrichHannot\ReaderBundle\ConfigElementType\ReaderConfigElementTypeInterface`
+1. Create a class that implements `HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeInterface`
 1. Register the class as service with service tag `huh.reader.config_element_type`
 1. Add a friendly type name (translation) into the `$GLOBALS['TL_LANG']['tl_reader_config_element']['reference']` variable
 

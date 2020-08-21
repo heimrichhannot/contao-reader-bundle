@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.20.0] - 2020-08-21
+- added heimrichhannot/contao-config-element-type-bundle dependency
+- ConfigElementTypeInterface is now the default way to implement ConfigElementTypes
+- deprecated ReaderConfigElementTypeInterface and ReaderConfigElementData
+
 ## [1.19.1] - 2020-08-19
 - removed test code
 

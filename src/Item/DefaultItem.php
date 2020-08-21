@@ -11,6 +11,8 @@ namespace HeimrichHannot\ReaderBundle\Item;
 use Contao\DataContainer;
 use Contao\StringUtil;
 use Contao\System;
+use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementData;
+use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementResult;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeInterface;
 use HeimrichHannot\ReaderBundle\ConfigElementType\ConfigElementType;
 use HeimrichHannot\ReaderBundle\ConfigElementType\ReaderConfigElementData;
@@ -275,11 +277,22 @@ class DefaultItem implements ItemInterface, \JsonSerializable
             foreach ($readerConfigElements as $readerConfigElement) {
                 if ($readerConfigElementType = $this->_manager->getReaderConfigElementRegistry()->getReaderConfigElementType($readerConfigElement->type)) {
                     if ($readerConfigElementType instanceof ConfigElementTypeInterface) {
-                        $readerConfigElementType->applyConfiguration(new ReaderConfigElementData($this, $readerConfigElement));
+                        $result = $readerConfigElementType->applyConfiguration(new ConfigElementData($this->getRaw(), $readerConfigElement));
+
+                        switch ($result->getType()) {
+                            case ConfigElementResult::TYPE_FORMATTED_VALUE:
+                                $this->setFormattedValue($readerConfigElement->templateVariable, $result->getValue());
+
+                                break;
+
+                            case ConfigElementResult::TYPE_RAW_VALUE:
+                                $this->setRawValue($readerConfigElement->templateVariable, $result->getValue());
+
+                                break;
+                        }
                     } else {
                         $readerConfigElementType->addToReaderItemData(new ReaderConfigElementData($this, $readerConfigElement));
                     }
-
                 } else {
                     if (null === ($class = $this->_manager->getReaderConfigElementRegistry()->getElementClassByName($readerConfigElement->type))) {
                         continue;

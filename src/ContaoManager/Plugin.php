@@ -28,7 +28,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, ExtensionP
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create(HeimrichHannotContaoReaderBundle::class)->setLoadAfter([ContaoCoreBundle::class, HeimrichHannotContaoFilterBundle::class]),
+            BundleConfig::create(HeimrichHannotContaoReaderBundle::class)
+                ->setLoadAfter([
+                ContaoCoreBundle::class,
+                HeimrichHannotContaoFilterBundle::class,
+            ]),
         ];
     }
 
