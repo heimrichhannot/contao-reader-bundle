@@ -1,64 +1,71 @@
 <!DOCTYPE html>
 <html lang="{{ language }}" {% if isRTL %} dir="rtl"{% endif %}>
 <head>
-    <meta charset="{{ charset }}">
-    <title>{{ title }}</title>
-    <base href="{{ base }}">
-    <style>
-        *,
-        *::before,
-        *::after {
-            text-shadow: none !important;
-            box-shadow: none !important;
-        }
+    {% block head %}
+        <meta charset="{{ charset }}">
+        <title>{{ title }}</title>
+        <base href="{{ base }}">
+        {% block style %}
+            <style>
 
-        abbr[title]::after {
-            content: " (" attr(title) ")";
-        }
+                *,
+                *::before,
+                *::after {
+                    text-shadow: none !important;
+                    box-shadow: none !important;
+                }
 
-        pre {
-            white-space: pre-wrap !important;
-        }
+                abbr[title]::after {
+                    content: " (" attr(title) ")";
+                }
 
-        pre,
-        blockquote {
-            border: 1px solid #999;
-            page-break-inside: avoid;
-        }
+                pre {
+                    white-space: pre-wrap !important;
+                }
 
-        thead {
-            display: table-header-group;
-        }
+                pre,
+                blockquote {
+                    border: 1px solid #999;
+                    page-break-inside: avoid;
+                }
 
-        tr,
-        img {
-            page-break-inside: avoid;
-        }
+                thead {
+                    display: table-header-group;
+                }
 
-        p,
-        h2,
-        h3 {
-            orphans: 3;
-            widows: 3;
-        }
+                tr,
+                img {
+                    page-break-inside: avoid;
+                }
 
-        h2,
-        h3 {
-            page-break-after: avoid;
-        }
+                p,
+                h2,
+                h3 {
+                    orphans: 3;
+                    widows: 3;
+                }
 
-        @page {
-            size: a3;
-        }
-    </style>
+                h2,
+                h3 {
+                    page-break-after: avoid;
+                }
+
+                @page {
+                    size: a3;
+                }
+            </style>
+        {% endblock %}
+    {% endblock %}
 </head>
 <body class="print" onload="{{ onload }}">
-<div class="item">
-    {% for field, value in formatted %}
-        <div class="{{ field|lower }}">
-            {{ field }}: {{ value }}
-        </div>
-    {% endfor %}
-</div>
+{% block body %}
+    <div class="item">
+        {% for field, value in formatted %}
+            <div class="{{ field|lower }}">
+                {{ field }}: {{ value }}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
 </body>
 </html>

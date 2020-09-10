@@ -11,6 +11,11 @@ namespace HeimrichHannot\ReaderBundle\ConfigElementType;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 
+/**
+ * Class ReaderConfigElementData.
+ *
+ * @deprecated use ConfigElementTypeData instead
+ */
 class ReaderConfigElementData
 {
     /**

@@ -1,0 +1,12 @@
+{% extends "@HeimrichHannotContaoReader/readerpdf/readerpdf_default.html.twig" %}
+
+{% block head %}
+    {{ parent() }}
+    {% block stylesheets %}
+        {% block encore_stylesheets %}
+            {% if encoreStylesheets|default %}
+                {{ encoreStylesheets|raw }}
+            {% endif %}
+        {% endblock %}
+    {% endblock %}
+{% endblock %}

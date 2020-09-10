@@ -1,6 +1,25 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.20.0] - 2020-08-21
+- added heimrichhannot/contao-config-element-type-bundle dependency
+- ConfigElementTypeInterface is now the default way to implement ConfigElementTypes
+- deprecated ReaderConfigElementTypeInterface and ReaderConfigElementData
+
+## [1.19.1] - 2020-08-19
+- removed test code
+
+## [1.19.0] - 2020-08-19
+- added encore support to pdf and print syndication (added _encore templates for out of the box support)
+
+## [1.18.0] - 2020-08-18
+- use PdfCreator for PDF syndication instead of deprecated PdfWriter
+
+## [1.17.0] - 2020-08-13
+- added blocks to print and pdf twig templates
+- fixed usage of deprecated util service
+- fixed copypaste errors in readme
+
 ## [1.16.0] - 2020-08-05
 - added customization of templateContainerVariable for config elements
 

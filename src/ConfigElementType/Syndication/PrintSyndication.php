@@ -8,6 +8,8 @@
 
 namespace HeimrichHannot\ReaderBundle\ConfigElementType\Syndication;
 
+use Contao\LayoutModel;
+use Contao\PageModel;
 use Contao\System;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\DefaultLink;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\LinkInterface;
@@ -59,7 +61,23 @@ class PrintSyndication extends AbstractSyndication
         $data['onload'] = sprintf('window.print();%s', (bool) System::getContainer()->get('huh.request')->query->get(static::PRINT_DEBUG_QUERY_PARAM) ? '' : 'setTimeout(window.close, 0);');
         $data['title'] = $this->getTitle();
 
-        die(System::getContainer()->get('huh.utils.string')->replaceInsertTags($this->item->getManager()->getTwig()->render(System::getContainer()->get('huh.utils.template')->getTemplate($this->readerConfigElement->syndicationPrintTemplate), $data)));
+        /* @var PageModel $objPage */
+        global $objPage;
+
+        if (System::getContainer()->has('huh.encore.asset.template') && $objPage) {
+            $layout = LayoutModel::findById($objPage->layout);
+
+            if ($layout) {
+                $templateAssets = System::getContainer()->get('huh.encore.asset.template')->createInstance($objPage, $layout);
+                $data['encoreStylesheets'] = $templateAssets->linkTags();
+            }
+        }
+
+        die(System::getContainer()->get('huh.utils.string')->replaceInsertTags(
+            $this->item->getManager()->getTwig()->render(System::getContainer()->get('huh.utils.template')->getTemplate(
+                $this->readerConfigElement->syndicationPrintTemplate),
+                $data))
+        );
     }
 
     /**

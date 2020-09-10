@@ -8,7 +8,11 @@
 
 namespace HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\PdfReader;
 
+use Contao\Config;
 use Contao\Controller;
+use Contao\Environment;
+use Contao\LayoutModel;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 
@@ -31,9 +35,21 @@ class DefaultPdfReader extends AbstractPdfReader
 
         $data['isRTL'] = 'rtl' === $GLOBALS['TL_LANG']['MSC']['textDirection'];
         $data['language'] = $GLOBALS['TL_LANGUAGE'];
-        $data['charset'] = \Config::get('characterSet');
-        $data['base'] = \Environment::get('base');
+        $data['charset'] = Config::get('characterSet');
+        $data['base'] = Environment::get('base');
         $data['title'] = $this->getSyndication()->getTitle();
+
+        /* @var PageModel $objPage */
+        global $objPage;
+
+        if (System::getContainer()->has('huh.encore.asset.template') && $objPage) {
+            $layout = LayoutModel::findById($objPage->layout);
+
+            if ($layout) {
+                $templateAssets = System::getContainer()->get('huh.encore.asset.template')->createInstance($objPage, $layout);
+                $data['encoreStylesheets'] = $templateAssets->linkTags();
+            }
+        }
 
         $result = $this->item->getManager()->getTwig()->render(System::getContainer()->get('huh.utils.template')->getTemplate($this->readerConfigElement->syndicationPdfTemplate), $data);
 
