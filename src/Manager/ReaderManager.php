@@ -16,6 +16,7 @@ use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\Environment;
+use Contao\Input;
 use Contao\Model;
 use Contao\StringUtil;
 use Contao\System;
@@ -634,6 +635,9 @@ class ReaderManager implements ReaderManagerInterface
         $dca = &$GLOBALS['TL_DCA'][$readerConfig->dataContainer];
 
         if (Config::get('useAutoItem') && ($autoItem = $this->container->get('huh.request')->getGet('auto_item'))) {
+            // tell contao that the auto_item parameter has been used -> else a UnusedArgumentsException is thrown resulting in a 404 response
+            Input::get('auto_item');
+
             $field = $readerConfig->itemRetrievalAutoItemField;
 
             /* @var Model $adapter */
