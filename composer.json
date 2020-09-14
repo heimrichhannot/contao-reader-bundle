@@ -11,7 +11,7 @@
     "heimrichhannot/contao-entity-filter-bundle": "^1.0",
     "heimrichhannot/contao-filter-bundle": "^1.0",
     "heimrichhannot/contao-head-bundle": "^1.0",
-    "heimrichhannot/contao-status_messages": "^1.0",
+    "heimrichhannot/contao-status_messages": "^1.0|^2.0",
     "heimrichhannot/contao-utils-bundle": "^2.128",
     "heimrichhannot/truncate-html": "^1.0",
     "jsvrcek/ics-bundle": "0.*",

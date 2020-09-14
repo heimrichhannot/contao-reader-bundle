@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.20.2] - 2020-09-14
+- allow status_messages 2.0
+
 ## [1.20.1] - 2020-09-10
 - fixed 404 issues on contao 4.9 (see [https://github.com/heimrichhannot/contao-reader-bundle/issues/1](https://github.com/heimrichhannot/contao-reader-bundle/issues/1))
 
