@@ -54,7 +54,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, ExtensionP
      */
     public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig)
     {
-        $loader->load('@HeimrichHannotContaoReaderBundle/Resources/config/datacontainers.yml');
         $loader->load('@HeimrichHannotContaoReaderBundle/Resources/config/listener.yml');
         $loader->load('@HeimrichHannotContaoReaderBundle/Resources/config/services.yml');
         $loader->load(function (ContainerBuilder $container) use ($loader) {

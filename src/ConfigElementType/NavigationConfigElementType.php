@@ -8,24 +8,24 @@
 
 namespace HeimrichHannot\ReaderBundle\ConfigElementType;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Model;
 use Contao\System;
 use HeimrichHannot\FilterBundle\Config\FilterConfig;
 use HeimrichHannot\ReaderBundle\Exception\InvalidReaderAndListFilterDataContainerException;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
+use HeimrichHannot\TwigSupportBundle\Filesystem\TwigTemplateLocator;
 
 class NavigationConfigElementType implements ReaderConfigElementTypeInterface
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var TwigTemplateLocator
      */
-    protected $framework;
+    protected $templateLocator;
 
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(TwigTemplateLocator $templateLocator)
     {
-        $this->framework = $framework;
+        $this->templateLocator = $templateLocator;
     }
 
     /**
@@ -45,7 +45,7 @@ class NavigationConfigElementType implements ReaderConfigElementTypeInterface
 
         $item->setFormattedValue(
             $readerConfigElement->name,
-            $item->getManager()->getTwig()->render(System::getContainer()->get('huh.utils.template')->getTemplate($readerConfigElement->navigationTemplate),
+            $item->getManager()->getTwig()->render($this->templateLocator->getTemplatePath($readerConfigElement->navigationTemplate),
                 ['items' => $items]
             )
         );

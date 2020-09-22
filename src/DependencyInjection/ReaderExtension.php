@@ -27,5 +27,6 @@ class ReaderExtension extends Extension
         $processedConfig = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('huh.reader', $processedConfig);
+        $container->setParameter('huh_reader', isset($processedConfig['reader']) ? $processedConfig['reader'] : []);
     }
 }

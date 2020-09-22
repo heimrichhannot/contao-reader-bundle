@@ -15,6 +15,7 @@ use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
+use HeimrichHannot\TwigSupportBundle\Filesystem\TwigTemplateLocator;
 
 class DefaultPdfReader extends AbstractPdfReader
 {
@@ -51,7 +52,7 @@ class DefaultPdfReader extends AbstractPdfReader
             }
         }
 
-        $result = $this->item->getManager()->getTwig()->render(System::getContainer()->get('huh.utils.template')->getTemplate($this->readerConfigElement->syndicationPdfTemplate), $data);
+        $result = $this->item->getManager()->getTwig()->render(System::getContainer()->get(TwigTemplateLocator::class)->getTemplatePath($this->readerConfigElement->syndicationPdfTemplate), $data);
 
         $result = StringUtil::restoreBasicEntities($result);
         $result = Controller::replaceInsertTags($result);

@@ -15,7 +15,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
-use Contao\Environment;
+use Contao\Environment as ContaoEnvironment;
 use Contao\Input;
 use Contao\Model;
 use Contao\StringUtil;
@@ -32,6 +32,7 @@ use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\ReaderBundle\QueryBuilder\ReaderQueryBuilder;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry;
+use HeimrichHannot\TwigSupportBundle\Filesystem\TwigTemplateLocator;
 use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
 use HeimrichHannot\UtilsBundle\Form\FormUtil;
@@ -39,6 +40,7 @@ use HeimrichHannot\UtilsBundle\Image\ImageUtil;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 use HeimrichHannot\UtilsBundle\Url\UrlUtil;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Twig\Environment;
 
 class ReaderManager implements ReaderManagerInterface
 {
@@ -103,7 +105,7 @@ class ReaderManager implements ReaderManagerInterface
     protected $containerUtil;
 
     /**
-     * @var \Twig_Environment
+     * @var \Twig\Environment
      */
     protected $twig;
 
@@ -127,6 +129,10 @@ class ReaderManager implements ReaderManagerInterface
      */
     protected $database;
     /**
+     * @var TwigTemplateLocator
+     */
+    protected $templateLocator;
+    /**
      * @var ContainerInterface
      */
     private $container;
@@ -147,7 +153,8 @@ class ReaderManager implements ReaderManagerInterface
         ContainerUtil $containerUtil,
         ImageUtil $imageUtil,
         FormUtil $formUtil,
-        \Twig_Environment $twig
+        Environment $twig,
+        TwigTemplateLocator $templateLocator
     ) {
         $this->framework = $framework;
         $this->filterManager = $filterManager;
@@ -164,6 +171,7 @@ class ReaderManager implements ReaderManagerInterface
         $this->database = $framework->createInstance(Database::class);
         $this->container = $container;
         $this->_dispatcher = System::getContainer()->get('event_dispatcher');
+        $this->templateLocator = $templateLocator;
     }
 
     /**
@@ -216,7 +224,7 @@ class ReaderManager implements ReaderManagerInterface
                     ('' === $item[$readerConfig->stopField] || $item[$readerConfig->stopField] > ($time + 60));
             }
 
-            if (\defined('BE_USER_LOGGED_IN') && BE_USER_LOGGED_IN === true && \Input::cookie('FE_PREVIEW')) {
+            if (\defined('BE_USER_LOGGED_IN') && BE_USER_LOGGED_IN === true && Input::cookie('FE_PREVIEW')) {
                 $isPublished = true;
             }
 
@@ -421,7 +429,7 @@ class ReaderManager implements ReaderManagerInterface
     public function setCanonicalLink()
     {
         System::getContainer()->get('huh.head.tag.link_canonical')->setContent(
-            Environment::get('url').'/'.$this->getItem()->getDetailsUrl(true, true)
+            ContaoEnvironment::get('url').'/'.$this->getItem()->getDetailsUrl(true, true)
         );
     }
 
@@ -546,7 +554,7 @@ class ReaderManager implements ReaderManagerInterface
         $config = $this->container->getParameter('huh.reader');
 
         if (!isset($config['reader']['templates']['item'])) {
-            return $this->container->get('huh.utils.template')->getTemplate($name);
+            return $this->templateLocator->getTemplatePath($name);
         }
 
         $templates = $config['reader']['templates']['item'];
@@ -557,7 +565,7 @@ class ReaderManager implements ReaderManagerInterface
             }
         }
 
-        return $this->container->get('huh.utils.template')->getTemplate($name);
+        return $this->templateLocator->getTemplatePath($name);
     }
 
     /**
@@ -571,7 +579,7 @@ class ReaderManager implements ReaderManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getTwig(): \Twig_Environment
+    public function getTwig(): Environment
     {
         return $this->twig;
     }

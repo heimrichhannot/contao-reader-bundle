@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.21.0] - 2020-09-21
+- moved to twig-support-bundle for template handling
+- allow ReaderManagerInterface::getTwig() to also return Twig\Environment
+- allow ReaderManagerInterface::getFramework() to also return ContaoFramework
+- added twig as dependency
+- removed ReaderItemTemplateChoice
+
 ## [1.20.2] - 2020-09-14
 - allow status_messages 2.0
 

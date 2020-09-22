@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\ReaderBundle\Manager;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\DataContainer;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -16,6 +17,7 @@ use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
 use HeimrichHannot\UtilsBundle\Form\FormUtil;
+use Twig\Environment;
 
 interface ReaderManagerInterface
 {
@@ -127,13 +129,17 @@ interface ReaderManagerInterface
 
     /**
      * Get current twig environment.
+     *
+     * @return Environment|\Twig_Environment
      */
-    public function getTwig(): \Twig_Environment;
+    public function getTwig();
 
     /**
      * Get the contao framework.
+     *
+     * @return ContaoFrameworkInterface|ContaoFramework
      */
-    public function getFramework(): ContaoFrameworkInterface;
+    public function getFramework();
 
     /**
      * Get current form utils.

@@ -1,12 +1,19 @@
 services:
   _defaults:
     public: true
+    bind:
+      $bundleConfig: '%huh_reader%'
 
   _instanceof:
     HeimrichHannot\ReaderBundle\ConfigElementType\ReaderConfigElementTypeInterface:
       tags: ['huh.reader.config_element_type']
       public: false
       autowire: true
+
+  HeimrichHannot\ReaderBundle\DataContainer\:
+    resource: '../../DataContainer/*'
+    autowire: true
+    public: true
 
   huh.reader.backend.reader-config:
     class: HeimrichHannot\ReaderBundle\Backend\ReaderConfig
@@ -18,11 +25,6 @@ services:
 
   huh.reader.backend.reader-config-element:
     class: HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement
-    arguments:
-      - "@contao.framework"
-
-  huh.reader.choice.template.item:
-    class: HeimrichHannot\ReaderBundle\Choice\ReaderItemTemplateChoice
     arguments:
       - "@contao.framework"
 

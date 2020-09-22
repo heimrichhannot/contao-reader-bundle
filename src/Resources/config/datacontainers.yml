@@ -1,6 +1,0 @@
-services:
-  _defaults:
-    public: true
-    autowire: true
-
-  HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer: ~

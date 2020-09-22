@@ -15,6 +15,7 @@ use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\DefaultLink;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\LinkInterface;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
+use HeimrichHannot\TwigSupportBundle\Filesystem\TwigTemplateLocator;
 
 class PrintSyndication extends AbstractSyndication
 {
@@ -64,17 +65,19 @@ class PrintSyndication extends AbstractSyndication
         /* @var PageModel $objPage */
         global $objPage;
 
-        if (System::getContainer()->has('huh.encore.asset.template') && $objPage) {
+        $container = System::getContainer();
+
+        if ($container->has('huh.encore.asset.template') && $objPage) {
             $layout = LayoutModel::findById($objPage->layout);
 
             if ($layout) {
-                $templateAssets = System::getContainer()->get('huh.encore.asset.template')->createInstance($objPage, $layout);
+                $templateAssets = $container->get('huh.encore.asset.template')->createInstance($objPage, $layout);
                 $data['encoreStylesheets'] = $templateAssets->linkTags();
             }
         }
 
-        die(System::getContainer()->get('huh.utils.string')->replaceInsertTags(
-            $this->item->getManager()->getTwig()->render(System::getContainer()->get('huh.utils.template')->getTemplate(
+        die($container->get('huh.utils.string')->replaceInsertTags(
+            $this->item->getManager()->getTwig()->render($container->get(TwigTemplateLocator::class)->getTemplatePath(
                 $this->readerConfigElement->syndicationPrintTemplate),
                 $data))
         );

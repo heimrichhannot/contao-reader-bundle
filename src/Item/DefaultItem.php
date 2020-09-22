@@ -316,9 +316,10 @@ class DefaultItem implements ItemInterface, \JsonSerializable
         $context = $this->jsonSerialize();
         $template = $readerConfig->itemTemplate ?: 'default';
 
-        $beforeRenderEvent = System::getContainer()->get('event_dispatcher')->dispatch(ReaderBeforeRenderEvent::NAME, new ReaderBeforeRenderEvent(
-            $context, $this, $readerConfig
-        ));
+        $beforeRenderEvent = System::getContainer()->get('event_dispatcher')->dispatch(
+            ReaderBeforeRenderEvent::NAME,
+            new ReaderBeforeRenderEvent($context, $this, $readerConfig)
+        );
 
         /** @var RenderTwigTemplateEvent $event */
         $event = System::getContainer()->get('event_dispatcher')->dispatch(

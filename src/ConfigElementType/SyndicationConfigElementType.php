@@ -11,18 +11,24 @@ namespace HeimrichHannot\ReaderBundle\ConfigElementType;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\AbstractSyndication;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
+use HeimrichHannot\TwigSupportBundle\Filesystem\TwigTemplateLocator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SyndicationConfigElementType implements ReaderConfigElementTypeInterface
 {
     /**
+     * @var TwigTemplateLocator
+     */
+    protected $templateLocator;
+    /**
      * @var ContainerInterface
      */
     private $container;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, TwigTemplateLocator $templateLocator)
     {
         $this->container = $container;
+        $this->templateLocator = $templateLocator;
     }
 
     public function addToItemData(ItemInterface $item, ReaderConfigElementModel $readerConfigElement)
@@ -66,7 +72,7 @@ class SyndicationConfigElementType implements ReaderConfigElementTypeInterface
 
         $item->setFormattedValue(
             $readerConfigElement->name,
-            $this->container->get('twig')->render($this->container->get('huh.utils.template')->getTemplate($readerConfigElement->syndicationTemplate),
+            $this->container->get('twig')->render($this->templateLocator->getTemplatePath($readerConfigElement->syndicationTemplate),
                 ['links' => $syndications]
             )
         );
