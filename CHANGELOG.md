@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.22.0] - 2020-09-28
+- switched from ics bundle to `IcsUtil` in utils-bundle
+
 ## [1.21.0] - 2020-09-21
 - moved to twig-support-bundle for template handling
 - allow ReaderManagerInterface::getTwig() to also return Twig\Environment
