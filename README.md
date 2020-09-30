@@ -7,6 +7,8 @@
 
 This bundle offers a generic reader module to use with arbitrary contao entities containing standard reader specific functionality like field output, images and auto_item handling.
 
+It makes it possible to generate readers not only for events, news or faq's but with every DCA you like.
+
 ## Features
 
 - generic reader module: output entities of arbitrary DCA entities
