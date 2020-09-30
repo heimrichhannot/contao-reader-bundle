@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.23.0] - 2020-09-30
+- enhanced the README.md (now contains info about items and image config elements)
+
 ## [1.22.0] - 2020-09-28
 - switched from ics bundle to `IcsUtil` in utils-bundle
 

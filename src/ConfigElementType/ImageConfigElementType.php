@@ -11,6 +11,7 @@ namespace HeimrichHannot\ReaderBundle\ConfigElementType;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Database;
 use Contao\FilesModel;
 use Contao\Model;
 use Contao\StringUtil;
@@ -144,6 +145,10 @@ class ImageConfigElementType implements ReaderConfigElementTypeInterface
             && $readerConfigElement->templateContainerVariable
                 ? $readerConfigElement->templateContainerVariable : 'images');
 
+            if (\in_array($templateContainer, Database::getInstance()->getFieldNames($item->getDataContainer()))) {
+                throw new \Exception('Contao Reader Bundle: You specified that images of a reader config element should be added to an array called "'.$templateContainer.'" in your reader config element ID '.$readerConfigElement->id.'. The associated DCA '.$item->getDataContainer().' contains a field of the same name which isn\'t supported. Please adjust the template container variable name in the reader config element to be different from "'.$templateContainer.'".');
+            }
+
             $templateData = [];
 
             $templateData[$templateContainer] = $item->getFormattedValue($templateContainer) ?: [];
@@ -157,14 +162,14 @@ class ImageConfigElementType implements ReaderConfigElementTypeInterface
     }
 
     /**
-     * @param ReaderConfigElementModel $listConfigElement
+     * @param ReaderConfigElementModel $readerConfigElement
      */
-    public function getGenderedPlaceholderImage(ItemInterface $item, Model $listConfigElement): string
+    public function getGenderedPlaceholderImage(ItemInterface $item, Model $readerConfigElement): string
     {
-        if ($item->getRawValue($listConfigElement->genderField) && 'female' == $item->getRawValue($listConfigElement->genderField)) {
-            $image = $listConfigElement->placeholderImageFemale;
+        if ($item->getRawValue($readerConfigElement->genderField) && 'female' == $item->getRawValue($readerConfigElement->genderField)) {
+            $image = $readerConfigElement->placeholderImageFemale;
         } else {
-            $image = $listConfigElement->placeholderImage;
+            $image = $readerConfigElement->placeholderImage;
         }
 
         return $image;
