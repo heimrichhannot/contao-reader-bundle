@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.23.1] - 2020-10-01
+- fixed canonical links for empty details url
+
 ## [1.23.0] - 2020-09-30
 - enhanced the README.md (now contains info about items and image config elements)
 

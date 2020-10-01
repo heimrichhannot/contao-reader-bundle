@@ -428,9 +428,13 @@ class ReaderManager implements ReaderManagerInterface
 
     public function setCanonicalLink()
     {
-        System::getContainer()->get('huh.head.tag.link_canonical')->setContent(
-            ContaoEnvironment::get('url').'/'.$this->getItem()->getDetailsUrl(true, true)
-        );
+        $detailsUrl = $this->getItem()->getDetailsUrl(true, true);
+
+        if ($detailsUrl) {
+            System::getContainer()->get('huh.head.tag.link_canonical')->setContent(
+                ContaoEnvironment::get('url').'/'.$this->getItem()->getDetailsUrl(true, true)
+            );
+        }
     }
 
     /**
