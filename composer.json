@@ -33,6 +33,9 @@
   "suggest": {
     "heimrichhannot/contao-list-bundle": "^1.3.0"
   },
+  "conflict": {
+    "heimrichhannot/contao-list-bundle": "<1.1.0"
+  },
   "minimum-stability": "beta",
   "autoload": {
     "psr-4": {

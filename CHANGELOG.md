@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.23.2] - 2020-10-30
+- fixed non-existent service exception in list config element (#4)
+
 ## [1.23.1] - 2020-10-01
 - fixed canonical links for empty details url
 
