@@ -8,6 +8,7 @@
 
 namespace HeimrichHannot\ReaderBundle\DataContainer;
 
+use Contao\Controller;
 use Contao\StringUtil;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeInterface;
 use HeimrichHannot\ReaderBundle\ConfigElementType\RelatedConfigElementType;
@@ -144,5 +145,15 @@ class ReaderConfigElementContainer
         return '<div class="tl_content_left">'.($rows['title'] ?: $rows['id']).' <span style="color:#b3b3b3; padding-left:3px">['
             .$reference[$rows['type']].'] ('
             .\Date::parse(\Contao\Config::get('datimFormat'), trim($rows['dateAdded'])).')</span></div>';
+    }
+
+    /**
+     * Return all template files of a particular group as array.
+     *
+     * @return array An array of template names
+     */
+    public function getCommentTemplates()
+    {
+        return Controller::getTemplateGroup('com_');
     }
 }
