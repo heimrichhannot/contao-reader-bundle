@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.23.3] - 2020-12-16
+- fixed non-existent service exception for comment type in reader config element
+- fixed ctable definition in tl_reader_config was not an array
+
 ## [1.23.2] - 2020-10-30
 - fixed non-existent service exception in list config element (#4)
 

@@ -12,7 +12,7 @@
 $GLOBALS['TL_DCA']['tl_reader_config'] = [
     'config' => [
         'dataContainer' => 'Table',
-        'ctable' => 'tl_reader_config_element',
+        'ctable' => ['tl_reader_config_element'],
         'enableVersioning' => true,
         'onload_callback' => [
             ['huh.reader.backend.reader-config', 'modifyPalette'],
@@ -282,7 +282,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'exclude' => true,
             'filter' => true,
             'inputType' => 'select',
-            'options_callback' => function (\Contao\DataContainer $dc) {
+            'options_callback' => function (Contao\DataContainer $dc) {
                 return $dc->activeRecord->id > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->id) : [];
             },
             'eval' => ['chosen' => true, 'includeBlankOption' => true, 'tl_class' => 'w50', 'mandatory' => true],
@@ -293,7 +293,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'exclude' => true,
             'filter' => true,
             'inputType' => 'select',
-            'options_callback' => function (\Contao\DataContainer $dc) {
+            'options_callback' => function (Contao\DataContainer $dc) {
                 return $dc->activeRecord->id > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->id) : [];
             },
             'eval' => ['chosen' => true, 'includeBlankOption' => true, 'tl_class' => 'w50', 'mandatory' => true],
@@ -394,7 +394,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'label' => &$GLOBALS['TL_LANG']['tl_reader_config']['jumpToOverviewLabel'],
             'exclude' => true,
             'inputType' => 'select',
-            'options_callback' => function (\DataContainer $dc) {
+            'options_callback' => function (DataContainer $dc) {
                 return \Contao\System::getContainer()->get('huh.utils.choice.message')->getCachedChoices('huh.reader.label.overview');
             },
             'eval' => ['chosen' => true, 'mandatory' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
