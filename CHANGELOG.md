@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.23.4] - 2021-01-11
+- fixed for getSearchablePages computation on CLI
+
 ## [1.23.3] - 2020-12-16
 - fixed non-existent service exception for comment type in reader config element
 - fixed ctable definition in tl_reader_config was not an array

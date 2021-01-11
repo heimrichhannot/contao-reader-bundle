@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2020 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -36,6 +36,11 @@ class AdjustFilterValueEventListener
 
         $instance = System::getContainer()->get('huh.reader.manager.reader')->retrieveItem();
         $value = null;
+
+        // necessary for getSearchablePages hook
+        if (null === $instance) {
+            return;
+        }
 
         if ($dca['eval']['isCategoryField']) {
             $value = [];
