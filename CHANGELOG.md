@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.23.5] - 2021-01-20
+- fixed redirect issue in `TagsConfigElementType`
+
 ## [1.23.4] - 2021-01-11
 - fixed for getSearchablePages computation on CLI
 

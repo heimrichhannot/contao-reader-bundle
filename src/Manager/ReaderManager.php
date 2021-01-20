@@ -180,7 +180,7 @@ class ReaderManager implements ReaderManagerInterface
     public function retrieveItem(): ?ItemInterface
     {
         // necessary for getSearchablePages hook
-        if (PHP_SAPI === 'cli') {
+        if (\PHP_SAPI === 'cli') {
             return null;
         }
 

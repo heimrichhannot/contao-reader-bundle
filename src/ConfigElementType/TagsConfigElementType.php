@@ -103,7 +103,7 @@ class TagsConfigElementType implements ReaderConfigElementTypeInterface
 
                     System::getContainer()->get('huh.filter.session')->setData($sessionKey, $sessionData);
 
-                    throw new RedirectResponseException('/'.ltrim($jumpTo, '/'));
+                    throw new RedirectResponseException('/'.ltrim($jumpTo, '/'), 301);
                 }
             }
 
