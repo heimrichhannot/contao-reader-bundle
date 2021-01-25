@@ -12,7 +12,7 @@
     <div class="item">
         {% for field, value in formatted %}
             <div class="{{ field|lower }}">
-                {{ field }}: {{ value }}
+                {{ field }}: {{ field == 'dc' ? 'DataContainer' : value }}
             </div>
         {% endfor %}
     </div>

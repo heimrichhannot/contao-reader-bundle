@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.23.6] - 2021-01-25
+- fixed readerpdf and readerprint template
+
 ## [1.23.5] - 2021-01-20
 - fixed redirect issue in `TagsConfigElementType`
 
