@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.23.8] - 2021-01-28
+- added noindex,nofollow for print syndication
+
 ## [1.23.7] - 2021-01-28
 - fixed auto_item issue in ReaderManager -> if \Input::get('auto_item') isn't used (request bundle had been used before), auto_item isn't put to \Input::$arrUnusedGet leading to a 404 for valid auto_items
 
