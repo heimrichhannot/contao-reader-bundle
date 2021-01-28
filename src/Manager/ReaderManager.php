@@ -651,7 +651,7 @@ class ReaderManager implements ReaderManagerInterface
 
         $dca = &$GLOBALS['TL_DCA'][$readerConfig->dataContainer];
 
-        if (Config::get('useAutoItem') && ($autoItem = $this->container->get('huh.request')->getGet('auto_item'))) {
+        if (Config::get('useAutoItem') && ($autoItem = \Input::get('auto_item'))) {
             // tell contao that the auto_item parameter has been used -> else a UnusedArgumentsException is thrown resulting in a 404 response
             Input::get('auto_item');
 
