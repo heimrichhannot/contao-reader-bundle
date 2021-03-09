@@ -1,7 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.23.8] - 2021-01-28
+## [1.24.0] - 2021-03-09
+- deprecated bundled syndication config element type in favor of syndication type bundle
+- fixed service definition
+- fixed docs in ReaderConfigElementRegistry 
+- made templateVariable mandatory for ConfigElementTypes
+- updated FacebookSyndication rel
+
+
 ## [1.23.8] - 2021-01-28
 - added noindex,nofollow for print syndication
 

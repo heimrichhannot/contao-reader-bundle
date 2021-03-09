@@ -87,13 +87,20 @@ it's formatted, you can still access its raw value by using:
 
 Every reader config can have one or more reader config elements. These are designed to specify things that can occur multiple times (e.g. because there are many fields of one type).
 
-Currently available reader config element types:
+Currently build-in reader config element types:
 
 Type          | Description
 --------------|------------
 image         | Configure the output of one or more image fields separately (image size, placeholder handling, ...)
 tags          | Output one or more tag fields based on [codefog/tags-bundle](https://github.com/codefog/tags-bundle).
 related items | Output related items based on given tags (needs [heimrichhannot/contao-list-bundle](https://github.com/heimrichhannot/contao-list-bundle); needs [codefog/tags-bundle](https://github.com/codefog/tags-bundle)) or categories (needs [heimrichhannot/contao-categories-bundle](https://github.com/heimrichhannot/contao-categories-bundle)).
+
+Other bundle can add reader config elements as well. Some examples:
+
+- [Syndication through Syndication Type Bundle](https://github.com/heimrichhannot/contao-syndication-type-bundle)
+- [Enhanced Videos through Video Bundle](https://github.com/heimrichhannot/contao-video-bundle)
+
+
 
 #### Image
 
@@ -173,43 +180,6 @@ huh:
                 - news_
                 - event_
 ```
-
-### Syndications
-
-Syndications as links that share the article with other social networks or provide print or pdf export.
-
-#### PDF-Syndication
-
-##### Use custom fonts  
-
-Inside each tl_reader_config_element.syndicationPdfFontDirectories you can provide multiple paths to a directory containing additional fonts.
-The directory **must contain** a `mpdf-config.php` file, that must return an array with the additional mpdf font-configuration.
-
-**Example:**
-
-You declare for instance the direcory `files/pdf-fonts/` that contains the `.ttf` or `.otf` or `.ttc` font files and the `mpdf-config.php`, than the following configuration should be made. 
-
-```
-<?php
-
-$defaultFontConfig = (new Mpdf\Config\FontVariables())->getDefaults();
-$fontData          = $defaultFontConfig['fontdata'];
-
-return [
-    'fontdata'     => $fontData +[
-        'roboto'      => [
-            'R' => 'Roboto-Regular.ttf'
-        ],
-        'fontawesome' => [
-            'R' => 'fontawesome-webfont.ttf'
-        ]
-    ],
-    'default_font' => 'roboto'
-];
-``` 
-*Example: mpdf-config.php*
-
-More Information: https://mpdf.github.io/fonts-languages/fonts-in-mpdf-7-x.html
 
 ## Developers
 

@@ -14,6 +14,11 @@ use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\TwigSupportBundle\Filesystem\TwigTemplateLocator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Class SyndicationConfigElementType.
+ *
+ * @deprecated Use syndication type bundle instead
+ */
 class SyndicationConfigElementType implements ReaderConfigElementTypeInterface
 {
     /**

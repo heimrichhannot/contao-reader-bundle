@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2020 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -312,7 +312,7 @@ $lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigEle
 $lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\VideoConfigElementType::getType()] = 'Video';
 $lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\RedirectionConfigElementType::getType()] = 'Weiterleitung';
 $lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\NavigationConfigElementType::getType()] = 'Navigation';
-$lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\SyndicationConfigElementType::getType()] = 'Syndikationen';
+$lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\SyndicationConfigElementType::getType()] = 'Syndikationen (Veraltet)';
 $lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\ListConfigElementType::getType()] = 'Liste';
 $lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\DeleteConfigElementType::getType()] = 'Löschen';
 $lang['reference'][\HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType::getType()] = 'Kommentar';

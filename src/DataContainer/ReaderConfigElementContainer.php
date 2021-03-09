@@ -9,9 +9,11 @@
 namespace HeimrichHannot\ReaderBundle\DataContainer;
 
 use Contao\Controller;
+use Contao\Message;
 use Contao\StringUtil;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeInterface;
 use HeimrichHannot\ReaderBundle\ConfigElementType\RelatedConfigElementType;
+use HeimrichHannot\ReaderBundle\ConfigElementType\SyndicationConfigElementType;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -88,6 +90,10 @@ class ReaderConfigElementContainer
 
         if ($readConfigElement && $readConfigElement instanceof ConfigElementTypeInterface) {
             $GLOBALS['TL_DCA'][ReaderConfigElementModel::getTable()]['fields']['templateVariable']['eval']['mandatory'] = true;
+        }
+
+        if (\in_array($readerConfigElementModel->type, [SyndicationConfigElementType::getType()])) {
+            Message::addInfo($GLOBALS['TL_LANG']['ERR']['readerBundleConfigElementTypeDeprecated']);
         }
 
         // related
