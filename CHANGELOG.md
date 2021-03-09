@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [1.23.8] - 2021-01-28
+## [1.23.8] - 2021-01-28
 - added noindex,nofollow for print syndication
 
 ## [1.23.7] - 2021-01-28

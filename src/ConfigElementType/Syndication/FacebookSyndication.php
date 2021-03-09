@@ -20,7 +20,7 @@ class FacebookSyndication extends AbstractSyndication
     {
         $link = new DefaultLink();
         $link->setCssClass('facebook');
-        $link->setRel('nofollow');
+        $link->setRel('external nofollow');
         $link->setTitle('huh.reader.element.title.facebook');
         $link->setContent('huh.reader.element.title.facebook');
         $link->setTarget('_blank');

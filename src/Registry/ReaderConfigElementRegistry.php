@@ -53,9 +53,9 @@ class ReaderConfigElementRegistry
     }
 
     /**
-     * Get a list config element type from the registry.
+     * Get a config element type from the registry.
      *
-     * @return array|ReaderConfigElementTypeInterface[]|ConfigElementTypeInterface[]
+     * @return ReaderConfigElementTypeInterface|ConfigElementTypeInterface|null
      */
     public function getReaderConfigElementType(string $type)
     {

@@ -64,7 +64,8 @@ class ReaderConfigElementContainer
      */
     public function onLoadCallback($dc)
     {
-        if (null === ($readerConfigElement = $this->container->get('huh.utils.model')->findModelInstanceByPk('tl_reader_config_element', $dc->id))) {
+        /** @var $readerConfigElementModel ReaderConfigElementModel */
+        if (null === ($readerConfigElementModel = $this->container->get('huh.utils.model')->findModelInstanceByPk('tl_reader_config_element', $dc->id))) {
             return;
         }
 
@@ -74,18 +75,24 @@ class ReaderConfigElementContainer
             return;
         }
 
-        foreach ($configElementTypes as $listConfigElementType) {
-            if ($listConfigElementType instanceof ConfigElementTypeInterface) {
-                $palette = $listConfigElementType->getPalette(static::PREPEND_PALETTE, static::APPEND_PALETTE);
+        foreach ($configElementTypes as $readerConfigElementType) {
+            if ($readerConfigElementType instanceof ConfigElementTypeInterface) {
+                $palette = $readerConfigElementType->getPalette(static::PREPEND_PALETTE, static::APPEND_PALETTE);
             } else {
-                $palette = static::PREPEND_PALETTE.$listConfigElementType->getPalette().static::APPEND_PALETTE;
+                $palette = static::PREPEND_PALETTE.$readerConfigElementType->getPalette().static::APPEND_PALETTE;
             }
-            $GLOBALS['TL_DCA'][ReaderConfigElementModel::getTable()]['palettes'][$listConfigElementType::getType()] = $palette;
+            $GLOBALS['TL_DCA'][ReaderConfigElementModel::getTable()]['palettes'][$readerConfigElementType::getType()] = $palette;
+        }
+
+        $readConfigElement = $this->configElementTypeRegistry->getReaderConfigElementType($readerConfigElementModel->type);
+
+        if ($readConfigElement && $readConfigElement instanceof ConfigElementTypeInterface) {
+            $GLOBALS['TL_DCA'][ReaderConfigElementModel::getTable()]['fields']['templateVariable']['eval']['mandatory'] = true;
         }
 
         // related
-        if ($readerConfigElement->type === RelatedConfigElementType::getType()) {
-            $criteria = StringUtil::deserialize($readerConfigElement->relatedCriteria, true);
+        if ($readerConfigElementModel->type === RelatedConfigElementType::getType()) {
+            $criteria = StringUtil::deserialize($readerConfigElementModel->relatedCriteria, true);
 
             $fields = [];
 
