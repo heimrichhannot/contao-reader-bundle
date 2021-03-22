@@ -8,10 +8,8 @@ $lang = &$GLOBALS['TL_LANG']['tl_reader_config'];
 $lang['tstamp'][0] = 'Änderungsdatum';
 
 // general
-$lang['title'][0]              = 'Titel';
-$lang['title'][1]              = 'Geben Sie hier bitte den Titel ein.';
-$lang['parentReaderConfig'][0] = 'Eltern-Leserkonfiguration';
-$lang['parentReaderConfig'][1] = 'Wählen Sie hier eine Leserkonfiguration aus, von der geerbt werden soll. Sie können dann punktuell einzelne Eigenschaften überschreiben.';
+$lang['title'][0] = 'Titel';
+$lang['title'][1] = 'Geben Sie hier bitte den Titel ein.';
 
 // filter
 $lang['filter'][0] = 'Filter';
@@ -79,12 +77,12 @@ $lang['disable404'][0]                        = '404-Weiterleitung deaktivieren'
 $lang['disable404'][1]                        = 'Wählen Sie diese Option, wenn nicht zu einer 404-Seite weitergeleitet werden soll, wenn kein Item gefunden wurde.';
 
 // misc
-$lang['headTags'][0]          = '&lt;head&gt; Tags';
-$lang['headTags'][1]          = 'Legen Sie fest, welche Inhalte der Instanz in welchen &lt;head&gt; Tag (title, meta, og) überführt werden sollen.';
-$lang['headTags_service'][0]  = 'Tag-Service';
-$lang['headTags_service'][1]  = 'Wählen Sie einen verfügbaren Tag aus.';
-$lang['headTags_pattern'][0]  = 'Pattern';
-$lang['headTags_pattern'][1]  = 'Geben Sie hier ein Text-Muster ein (Beispiel: "%somefield1% %somefield2%").';
+$lang['headTags'][0]         = '&lt;head&gt; Tags';
+$lang['headTags'][1]         = 'Legen Sie fest, welche Inhalte der Instanz in welchen &lt;head&gt; Tag (title, meta, og) überführt werden sollen.';
+$lang['headTags_service'][0] = 'Tag-Service';
+$lang['headTags_service'][1] = 'Wählen Sie einen verfügbaren Tag aus.';
+$lang['headTags_pattern'][0] = 'Pattern';
+$lang['headTags_pattern'][1] = 'Geben Sie hier ein Text-Muster ein (Beispiel: "%somefield1% %somefield2%").';
 
 $lang['setMetaDescriptionByField'][0]   = 'Instanzfeld als Meta-Description setzen';
 $lang['setMetaDescriptionByField'][1]   = 'Wählen Sie diese Option, wenn die Meta-Description dynamisch mit einem Instanzfeld ersetzt werden soll.';
@@ -103,8 +101,14 @@ $lang['itemTemplate'][1] = 'Wählen Sie hier das Template aus, mit dem die einze
  */
 $lang['reference'] = [
     \HeimrichHannot\ReaderBundle\Backend\ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM        => 'Auto-Item',
-    \HeimrichHannot\ReaderBundle\Backend\ReaderConfig::ITEM_RETRIEVAL_MODE_FIELD_CONDITIONS => 'Instanzfeld-Bedingungen'
+    \HeimrichHannot\ReaderBundle\Backend\ReaderConfig::ITEM_RETRIEVAL_MODE_FIELD_CONDITIONS => 'Instanzfeld-Bedingungen',
+    'sortAlphabeticallyConfirm'                                                             => 'Möchten Sie wirklich fortfahren? Diese Aktion kann nur schwer rückgängig gemacht werden.'
 ];
+
+/**
+ * Select
+ */
+$lang['generateSorting'] = 'Alphabetisch sortieren';
 
 /**
  * Legends
@@ -119,10 +123,11 @@ $lang['template_legend'] = 'Template';
 /**
  * Buttons
  */
-$lang['new']        = ['Neue Leserkonfiguration', 'Leserkonfiguration erstellen'];
-$lang['edit']       = ['Leserkonfiguration bearbeiten', 'Leserkonfiguration ID %s bearbeiten'];
-$lang['editheader'] = ['Leserkonfiguration-Einstellungen bearbeiten', 'Leserkonfiguration-Einstellungen ID %s bearbeiten'];
-$lang['copy']       = ['Leserkonfiguration duplizieren', 'Leserkonfiguration ID %s duplizieren'];
-$lang['delete']     = ['Leserkonfiguration löschen', 'Leserkonfiguration ID %s löschen'];
-$lang['toggle']     = ['Leserkonfiguration veröffentlichen', 'Leserkonfiguration ID %s veröffentlichen/verstecken'];
-$lang['show']       = ['Leserkonfiguration Details', 'Leserkonfiguration-Details ID %s anzeigen'];
+$lang['new']                = ['Neue Leserkonfiguration', 'Leserkonfiguration erstellen'];
+$lang['edit']               = ['Leserkonfiguration bearbeiten', 'Leserkonfiguration ID %s bearbeiten'];
+$lang['editheader']         = ['Leserkonfiguration-Einstellungen bearbeiten', 'Leserkonfiguration-Einstellungen ID %s bearbeiten'];
+$lang['copy']               = ['Leserkonfiguration duplizieren', 'Leserkonfiguration ID %s duplizieren'];
+$lang['delete']             = ['Leserkonfiguration löschen', 'Leserkonfiguration ID %s löschen'];
+$lang['toggle']             = ['Leserkonfiguration veröffentlichen', 'Leserkonfiguration ID %s veröffentlichen/verstecken'];
+$lang['show']               = ['Leserkonfiguration Details', 'Leserkonfiguration-Details ID %s anzeigen'];
+$lang['sortAlphabetically'] = ['Alphabetisch sortieren', 'Leserkonfigurationeb alphabetisch sortieren'];

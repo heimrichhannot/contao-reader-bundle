@@ -147,7 +147,7 @@ class ReaderConfigElement
 
                 $readerConfig = System::getContainer()
                     ->get('huh.utils.model')
-                    ->findRootParentRecursively('parentReaderConfig', 'tl_reader_config', $readerConfig);
+                    ->findRootParentRecursively('pid', 'tl_reader_config', $readerConfig);
 
                 if ($readerConfig->dataContainer) {
                     foreach (['redirectConditions', 'redirectParams'] as $field) {

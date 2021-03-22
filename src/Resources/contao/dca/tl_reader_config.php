@@ -34,19 +34,30 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
         'label' => [
             'fields' => ['title'],
             'format' => '%s',
-            'label_callback' => ['huh.reader.backend.reader-config', 'generateLabel'],
         ],
-        'sorting' => [
-            'mode' => 1,
-            'fields' => ['title'],
-            'headerFields' => ['title'],
-            'panelLayout' => 'filter;sort,search,limit',
+        'sorting'           => [
+            'mode'                  => 5,
+            'fields'                => ['title'],
+            'headerFields'          => ['title'],
+            'panelLayout'           => 'filter;sort,search,limit',
+            'paste_button_callback' => [\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigContainer::class, 'pasteReaderConfig'],
         ],
         'global_operations' => [
-            'all' => [
-                'label' => &$GLOBALS['TL_LANG']['MSC']['all'],
-                'href' => 'act=select',
-                'class' => 'header_edit_all',
+            'toggleNodes' => [
+                'label' => &$GLOBALS['TL_LANG']['MSC']['toggleAll'],
+                'href'  => 'ptg=all',
+                'class' => 'header_toggle'
+            ],
+            'sortAlphabetically' => [
+                'label' => &$GLOBALS['TL_LANG']['tl_reader_config']['sortAlphabetically'],
+                'href'  => 'key=sort_alphabetically',
+                'class' => 'header_toggle',
+                'button_callback' => [\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigContainer::class, 'sortAlphabetically'],
+            ],
+            'all'         => [
+                'label'      => &$GLOBALS['TL_LANG']['MSC']['all'],
+                'href'       => 'act=select',
+                'class'      => 'header_edit_all',
                 'attributes' => 'onclick="Backend.getScrollOffset();"',
             ],
         ],
@@ -67,6 +78,18 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
                 'label' => &$GLOBALS['TL_LANG']['tl_reader_config']['copy'],
                 'href' => 'act=copy',
                 'icon' => 'copy.gif',
+            ],
+            'copyChilds' => [
+                'label'      => &$GLOBALS['TL_LANG']['tl_reader_config']['copyChilds'],
+                'href'       => 'act=paste&amp;mode=copy&amp;childs=1',
+                'icon'       => 'copychilds.gif',
+                'attributes' => 'onclick="Backend.getScrollOffset()"'
+            ],
+            'cut'        => [
+                'label'      => &$GLOBALS['TL_LANG']['tl_reader_config']['cut'],
+                'href'       => 'act=paste&amp;mode=cut',
+                'icon'       => 'cut.svg',
+                'attributes' => 'onclick="Backend.getScrollOffset()"'
             ],
             'delete' => [
                 'label' => &$GLOBALS['TL_LANG']['tl_reader_config']['delete'],
@@ -94,7 +117,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'overviewMode',
             'customJumpToOverviewLabel',
         ],
-        'default' => '{general_legend},title,parentReaderConfig;'
+        'default' => '{general_legend},title;'
             .'{config_legend},dataContainer,filter,manager,item,limitFormattedFields,itemRetrievalMode,hideUnpublishedItems;'
             .'{security_legend},addShowConditions;'.'{jumpto_legend},addFieldDependentRedirect,addOverview,disable404;'
             .'{misc_legend},headTags,addDcMultilingualSupport;'.'{template_legend},itemTemplate;',
@@ -141,11 +164,12 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'eval' => ['mandatory' => true, 'tl_class' => 'w50', 'notOverridable' => true],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
-        'parentReaderConfig' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_reader_config']['parentReaderConfig'],
-            'exclude' => true,
-            'filter' => true,
-            'inputType' => 'select',
+        'pid'                         => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_reader_config']['pid'],
+            'exclude'          => true,
+            'filter'           => true,
+            'inputType'        => 'select',
+            'sorting'          => true,
             'options_callback' => function (DataContainer $dc) {
                 return \Contao\System::getContainer()->get('huh.reader.choice.parent-reader-config')->getCachedChoices(
                     [
@@ -153,8 +177,8 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
                     ]
                 );
             },
-            'eval' => ['tl_class' => 'w50', 'includeBlankOption' => true, 'chosen' => true, 'notOverridable' => true, 'submitOnChange' => true],
-            'sql' => "int(10) unsigned NOT NULL default '0'",
+            'eval'             => ['tl_class' => 'w50', 'includeBlankOption' => true, 'chosen' => true, 'notOverridable' => true, 'submitOnChange' => true],
+            'sql'              => "int(10) unsigned NOT NULL default '0'",
         ],
         // config
         'dataContainer' => [

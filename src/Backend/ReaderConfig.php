@@ -55,7 +55,7 @@ class ReaderConfig
             $dca = &$GLOBALS['TL_DCA']['tl_reader_config'];
 
             $readerConfig = $this->modelUtil->findRootParentRecursively(
-                'parentReaderConfig', 'tl_reader_config', $readerConfig
+                'pid', 'tl_reader_config', $readerConfig
             );
 
             if ($readerConfig->dataContainer) {
@@ -101,7 +101,7 @@ class ReaderConfig
     public function flattenPaletteForSubEntities(DataContainer $dc)
     {
         if (null !== ($readerConfig = $this->readerConfigRegistry->findByPk($dc->id))) {
-            if ($readerConfig->parentReaderConfig) {
+            if ($readerConfig->pid) {
                 $dca = &$GLOBALS['TL_DCA']['tl_reader_config'];
 
                 $overridableFields = [];
@@ -124,7 +124,7 @@ class ReaderConfig
 
     public function edit($row, $href, $label, $title, $icon, $attributes)
     {
-        if ($row['parentReaderConfig']) {
+        if ($row['pid']) {
             return '';
         }
 
@@ -163,8 +163,8 @@ class ReaderConfig
      */
     public function generateLabel($row, $label, $dca, $attributes)
     {
-        if ($row['parentReaderConfig']) {
-            if (null !== ($readerConfig = $this->readerConfigRegistry->findByPk($row['parentReaderConfig']))) {
+        if ($row['pid']) {
+            if (null !== ($readerConfig = $this->readerConfigRegistry->findByPk($row['pid']))) {
                 $label .= '<span style="padding-left:3px;color:#b3b3b3;">['.$GLOBALS['TL_LANG']['MSC']['readerBundle']['parentConfig'].': '.$readerConfig->title.']</span>';
             }
         }

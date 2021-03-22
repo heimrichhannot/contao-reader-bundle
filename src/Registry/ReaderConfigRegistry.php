@@ -116,7 +116,7 @@ class ReaderConfigRegistry
         }
 
         $parentReaderConfigs = $this->modelUtil->findParentsRecursively(
-            'parentReaderConfig',
+            'pid',
             'tl_reader_config',
             $readerConfig
         );
@@ -144,18 +144,18 @@ class ReaderConfigRegistry
 
         $readerConfig->rootId = $readerConfig->id;
 
-        if (!$readerConfig->parentReaderConfig) {
+        if (!$readerConfig->pid) {
             return $readerConfig;
         }
 
         $computedReaderConfig = new ReaderConfigModel();
 
         $parentReaderConfigs = $this->modelUtil->findParentsRecursively(
-            'parentReaderConfig', 'tl_reader_config', $readerConfig
+            'pid', 'tl_reader_config', $readerConfig
         );
 
         $rootReaderConfig = $this->modelUtil->findRootParentRecursively(
-            'parentReaderConfig', 'tl_reader_config', $readerConfig
+            'pid', 'tl_reader_config', $readerConfig
         );
 
         foreach ($GLOBALS['TL_DCA']['tl_reader_config']['fields'] as $field => $data) {

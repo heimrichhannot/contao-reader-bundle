@@ -58,7 +58,7 @@ class ReaderConfigUtil
         }
 
         $readerConfig = $this->modelUtil->findRootParentRecursively(
-            'parentReaderConfig', 'tl_reader_config', $readerConfig
+            'pid', 'tl_reader_config', $readerConfig
         );
 
         return $this->fieldChoice->getCachedChoices(
@@ -77,7 +77,7 @@ class ReaderConfigUtil
         }
 
         $readerConfig = $this->modelUtil->findRootParentRecursively(
-            'parentReaderConfig', 'tl_reader_config', $readerConfig
+            'pid', 'tl_reader_config', $readerConfig
         );
 
         return $this->fieldChoice->getCachedChoices(
@@ -95,7 +95,7 @@ class ReaderConfigUtil
         }
 
         $readerConfig = $this->modelUtil->findRootParentRecursively(
-            'parentReaderConfig', 'tl_reader_config', $readerConfig
+            'pid', 'tl_reader_config', $readerConfig
         );
 
         return $this->fieldChoice->getCachedChoices(

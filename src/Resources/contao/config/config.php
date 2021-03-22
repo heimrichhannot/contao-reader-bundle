@@ -21,6 +21,11 @@ array_insert(
     ]
 );
 
+/**
+ * Hooks
+ */
+$GLOBALS['TL_HOOKS']['sqlGetFromDca']['huh_reader'] = [\HeimrichHannot\ReaderBundle\EventListener\Contao\SqlGetFromDcaListener::class, '__invoke'];
+
 /*
  * Permissions
  */
