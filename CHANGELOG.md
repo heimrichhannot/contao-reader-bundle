@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.25.1] - 2021-03-25
+
+- fixed missing sorting field
+
 ## [1.25.0] - 2021-03-22
 
 - added a new visual presentation for nested reader configurations which should be way easier to read

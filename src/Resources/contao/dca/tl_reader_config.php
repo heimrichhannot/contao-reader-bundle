@@ -146,6 +146,10 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'eval' => ['notOverridable' => true],
             'sql' => "int(10) unsigned NOT NULL default '0'",
         ],
+        'sorting'                     => [
+            'eval' => ['notOverridable' => true],
+            'sql'  => "int(10) unsigned NOT NULL default '0'"
+        ],
         'dateAdded' => [
             'label' => &$GLOBALS['TL_LANG']['MSC']['dateAdded'],
             'sorting' => true,
