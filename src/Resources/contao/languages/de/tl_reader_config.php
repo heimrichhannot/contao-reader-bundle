@@ -92,6 +92,10 @@ $lang['metaDescriptionFieldPattern'][1] = 'Geben Sie hier ein Text-Muster Meta-D
 $lang['addDcMultilingualSupport'][0] = 'Support für DC_Multilingual hinzufügen';
 $lang['addDcMultilingualSupport'][1] = 'Wählen Sie diese Option, die verknüpfte Entität durch das Bundle "terminal42/contao-DC_Multilingual" übersetzbar ist.';
 
+$lang['addMultilingualFieldsSupport'][0] = 'Support für "Multilingual Fields Bundle" hinzufügen';
+$lang['addMultilingualFieldsSupport'][1] = 'Wählen Sie diese Option, die verknüpfte Entität durch das Bundle "heimrichhannot/contao-multilingual-fields-bundle" übersetzbar ist.';
+
+
 // template
 $lang['itemTemplate'][0] = 'Instanz-Template';
 $lang['itemTemplate'][1] = 'Wählen Sie hier das Template aus, mit dem die einzelnen Instanzen gerendert werden sollen.';

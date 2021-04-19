@@ -120,7 +120,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
         'default' => '{general_legend},title;'
             .'{config_legend},dataContainer,filter,manager,item,limitFormattedFields,itemRetrievalMode,hideUnpublishedItems;'
             .'{security_legend},addShowConditions;'.'{jumpto_legend},addFieldDependentRedirect,addOverview,disable404;'
-            .'{misc_legend},headTags,addDcMultilingualSupport;'.'{template_legend},itemTemplate;',
+            .'{misc_legend},headTags,addDcMultilingualSupport,addMultilingualFieldsSupport;'.'{template_legend},itemTemplate;',
     ],
     'subpalettes' => [
         'limitFormattedFields' => 'formattedFields',
@@ -459,7 +459,7 @@ $dca = &$GLOBALS['TL_DCA']['tl_reader_config'];
 );
 
 if (System::getContainer()->get('huh.utils.container')->isBundleActive('Terminal42\DcMultilingualBundle\Terminal42DcMultilingualBundle')) {
-    $dca['fields'] += [
+    $dca['fields'] = array_merge(is_array($dca['fields']) ? $dca['fields'] : [], [
         'addDcMultilingualSupport' => [
             'label' => &$GLOBALS['TL_LANG']['tl_reader_config']['addDcMultilingualSupport'],
             'exclude' => true,
@@ -467,7 +467,19 @@ if (System::getContainer()->get('huh.utils.container')->isBundleActive('Terminal
             'eval' => ['tl_class' => 'w50'],
             'sql' => "char(1) NOT NULL default ''",
         ],
-    ];
+    ]);
+}
+
+if (class_exists('HeimrichHannot\MultilingualFieldsBundle\HeimrichHannotMultilingualFieldsBundle')) {
+    $dca['fields'] = array_merge(is_array($dca['fields']) ? $dca['fields'] : [], [
+        'addMultilingualFieldsSupport' => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_reader_config']['addMultilingualFieldsSupport'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => ['tl_class' => 'w50'],
+            'sql'       => "char(1) NOT NULL default ''",
+        ],
+    ]);
 }
 
 \HeimrichHannot\ReaderBundle\Backend\ReaderConfig::addOverridableFields();

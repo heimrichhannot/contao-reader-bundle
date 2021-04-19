@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.26.0] - 2021-04-19
+
+- added optional support for [heimrichhannot/contao-multilingual-fields-bundle](https://github.com/heimrichhannot/contao-multilingual-fields-bundle)
+
 ## [1.25.1] - 2021-03-25
 
 - fixed missing sorting field

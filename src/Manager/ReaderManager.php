@@ -618,14 +618,67 @@ class ReaderManager implements ReaderManagerInterface
     public function isDcMultilingualUtilsActive(ReaderConfigModel $readerConfig, array $dca, string $table)
     {
         return $GLOBALS['TL_LANGUAGE'] !== $dca['config']['fallbackLang']
-               && $readerConfig->addDcMultilingualSupport
-               && $this->containerUtil->isBundleActive('HeimrichHannot\DcMultilingualUtilsBundle\ContaoDcMultilingualUtilsBundle')
-               && System::getContainer()->get('huh.utils.dca')->isDcMultilingual($table);
+            && $readerConfig->addDcMultilingualSupport
+            && $this->containerUtil->isBundleActive('HeimrichHannot\DcMultilingualUtilsBundle\ContaoDcMultilingualUtilsBundle')
+            && System::getContainer()->get('huh.utils.dca')->isDcMultilingual($table);
+    }
+
+    public function isMultilingualFieldsActive(ReaderConfigModel $readerConfig, string $table)
+    {
+        if (!$readerConfig->addMultilingualFieldsSupport) {
+            return false;
+        }
+
+        $config = System::getContainer()->getParameter('huh_multilingual_fields');
+
+        return isset($config['data_containers'][$table]);
     }
 
     public function isNonFallbackLanguage(array $dca)
     {
         return $GLOBALS['TL_LANGUAGE'] !== $dca['config']['fallbackLang'];
+    }
+
+    public function addMultilingualFieldsSupport(ReaderConfigModel $readerConfig, QueryBuilder $queryBuilder)
+    {
+        $dca = &$GLOBALS['TL_DCA'][$readerConfig->dataContainer];
+        $dbFields = $this->database->getFieldNames($readerConfig->dataContainer);
+
+        if ($this->isMultilingualFieldsActive($readerConfig, $readerConfig->dataContainer)) {
+            $fallbackLanguage = System::getContainer()->getParameter('huh_multilingual_fields')['fallback_language'];
+
+            if ($GLOBALS['TL_LANGUAGE'] !== $fallbackLanguage) {
+                // compute fields
+                $fieldNames = [];
+
+                foreach ($dca['fields'] as $field => $data) {
+                    if (!isset($data['sql']) || isset($data['eval']['translatedField'])) {
+                        continue;
+                    }
+
+                    if (isset($data['eval']['isTranslatedField'])) {
+                        $selectorField = $data['eval']['translationConfig'][$GLOBALS['TL_LANGUAGE']]['selector'];
+                        $translationField = $data['eval']['translationConfig'][$GLOBALS['TL_LANGUAGE']]['field'];
+
+                        $fieldNames[] = "IF($readerConfig->dataContainer.$selectorField=1, $readerConfig->dataContainer.$translationField, $readerConfig->dataContainer.$field) AS '$field'";
+                    } else {
+                        $fieldNames[] = $readerConfig->dataContainer.'.'.$field;
+                    }
+                }
+
+                $fields = implode(', ', $fieldNames);
+            } else {
+                $fields = implode(', ', array_map(function ($field) use ($readerConfig) {
+                    return $readerConfig->dataContainer.'.'.$field;
+                }, $dbFields));
+            }
+        } else {
+            $fields = implode(', ', array_map(function ($field) use ($readerConfig) {
+                return $readerConfig->dataContainer.'.'.$field;
+            }, $dbFields));
+        }
+
+        return $fields;
     }
 
     /**
@@ -733,6 +786,8 @@ class ReaderManager implements ReaderManagerInterface
             $queryBuilder = $this->entityFilter->computeQueryBuilderCondition($queryBuilder, $itemConditions, $readerConfig->dataContainer);
 
             $fields = $this->addDcMultilingualSupport($readerConfig, $queryBuilder);
+            $fields = $this->addMultilingualFieldsSupport($readerConfig, $queryBuilder);
+
             $queryBuilder->select($fields);
 
             $item = $queryBuilder->execute()->fetch() ?: null;
