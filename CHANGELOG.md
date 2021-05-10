@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.26.1] - 2021-05-10
+
+- allow twig support bundle ^1.0
+
 ## [1.26.0] - 2021-04-19
 
 - added optional support for [heimrichhannot/contao-multilingual-fields-bundle](https://github.com/heimrichhannot/contao-multilingual-fields-bundle)
