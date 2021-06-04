@@ -56,6 +56,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, ExtensionP
     {
         $loader->load('@HeimrichHannotContaoReaderBundle/Resources/config/listener.yml');
         $loader->load('@HeimrichHannotContaoReaderBundle/Resources/config/services.yml');
+        $loader->load('@HeimrichHannotContaoReaderBundle/Resources/config/commands.yml');
         $loader->load(function (ContainerBuilder $container) use ($loader) {
             if ($container->hasParameter('kernel.bundles') && \in_array('HeimrichHannot\ListBundle\HeimrichHannotContaoListBundle', $container->getParameter('kernel.bundles'))) {
                 $loader->load('@HeimrichHannotContaoReaderBundle/Resources/config/config_list.yml');
