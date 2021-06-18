@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.27.1] - 2021-06-18
+
+- fixed optional support for [heimrichhannot/contao-multilingual-fields-bundle](https://github.com/heimrichhannot/contao-multilingual-fields-bundle)
+
 ## [1.27.0] - 2021-06-04
 
 - added new symfony command `huh-reader:make` for easier creating reader modules containing a reader config and a filter
