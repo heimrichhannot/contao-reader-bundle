@@ -642,6 +642,7 @@ class ReaderManager implements ReaderManagerInterface
     public function addMultilingualFieldsSupport(ReaderConfigModel $readerConfig, QueryBuilder $queryBuilder)
     {
         $dca = &$GLOBALS['TL_DCA'][$readerConfig->dataContainer];
+        $dbFields = $this->database->getFieldNames($readerConfig->dataContainer);
 
         $fallbackLanguage = System::getContainer()->getParameter('huh_multilingual_fields')['fallback_language'];
 
