@@ -698,7 +698,7 @@ class ReaderManager implements ReaderManagerInterface
 
         $dca = &$GLOBALS['TL_DCA'][$readerConfig->dataContainer];
 
-        if (Config::get('useAutoItem') && ($autoItem = \Input::get('auto_item'))) {
+        if (Config::get('useAutoItem') && ($autoItem = Input::get('auto_item'))) {
             // tell contao that the auto_item parameter has been used -> else a UnusedArgumentsException is thrown resulting in a 404 response
             Input::get('auto_item');
 
@@ -752,6 +752,28 @@ class ReaderManager implements ReaderManagerInterface
                 $fields = $this->addDcMultilingualSupport($readerConfig, $queryBuilder);
             } elseif ($this->isMultilingualFieldsActive($readerConfig, $readerConfig->dataContainer)) {
                 $fields = $this->addMultilingualFieldsSupport($readerConfig, $queryBuilder);
+
+                $mfConfig = System::getContainer()->getParameter('huh_multilingual_fields');
+
+                // multilingual alias?
+                if ($GLOBALS['TL_LANGUAGE'] !== $mfConfig['fallback_language']) {
+                    $translatableFields = System::getContainer()->get('HeimrichHannot\MultilingualFieldsBundle\Util\MultilingualFieldsUtil')->getTranslatableFields(
+                        $readerConfig->dataContainer
+                    );
+
+                    if (\in_array($field, $translatableFields)) {
+                        $instance = $this->database->prepare('SELECT * FROM '.$readerConfig->dataContainer.' WHERE '.
+                            $readerConfig->dataContainer.'.'.$GLOBALS['TL_LANGUAGE'].'_'.$field.'=? AND '.
+                            $readerConfig->dataContainer.'.'.$GLOBALS['TL_LANGUAGE'].'_translate_'.$field.'=1')->limit(1)->execute($autoItem);
+
+                        if ($instance->numRows > 0) {
+                            $autoItem = $instance->{$field};
+
+                            // set normal alias
+                            Input::setGet('auto_item', $instance->{$field});
+                        }
+                    }
+                }
             } else {
                 $fields = implode(', ', array_map(function ($field) use ($readerConfig) {
                     return $readerConfig->dataContainer.'.'.$field;
