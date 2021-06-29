@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.29.0] - 2021-06-29
+
+- added Polish translations
+
 ## [1.28.0] - 2021-06-24
 
 - added optional support for multilingual aliases based on [heimrichhannot/contao-multilingual-fields-bundle](https://github.com/heimrichhannot/contao-multilingual-fields-bundle)

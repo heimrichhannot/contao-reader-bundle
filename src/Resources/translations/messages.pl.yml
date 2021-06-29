@@ -1,0 +1,36 @@
+# messages
+huh.reader.messages.permissionDenied: Dostęp do tych danych jest zablokowany.
+# Config element labels
+huh.reader.element.label.previous.default: Poprzedni artykuł
+huh.reader.element.label.next.default: Następny artykuł
+# Config element titles
+huh.reader.element.title.previous.default: Przejdź do poprzedniego artykułu
+huh.reader.element.title.next.default: Przejdź do następnego artykułu
+huh.reader.element.title.facebook: Udostępnij na Facebooku
+huh.reader.element.title.twitter: Udostępnij na Twitterze
+huh.reader.element.title.googleplus: Udostępnij na Google+
+huh.reader.element.title.linkedin: Udostępnij na LinkedIn
+huh.reader.element.title.xing: Udostępnij na Xing
+huh.reader.element.title.tumblr: Udostępnij na tumblr
+huh.reader.element.title.pinterest: Udostępnij na Pintereście
+huh.reader.element.title.reddit: Udostępnij na Reddicie
+huh.reader.element.title.whatsapp: Udostępnij na WhatsAppie
+huh.reader.element.title.mail: Wyślij e-mailem
+huh.reader.element.title.feedback: Wyślij opinię e-mailem
+huh.reader.element.title.pdf: Pobierz jako PDF
+huh.reader.element.title.print: Wydrukuj stronę
+huh.reader.element.title.ics: Utwórz wpis w kalendarzu z pliku ICS
+# Config element mail subject labels
+huh.reader.element.mail.subject.syndication.default: 'Polecenie artykułu: %title%'
+huh.reader.element.mail.subject.syndication.recommended_post: 'Polecony artykuł: %title%'
+# Config element mail subject labels
+huh.reader.element.mail.body.syndication.default: 'Zobacz interesujący artykuł: %url%'
+huh.reader.element.mail.body.syndication.plain: '%url%'
+# Config element feedback subject labels
+huh.reader.element.feedback.subject.syndication.default: 'Opinia: %title%'
+# Config element feedback subject labels
+huh.reader.element.feedback.body.syndication.default: '%url%'
+# Misc
+huh.reder.misc.contact: Kontakt
+# label
+huh.reader.label.overview.default: Do okna startowego
