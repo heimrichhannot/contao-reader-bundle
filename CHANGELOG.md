@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.30.0] - 2021-09-20
+- Changed: allow php 8
+
 ## [1.29.1] - 2021-09-15
 
 - Fixed: preview mode for contao 4.9
