@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.30.1] - 2021-11-01
+- Fixed: formatted return values of config element type processed by list bundle formatting
+
 ## [1.30.0] - 2021-09-20
 - Changed: allow php 8
 

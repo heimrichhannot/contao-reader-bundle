@@ -179,27 +179,29 @@ class DefaultItem implements ItemInterface, \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function setFormattedValue(string $name, $value): void
+    public function setFormattedValue(string $name, $value, bool $formatted = false): void
     {
-        $dca = &$GLOBALS['TL_DCA'][$this->_manager->getReaderConfig()->dataContainer];
+        if (!$formatted) {
+            $dca = &$GLOBALS['TL_DCA'][$this->_manager->getReaderConfig()->dataContainer];
 
-        if (!$this->dc) {
-            $this->dc = DC_Table_Utils::createFromModelData($this->getRaw(), $this->getDataContainer());
-        }
+            if (!$this->dc) {
+                $this->dc = DC_Table_Utils::createFromModelData($this->getRaw(), $this->getDataContainer());
+            }
 
-        $fields = $this->getManager()->getReaderConfig()->limitFormattedFields ? StringUtil::deserialize($this->getManager()->getReaderConfig()->formattedFields, true) : (isset($dca['fields']) && \is_array($dca['fields']) ? array_keys($dca['fields']) : []);
+            $fields = $this->getManager()->getReaderConfig()->limitFormattedFields ? StringUtil::deserialize($this->getManager()->getReaderConfig()->formattedFields, true) : (isset($dca['fields']) && \is_array($dca['fields']) ? array_keys($dca['fields']) : []);
 
-        if (\in_array($name, $fields)) {
-            $this->dc->field = $name;
+            if (\in_array($name, $fields)) {
+                $this->dc->field = $name;
 
-            $value = $this->_manager->getFormUtil()->prepareSpecialValueForOutput($name, $value, $this->dc);
+                $value = $this->_manager->getFormUtil()->prepareSpecialValueForOutput($name, $value, $this->dc);
 
-            // anti-xss: escape everything besides some tags
-            $value = $this->_manager->getFormUtil()->escapeAllHtmlEntities($this->getManager()->getReaderConfig()->dataContainer, $name, $value);
+                // anti-xss: escape everything besides some tags
+                $value = $this->_manager->getFormUtil()->escapeAllHtmlEntities($this->getManager()->getReaderConfig()->dataContainer, $name, $value);
 
-            // overwrite existing property with formatted value
-            if (property_exists($this, $name)) {
-                $this->{$name} = $value;
+                // overwrite existing property with formatted value
+                if (property_exists($this, $name)) {
+                    $this->{$name} = $value;
+                }
             }
         }
 
@@ -281,7 +283,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
 
                         switch ($result->getType()) {
                             case ConfigElementResult::TYPE_FORMATTED_VALUE:
-                                $this->setFormattedValue($readerConfigElement->templateVariable, $result->getValue());
+                                $this->setFormattedValue($readerConfigElement->templateVariable, $result->getValue(), true);
 
                                 break;
 
