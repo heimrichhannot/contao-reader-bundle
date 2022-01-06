@@ -6,6 +6,8 @@
  * @license LGPL-3.0-or-later
  */
 
+use HeimrichHannot\ReaderBundle\Backend\ReaderConfig;
+
 \Contao\Controller::loadDataContainer('tl_module');
 \Contao\System::loadLanguageFile('tl_module');
 
@@ -123,18 +125,16 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             .'{misc_legend},headTags,addDcMultilingualSupport,addMultilingualFieldsSupport;'.'{template_legend},itemTemplate;',
     ],
     'subpalettes' => [
-        'limitFormattedFields' => 'formattedFields',
-        'itemRetrievalMode_'
-        .\HeimrichHannot\ReaderBundle\Backend\ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM => 'itemRetrievalAutoItemField',
-        'itemRetrievalMode_'
-        .\HeimrichHannot\ReaderBundle\Backend\ReaderConfig::ITEM_RETRIEVAL_MODE_FIELD_CONDITIONS => 'itemRetrievalFieldConditions',
-        'hideUnpublishedItems' => 'publishedField,invertPublishedField,addStartAndStop',
-        'addStartAndStop' => 'startField,stopField',
-        'addShowConditions' => 'showFieldConditions',
-        'addFieldDependentRedirect' => 'fieldDependentJumpTo,redirectFieldConditions',
-        'addOverview' => 'overviewMode,customJumpToOverviewLabel',
-        'overviewMode_jumpTo' => 'jumpToOverview',
-        'customJumpToOverviewLabel' => 'jumpToOverviewLabel',
+        'limitFormattedFields'                               => 'formattedFields',
+        'itemRetrievalMode_'.ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM        => 'itemRetrievalAutoItemField',
+        'itemRetrievalMode_'.ReaderConfig::ITEM_RETRIEVAL_MODE_FIELD_CONDITIONS => 'itemRetrievalFieldConditions',
+        'hideUnpublishedItems'                               => 'publishedField,invertPublishedField,addStartAndStop',
+        'addStartAndStop'                                    => 'startField,stopField',
+        'addShowConditions'                                  => 'showFieldConditions',
+        'addFieldDependentRedirect'                          => 'fieldDependentJumpTo,redirectFieldConditions',
+        'addOverview'                                        => 'overviewMode,customJumpToOverviewLabel',
+        'overviewMode_jumpTo'                                => 'jumpToOverview',
+        'customJumpToOverviewLabel'                          => 'jumpToOverviewLabel',
     ],
     'fields' => [
         'id' => [
@@ -258,7 +258,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'exclude' => true,
             'filter' => true,
             'inputType' => 'select',
-            'options' => \HeimrichHannot\ReaderBundle\Backend\ReaderConfig::ITEM_RETRIEVAL_MODES,
+            'options' => ReaderConfig::ITEM_RETRIEVAL_MODES,
             'reference' => &$GLOBALS['TL_LANG']['tl_reader_config']['reference'],
             'eval' => ['tl_class' => 'w50 clr', 'mandatory' => true, 'includeBlankOption' => true, 'submitOnChange' => true],
             'sql' => "varchar(64) NOT NULL default ''",
@@ -482,4 +482,4 @@ if (class_exists('HeimrichHannot\MultilingualFieldsBundle\HeimrichHannotMultilin
     ]);
 }
 
-\HeimrichHannot\ReaderBundle\Backend\ReaderConfig::addOverridableFields();
+ReaderConfig::addOverridableFields();

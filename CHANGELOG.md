@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.30.2] - 2022-01-06
+- Fixed: disable 404 option not working
+
 ## [1.30.1] - 2021-11-01
 - Fixed: formatted return values of config element type processed by list bundle formatting
 

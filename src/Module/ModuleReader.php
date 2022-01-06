@@ -104,9 +104,12 @@ class ModuleReader extends Module
             $this->manager->triggerOnLoadCallbacks();
         }
 
-        // throw a 404 if no item found
-        if (null === $this->item && !$this->readerConfig->disable404) {
-            throw new PageNotFoundException('Page not found: '.Environment::get('uri'));
+        if (null === $this->item) {
+            if ($this->readerConfig->disable404) {
+                return '';
+            } else {
+                throw new PageNotFoundException('Page not found: '.Environment::get('uri'));
+            }
         }
 
         return parent::generate();
@@ -130,6 +133,10 @@ class ModuleReader extends Module
 
         $this->cssID = $cssID;
 
+        if (null === $this->item) {
+            return;
+        }
+
         if (!$this->manager->checkPermission()) {
             StatusMessage::addError($this->translator->trans('huh.reader.messages.permissionDenied'), $this->id);
             $this->Template->invalid = true;
@@ -141,8 +148,6 @@ class ModuleReader extends Module
         $this->manager->setHeadTags();
         $this->manager->setCanonicalLink();
 
-        if (null !== $this->item) {
-            $this->Template->item = $this->manager->getItem()->parse();
-        }
+        $this->Template->item = $this->manager->getItem()->parse();
     }
 }
