@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.30.3] - 2022-01-06
+- Fixed: some missing english translations
+
 ## [1.30.2] - 2022-01-06
 - Fixed: disable 404 option not working
 

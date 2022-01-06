@@ -3,3 +3,19 @@ huh.reder.misc.contact: Contact
 
 # label
 huh.reader.label.overview.default: Back to overview
+
+huh.reader.element.title.previous.default: Go to previous article
+huh.reader.element.title.next.default: Go to next article
+huh.reader.element.title.facebook: Share on Facebook
+huh.reader.element.title.twitter: Share on Twitter
+huh.reader.element.title.linkedin: Share on LinkedIn
+huh.reader.element.title.xing: Share on Xing
+huh.reader.element.title.tumblr: Share on tumblr
+huh.reader.element.title.pinterest: Share on Pinterest
+huh.reader.element.title.reddit: Share on Reddit
+huh.reader.element.title.whatsapp: Share on WhatsApp
+huh.reader.element.title.mail: Share by email
+huh.reader.element.title.feedback: Send feedback by email
+huh.reader.element.title.pdf: Download as PDF
+huh.reader.element.title.print: Print this page
+huh.reader.element.title.ics: Create calendar entry from ICS file
