@@ -143,6 +143,8 @@ services:
   HeimrichHannot\ReaderBundle\ConfigElementType\RedirectionConfigElementType: ~
   HeimrichHannot\ReaderBundle\ConfigElementType\DeleteConfigElementType: ~
   HeimrichHannot\ReaderBundle\ConfigElementType\NavigationConfigElementType: ~
-  HeimrichHannot\ReaderBundle\ConfigElementType\SubmissionFormConfigElementType: ~
   HeimrichHannot\ReaderBundle\ConfigElementType\RelatedConfigElementType: ~
   HeimrichHannot\ReaderBundle\ConfigElementType\TagsConfigElementType: ~
+  HeimrichHannot\ReaderBundle\ConfigElementType\SubmissionFormConfigElementType:
+    tags: [ 'huh.reader.config_element_type' ]
+    autowire: true

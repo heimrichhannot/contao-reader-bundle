@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.30.4] - 2022-01-10
+- Changed: submission config element to use generic interface
+- Added: template selection and standard values for submission config element
+
 ## [1.30.3] - 2022-01-06
 - Fixed: some missing english translations
 

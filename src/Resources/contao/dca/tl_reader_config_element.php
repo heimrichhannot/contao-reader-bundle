@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2020 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -1048,8 +1048,49 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
                 return System::getContainer()->get('huh.reader.util.reader-config-element-util')->getFields($dc);
             },
             'exclude' => true,
-            'eval' => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
+            'eval' => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50 autoheight'],
             'sql' => "varchar(64) NOT NULL default ''",
+        ],
+        'submissionFormTemplate' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_reader_config_element']['submissionFormTemplate'],
+            'exclude' => true,
+            'inputType' => 'select',
+            'options_callback' => function () {
+                return \Contao\System::getContainer()->get(HeimrichHannot\UtilsBundle\Choice\TwigTemplateChoice::class)->getCachedChoices(['submission_form_']);
+            },
+            'eval' => ['tl_class' => 'w50', 'includeBlankOption' => true, 'mandatory' => true, 'chosen' => true],
+            'sql' => "varchar(64) NOT NULL default ''",
+        ],
+        'submissionDefaultValues' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_reader_config_element']['submissionDefaultValues'],
+            'inputType' => 'multiColumnEditor',
+            'eval' => [
+                'tl_class' => 'long clr',
+                'multiColumnEditor' => [
+                    'minRowCount' => 0,
+                    'fields' => [
+                        'submissionField' => [
+                            'label' => &$GLOBALS['TL_LANG']['tl_reader_config_element']['submissionDefaultValues']['submissionField'],
+                            'inputType' => 'select',
+                            'options_callback' => function () {
+                                return System::getContainer()->get(\HeimrichHannot\UtilsBundle\Choice\FieldChoice::class)->getCachedChoices([
+                                    'dataContainer' => 'tl_submission',
+                                ]);
+                            },
+                            'eval' => ['style' => 'width: 400px', 'mandatory' => true, 'includeBlankOption' => true],
+                        ],
+                        'entityField' => [
+                            'label' => &$GLOBALS['TL_LANG']['tl_reader_config_element']['submissionDefaultValues']['entityField'],
+                            'inputType' => 'select',
+                            'options_callback' => function (DataContainer $dc) {
+                                return System::getContainer()->get('huh.reader.util.reader-config-element-util')->getFields($dc);
+                            },
+                            'eval' => ['style' => 'width: 400px', 'mandatory' => true, 'includeBlankOption' => true],
+                        ],
+                    ],
+                ],
+            ],
+            'sql' => 'blob NULL',
         ],
     ],
 ];

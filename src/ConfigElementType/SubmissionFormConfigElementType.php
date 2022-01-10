@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -9,20 +9,23 @@
 namespace HeimrichHannot\ReaderBundle\ConfigElementType;
 
 use Contao\Module;
-use HeimrichHannot\ReaderBundle\Item\ItemInterface;
-use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
+use Contao\StringUtil;
+use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementData;
+use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementResult;
+use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeInterface;
+use HeimrichHannot\TwigSupportBundle\Renderer\TwigTemplateRenderer;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
-use Twig\Environment;
 
-class SubmissionFormConfigElementType implements ReaderConfigElementTypeInterface
+class SubmissionFormConfigElementType implements ConfigElementTypeInterface
 {
     const TYPE = 'submission_form';
 
     public static $recipientEmail;
+
     /**
-     * @var Environment
+     * @var TwigTemplateRenderer
      */
-    private $twig;
+    protected $twigTemplateRenderer;
     /**
      * @var ModelUtil
      */
@@ -30,30 +33,51 @@ class SubmissionFormConfigElementType implements ReaderConfigElementTypeInterfac
 
     private static $count = 0;
 
-    public function __construct(ModelUtil $modelUtil, Environment $twig)
+    public function __construct(ModelUtil $modelUtil, TwigTemplateRenderer $twigTemplateRenderer)
     {
         $this->modelUtil = $modelUtil;
-        $this->twig = $twig;
+        $this->twigTemplateRenderer = $twigTemplateRenderer;
     }
 
-    public function addToItemData(ItemInterface $item, ReaderConfigElementModel $configElement)
+    /**
+     * Return the reader config element type alias.
+     */
+    public static function getType(): string
     {
+        return static::TYPE;
+    }
+
+    /**
+     * Return the reader config element type palette.
+     */
+    public function getPalette(string $prependPalette, string $appendPalette): string
+    {
+        return $prependPalette.'{config_legend},submissionFormExplanation,submissionReader,submissionDefaultValues,emailField,submissionFormTemplate;'.$appendPalette;
+    }
+
+    /**
+     * Update the item data.
+     */
+    public function applyConfiguration(ConfigElementData $configElementData): ConfigElementResult
+    {
+        $itemData = $configElementData->getItemData();
+        $configuration = $configElementData->getConfiguration();
+
         // add email value to notification center tokens
-        static::$recipientEmail = $item->getRawValue($configElement->emailField);
+        static::$recipientEmail = $configuration->emailField;
         $GLOBALS['TL_HOOKS']['formhybridBeforeCreateNotifications']['contao-reader-bundle.addEmailToTokens'] = [static::class, 'addEmailToTokens'];
 
         // generate form
-        $moduleId = $item->getModule()->id;
-
-        $table = $item->getManager()->getDataContainer();
-
-        $identifier = $table.'_'.$moduleId.$item->getRawValue('id');
-
-        $item->setFormattedValue($configElement->templateVariable ?: 'submissionForm', $this->twig->render('@HeimrichHannotContaoReader/config_element/submission_form_modal_bootstrap4.html.twig', [
+        $type = $configuration->type;
+        $ids = $configuration->id.$configuration->pid;
+        $identifier = $type.'_'.$ids.$itemData['id'];
+        $templateData = [
             'identifier' => $identifier,
             'item' => $this,
-            'form' => $this->generateSubmissionReader((int) $configElement->submissionReader),
-        ]));
+            'form' => $this->generateSubmissionReader((int) $configuration->submissionReader, $itemData, StringUtil::deserialize($configuration->submissionDefaultValues, true)),
+        ];
+
+        return new ConfigElementResult(ConfigElementResult::TYPE_FORMATTED_VALUE, $this->twigTemplateRenderer->render($configuration->submissionFormTemplate, $templateData));
     }
 
     public function addEmailToTokens(&$submissionData, $submission)
@@ -63,7 +87,7 @@ class SubmissionFormConfigElementType implements ReaderConfigElementTypeInterfac
         return true;
     }
 
-    public function generateSubmissionReader(int $submissionReader)
+    public function generateSubmissionReader(int $submissionReader, array $item = [], array $defaultValues = [], int $overrideSubmissionArchiv = 0)
     {
         if (null === ($moduleModel = $this->modelUtil->findModelInstanceByPk('tl_module', $submissionReader))) {
             return '';
@@ -78,34 +102,23 @@ class SubmissionFormConfigElementType implements ReaderConfigElementTypeInterfac
         // the form might be more than one time on the page
         $moduleModel->formHybridUseCustomFormIdSuffix = true;
         $moduleModel->formHybridCustomFormIdSuffix = ++static::$count;
+        $existingDefaultValues = StringUtil::deserialize($moduleModel->formHybridDefaultValues, true);
+
+        if (!empty($defaultValues)) {
+            $moduleModel->formHybridAddDefaultValues = true;
+
+            $newValues = [];
+
+            foreach ($defaultValues as $value) {
+                $newValues[] = ['field' => $value['submissionField'], 'value' => $item[$value['entityField']], 'label' => $value['submissionField']];
+            }
+
+            $moduleModel->formHybridDefaultValues = array_merge($existingDefaultValues, $newValues);
+        }
 
         /** @var Module $module */
         $module = new $class($moduleModel);
 
         return $module->generate();
-    }
-
-    /**
-     * Return the reader config element type alias.
-     */
-    public static function getType(): string
-    {
-        return static::TYPE;
-    }
-
-    /**
-     * Return the reader config element type palette.
-     */
-    public function getPalette(): string
-    {
-        return '{config_legend},submissionFormExplanation,submissionReader,emailField;';
-    }
-
-    /**
-     * Update the item data.
-     */
-    public function addToReaderItemData(ReaderConfigElementData $configElementData): void
-    {
-        $this->addToItemData($configElementData->getItem(), $configElementData->getReaderConfigElement());
     }
 }

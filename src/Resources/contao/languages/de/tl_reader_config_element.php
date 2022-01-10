@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -261,6 +261,14 @@ $lang['submissionReader'][1] = 'Wählen Sie hier ein Modul vom Typ "Einsendungsl
 $lang['emailField'][0] = 'E-Mail-Feld';
 $lang['emailField'][1] = 'Wählen Sie hier das Feld aus, an das die E-Mail verschickt werden soll.';
 $lang['submissionFormExplanation'] = 'Die E-Mail-Adresse, an die das Formular verschickt wird, finden Sie im Notification-Center-Token ##form_value_submission_form_email##.';
+$lang['submissionFormTemplate'][0] = 'Template';
+$lang['submissionFormTemplate'][1] = 'Wählen Sie hier das gewünschte Template aus.';
+$lang['submissionDefaultValues'][0] = 'Standardwerte';
+$lang['submissionDefaultValues'][1] = 'Wählen Sie die Standardwerte für das Formular.';
+$lang['submissionDefaultValues']['submissionField'][0] = 'Einsendungsfeld';
+$lang['submissionDefaultValues']['submissionField'][1] = 'Wählen Sie hier ein Feld aus dem DCA tl_submission.';
+$lang['submissionDefaultValues']['entityField'][0] = 'Entität';
+$lang['submissionDefaultValues']['entityField'][1] = 'Wählen Sie hier ein aus Ihrem Ziel-DCA.';
 
 // related
 $lang['relatedExplanation'] = 'Um ähnliche Instanzen auszugeben, müssen Sie vorab erst eine Modul des Typs "Liste" samt Listenkonfiguration und Filter erstellen (<a href="https://github.com/heimrichhannot/contao-list-bundle" target="blank">heimrichhannot/contao-list-bundle</a> muss installiert sein). Die notwendigen Filter-Bedingungen für das Auffinden ähnlicher Instanzen werden durch dieses Listenkonfigurations-Element automatisch gesetzt. Der Filter in der Liste muss diese Filter-Konfigurationselemente also <strong>nicht</strong> setzen. In der Regel sollte sich in einem solchen Filter nur ein Filter-Element für die Prüfung des "Veröffentlicht"-Status befinden.';
