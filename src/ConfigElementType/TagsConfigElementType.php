@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -91,7 +91,17 @@ class TagsConfigElementType implements ReaderConfigElementTypeInterface
         if ($configElement->tagsAddLink) {
             $jumpTo = $this->urlUtil->getJumpToPageUrl($configElement->tagsJumpTo, false);
 
-            if (($tagId = $this->request->getGet('huh_cfg_tag')) && $jumpTo) {
+            $tagId = $this->request->getGet('huh_cfg_tag');
+
+            if (($tagAlias = $this->request->getGet('huh_cfg_tag_alias')) && $jumpTo) {
+                $tag = System::getContainer()->get(ModelUtil::class)->findOneModelInstanceBy('tl_cfg_tag', ['tl_cfg_tag.alias=?'], [$tagAlias]);
+
+                if (null !== $tag) {
+                    $tagId = $tag->id;
+                }
+            }
+
+            if ($tagId && $jumpTo) {
                 if (null !== ($filterConfigElement = $this->modelUtil->findModelInstanceByPk('tl_filter_config_element', $configElement->tagsFilterConfigElement))) {
                     $sessionKey = System::getContainer()->get('huh.filter.manager')->findById($configElement->tagsFilter)->getSessionKey();
 
@@ -99,7 +109,7 @@ class TagsConfigElementType implements ReaderConfigElementTypeInterface
 
                     $sessionData = \is_array($sessionData) ? $sessionData : [];
 
-                    $sessionData[$filterConfigElement->field] = $tagId;
+                    $sessionData[$filterConfigElement->field] = urldecode($tagId);
 
                     System::getContainer()->get('huh.filter.session')->setData($sessionKey, $sessionData);
 
@@ -108,7 +118,7 @@ class TagsConfigElementType implements ReaderConfigElementTypeInterface
             }
 
             foreach ($tags as &$tag) {
-                $tag['url'] = $this->urlUtil->addQueryString('huh_cfg_tag='.$tag['id']);
+                $tag['url'] = $this->urlUtil->addQueryString($configElement->tagsUseAlias ? 'huh_cfg_tag_alias='.urlencode($tag['alias']) : 'huh_cfg_tag='.$tag['id']);
             }
         }
 

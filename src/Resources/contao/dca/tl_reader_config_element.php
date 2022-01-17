@@ -116,7 +116,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         'addMemberGroups' => 'memberGroups',
         'commentOverridePalette' => 'commentPalette',
         'commentHideFields' => 'commentHideFieldsPalette',
-        'tagsAddLink' => 'tagsFilter,tagsFilterConfigElement,tagsJumpTo',
+        'tagsAddLink' => 'tagsFilter,tagsFilterConfigElement,tagsJumpTo,tagsUseAlias',
         'overrideTemplateContainerVariable' => 'templateContainerVariable',
     ],
     'fields' => [
@@ -1350,6 +1350,13 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
             'eval' => ['fieldType' => 'radio', 'tl_class' => 'w50', 'mandatory' => true],
             'sql' => "int(10) unsigned NOT NULL default '0'",
             'relation' => ['type' => 'hasOne', 'load' => 'lazy'],
+        ],
+        'tagsUseAlias' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_reader_config_element']['tagsUseAlias'],
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'eval' => ['tl_class' => 'w50'],
+            'sql' => "char(1) NOT NULL default ''",
         ],
         'categoriesField' => [
             'label' => &$GLOBALS['TL_LANG']['tl_reader_config_element']['categoriesField'],

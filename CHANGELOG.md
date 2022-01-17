@@ -2,20 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.31.0] - 2022-01-17
+
+- Added: added support for alias tag links in `TagsConfigElementType`
+
 ## [1.30.4] - 2022-01-10
+
 - Changed: submission config element to use generic interface
 - Added: template selection and standard values for submission config element
 
 ## [1.30.3] - 2022-01-06
+
 - Fixed: some missing english translations
 
 ## [1.30.2] - 2022-01-06
+
 - Fixed: disable 404 option not working
 
 ## [1.30.1] - 2021-11-01
+
 - Fixed: formatted return values of config element type processed by list bundle formatting
 
 ## [1.30.0] - 2021-09-20
+
 - Changed: allow php 8
 
 ## [1.29.1] - 2021-09-15
@@ -28,15 +37,18 @@ All notable changes to this project will be documented in this file.
 
 ## [1.28.0] - 2021-06-24
 
-- added optional support for multilingual aliases based on [heimrichhannot/contao-multilingual-fields-bundle](https://github.com/heimrichhannot/contao-multilingual-fields-bundle)
+- added optional support for multilingual aliases based
+  on [heimrichhannot/contao-multilingual-fields-bundle](https://github.com/heimrichhannot/contao-multilingual-fields-bundle)
 
 ## [1.27.2] - 2021-06-21
 
-- fixed optional support for [heimrichhannot/contao-multilingual-fields-bundle](https://github.com/heimrichhannot/contao-multilingual-fields-bundle)
+- fixed optional support
+  for [heimrichhannot/contao-multilingual-fields-bundle](https://github.com/heimrichhannot/contao-multilingual-fields-bundle)
 
 ## [1.27.1] - 2021-06-18
 
-- fixed optional support for [heimrichhannot/contao-multilingual-fields-bundle](https://github.com/heimrichhannot/contao-multilingual-fields-bundle)
+- fixed optional support
+  for [heimrichhannot/contao-multilingual-fields-bundle](https://github.com/heimrichhannot/contao-multilingual-fields-bundle)
 
 ## [1.27.0] - 2021-06-04
 
@@ -48,7 +60,8 @@ All notable changes to this project will be documented in this file.
 
 ## [1.26.0] - 2021-04-19
 
-- added optional support for [heimrichhannot/contao-multilingual-fields-bundle](https://github.com/heimrichhannot/contao-multilingual-fields-bundle)
+- added optional support
+  for [heimrichhannot/contao-multilingual-fields-bundle](https://github.com/heimrichhannot/contao-multilingual-fields-bundle)
 
 ## [1.25.1] - 2021-03-25
 

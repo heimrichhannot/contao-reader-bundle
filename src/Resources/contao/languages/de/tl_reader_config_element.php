@@ -305,6 +305,9 @@ $lang['tagsFilterConfigElement'][1] = 'Wählen Sie hier das zu filternde Filter-
 $lang['tagsJumpTo'][0] = 'Weiterleitungsseite';
 $lang['tagsJumpTo'][1] = 'Wählen Sie hier die Seite aus, die den o.g. Filter nutzt.';
 
+$lang['tagsUseAlias'][0] = 'Tag-Alias für Schlagwort-Links verwenden';
+$lang['tagsUseAlias'][1] = 'Wählen Sie diese Option, wenn für Schlagwort-Links anstelle der Tag-ID der Tag-Alias verwendet werden soll.';
+
 $lang['tagsTemplate'][0] = 'Template';
 $lang['tagsTemplate'][1] = 'Wählen Sie hier das gewünschte Template aus.';
 
