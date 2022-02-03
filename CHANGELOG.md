@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.31.1] - 2022-02-03
+
+- Added: support for custom relationTable for tag-based `RelateConfigElementType`
+
 ## [1.31.0] - 2022-01-17
 
 - Added: added support for alias tag links in `TagsConfigElementType`
