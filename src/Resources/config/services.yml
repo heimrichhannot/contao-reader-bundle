@@ -126,16 +126,6 @@ services:
     arguments:
       - "@translator"
 
-  twig.truncate.service:
-    class: Urodoz\Truncate\TruncateService
-
-  twig.extension.truncate.html:
-    class: Urodoz\Truncate\Bridge\Twig\TruncateExtension
-    arguments:
-      - "@twig.truncate.service"
-    tags:
-      - { name: twig.extension }
-
   HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType: ~
   HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType: ~
   HeimrichHannot\ReaderBundle\ConfigElementType\VideoConfigElementType: ~

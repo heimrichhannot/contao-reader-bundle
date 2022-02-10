@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.32.0] - 2022-02-10
+- Changed: removed heimrichhannot/truncate-html dependency
+
 ## [1.31.1] - 2022-02-03
 
 - Added: support for custom relationTable for tag-based `RelateConfigElementType`
