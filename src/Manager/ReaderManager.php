@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -786,15 +786,15 @@ class ReaderManager implements ReaderManagerInterface
                 }, $dbFields));
             }
 
-            $queryBuilder->setParameter(':autoItem', $autoItem);
+            $queryBuilder->setParameter('autoItem', $autoItem);
 
-            $event = $this->_dispatcher->dispatch(ReaderModifyQueryBuilderEvent::NAME, new ReaderModifyQueryBuilderEvent($queryBuilder, $this, $readerConfig, $fields));
+            $event = $this->_dispatcher->dispatch(new ReaderModifyQueryBuilderEvent($queryBuilder, $this, $readerConfig, $fields), ReaderModifyQueryBuilderEvent::NAME);
 
             $queryBuilder->select($event->getFields());
 
             $item = $queryBuilder->execute()->fetch() ?: null;
 
-            $event = $this->_dispatcher->dispatch(ReaderModifyRetrievedItemEvent::NAME, new ReaderModifyRetrievedItemEvent($item, $queryBuilder, $this, $readerConfig, $fields));
+            $event = $this->_dispatcher->dispatch(new ReaderModifyRetrievedItemEvent($item, $queryBuilder, $this, $readerConfig, $fields), ReaderModifyRetrievedItemEvent::NAME);
 
             $item = $event->getItem();
         }
@@ -879,12 +879,12 @@ class ReaderManager implements ReaderManagerInterface
                     $orStart = $queryBuilder->expr()->orX($queryBuilder->expr()->eq($suffixedTable.'.'.$dca['config']['langStart'], '""'), $queryBuilder->expr()->lte($suffixedTable.'.'.$dca['config']['langStart'], ':'.$dca['config']['langStart'].'_time'));
 
                     $and->add($orStart);
-                    $queryBuilder->setParameter(':'.$dca['config']['langStart'].'_time', $time);
+                    $queryBuilder->setParameter($dca['config']['langStart'].'_time', $time);
 
                     $orStop = $queryBuilder->expr()->orX($queryBuilder->expr()->eq($suffixedTable.'.'.$dca['config']['langStop'], '""'), $queryBuilder->expr()->gt($suffixedTable.'.'.$dca['config']['langStop'], ':'.$dca['config']['langStop'].'_time'));
 
                     $and->add($orStop);
-                    $queryBuilder->setParameter(':'.$dca['config']['langStop'].'_time', $time + 60);
+                    $queryBuilder->setParameter($dca['config']['langStop'].'_time', $time + 60);
                 }
 
                 $and->add($queryBuilder->expr()->eq($suffixedTable.'.'.$dca['config']['langPublished'], 1));

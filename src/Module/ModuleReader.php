@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -21,8 +21,7 @@ use HeimrichHannot\ReaderBundle\Manager\ReaderManagerInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry;
 use HeimrichHannot\StatusMessages\StatusMessage;
-use Patchwork\Utf8;
-use Symfony\Component\Translation\Translator;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ModuleReader extends Module
 {
@@ -41,7 +40,7 @@ class ModuleReader extends Module
     protected $manager;
 
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     protected $translator;
 
@@ -81,7 +80,7 @@ class ModuleReader extends Module
     {
         if (TL_MODE == 'BE') {
             $objTemplate = new BackendTemplate('be_wildcard');
-            $objTemplate->wildcard = '### '.Utf8::strtoupper($GLOBALS['TL_LANG']['FMD'][$this->type][0]).' ###';
+            $objTemplate->wildcard = '### '.$GLOBALS['TL_LANG']['FMD'][$this->type][0].' ###';
             $objTemplate->title = $this->headline;
             $objTemplate->id = $this->id;
             $objTemplate->link = $this->name;
@@ -107,9 +106,9 @@ class ModuleReader extends Module
         if (null === $this->item) {
             if ($this->readerConfig->disable404) {
                 return '';
-            } else {
-                throw new PageNotFoundException('Page not found: '.Environment::get('uri'));
             }
+
+            throw new PageNotFoundException('Page not found: '.Environment::get('uri'));
         }
 
         return parent::generate();

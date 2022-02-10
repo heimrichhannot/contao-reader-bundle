@@ -104,28 +104,6 @@ services:
       - "@doctrine.dbal.default_connection"
   HeimrichHannot\ReaderBundle\QueryBuilder\ReaderQueryBuilder: '@huh.reader.query_builder'
 
-  twig.extension.text:
-    class: Twig_Extensions_Extension_Text
-    tags:
-      - { name: twig.extension }
-
-  twig.extension.intl:
-    class: Twig_Extensions_Extension_Intl
-    tags:
-      - { name: twig.extension }
-
-  twig.extension.array:
-    class: Twig_Extensions_Extension_Array
-    tags:
-      - { name: twig.extension }
-
-  twig.extension.date:
-    class: Twig_Extensions_Extension_Date
-    tags:
-      - { name: twig.extension }
-    arguments:
-      - "@translator"
-
   HeimrichHannot\ReaderBundle\ConfigElementType\CommentConfigElementType: ~
   HeimrichHannot\ReaderBundle\ConfigElementType\ImageConfigElementType: ~
   HeimrichHannot\ReaderBundle\ConfigElementType\VideoConfigElementType: ~

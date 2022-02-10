@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -319,23 +319,23 @@ class DefaultItem implements ItemInterface, \JsonSerializable
         $template = $readerConfig->itemTemplate ?: 'default';
 
         $beforeRenderEvent = System::getContainer()->get('event_dispatcher')->dispatch(
-            ReaderBeforeRenderEvent::NAME,
-            new ReaderBeforeRenderEvent($context, $this, $readerConfig)
+            new ReaderBeforeRenderEvent($context, $this, $readerConfig),
+            ReaderBeforeRenderEvent::NAME
         );
 
         /** @var RenderTwigTemplateEvent $event */
         $event = System::getContainer()->get('event_dispatcher')->dispatch(
-            RenderTwigTemplateEvent::NAME,
             new RenderTwigTemplateEvent(
                 $template, $beforeRenderEvent->getTemplateData()
-            )
+            ),
+            RenderTwigTemplateEvent::NAME
         );
 
         $rendered = $twig->render($this->_manager->getItemTemplateByName($event->getTemplate()), $event->getContext());
 
-        $afterRenderEvent = System::getContainer()->get('event_dispatcher')->dispatch(ReaderAfterRenderEvent::NAME, new ReaderAfterRenderEvent(
-            $rendered, $event->getContext(), $this, $readerConfig)
-        );
+        $afterRenderEvent = System::getContainer()->get('event_dispatcher')->dispatch(new ReaderAfterRenderEvent(
+            $rendered, $event->getContext(), $this, $readerConfig
+        ), ReaderAfterRenderEvent::NAME);
 
         return $afterRenderEvent->getRendered();
     }

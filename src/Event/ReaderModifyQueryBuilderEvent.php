@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -11,7 +11,7 @@ namespace HeimrichHannot\ReaderBundle\Event;
 use Doctrine\DBAL\Query\QueryBuilder;
 use HeimrichHannot\ReaderBundle\Manager\ReaderManagerInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class ReaderModifyQueryBuilderEvent extends Event
 {

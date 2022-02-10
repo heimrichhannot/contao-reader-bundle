@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.33.0] - 2022-02-10
+
+- Added: support for contao 4.13
+- Changed: minimum contao version is now 4.9
+- Changed: supported symfony versions to `^4.4||^5.4`
+- Changed: removed `twig/extensions`
+- Fixed: config for symfony 5+
+- Removed: twig extension service definitions
+- Removed: call to Utf8 functions
+- Fixed: querybuilder parameter colons for symfony 5+
+
 ## [1.32.0] - 2022-02-10
 - Changed: removed heimrichhannot/truncate-html dependency
 
