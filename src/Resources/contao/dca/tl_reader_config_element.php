@@ -68,7 +68,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
                 'label' => &$GLOBALS['TL_LANG']['tl_reader_config_element']['delete'],
                 'href' => 'act=delete',
                 'icon' => 'delete.gif',
-                'attributes' => 'onclick="if(!confirm(\''.$GLOBALS['TL_LANG']['MSC']['deleteConfirm']
+                'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null)
                     .'\'))return false;Backend.getScrollOffset()"',
             ],
             'show' => [
