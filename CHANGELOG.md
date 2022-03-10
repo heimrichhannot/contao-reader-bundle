@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.32.1] - 2022-03-10
+- Fixed: ics syndication has not data
+
 ## [1.32.0] - 2022-02-10
 - Changed: removed heimrichhannot/truncate-html dependency
 
