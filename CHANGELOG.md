@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.33.2] - 2022-03-10
+- Fixed: ics syndication has not data
+- 
 ## [1.33.1] - 2022-02-14
 
 - Fixed: array index issues in php 8+
