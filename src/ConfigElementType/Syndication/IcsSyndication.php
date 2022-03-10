@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -48,19 +48,19 @@ class IcsSyndication extends AbstractSyndication
         $readerConfigElement = $this->readerConfigElement;
 
         $icsData = System::getContainer()->get(IcsUtil::class)->generateIcs([
-            'title' => $readerConfigElement->syndicationIcsTitleField && $item->getFormattedValue($readerConfigElement->syndicationIcsTitleField),
-            'description' => $readerConfigElement->syndicationIcsDescriptionField && $item->getFormattedValue($readerConfigElement->syndicationIcsDescriptionField),
-            'street' => $readerConfigElement->syndicationIcsStreetField && $item->getFormattedValue($readerConfigElement->syndicationIcsStreetField),
-            'postal' => $readerConfigElement->syndicationIcsPostalField && $item->getFormattedValue($readerConfigElement->syndicationIcsPostalField),
-            'city' => $readerConfigElement->syndicationIcsCityField && $item->getFormattedValue($readerConfigElement->syndicationIcsCityField),
-            'country' => $readerConfigElement->syndicationIcsCountryField && $item->getFormattedValue($readerConfigElement->syndicationIcsCountryField),
-            'location' => $readerConfigElement->syndicationIcsLocationField && $item->getFormattedValue($readerConfigElement->syndicationIcsLocationField),
-            'url' => $readerConfigElement->syndicationIcsUrlField && $item->getFormattedValue($readerConfigElement->syndicationIcsUrlField),
-            'startDate' => $readerConfigElement->syndicationIcsStartDateField && $item->getRawValue($readerConfigElement->syndicationIcsStartDateField),
-            'endDate' => $readerConfigElement->syndicationIcsEndDateField && $item->getRawValue($readerConfigElement->syndicationIcsEndDateField),
-            'addTime' => $readerConfigElement->syndicationIcsAddTime && $item->getRawValue($readerConfigElement->syndicationIcsAddTimeField),
-            'startTime' => $readerConfigElement->syndicationIcsStartTimeField && $item->getRawValue($readerConfigElement->syndicationIcsStartTimeField),
-            'endTime' => $readerConfigElement->syndicationIcsEndTimeField && $item->getRawValue($readerConfigElement->syndicationIcsEndTimeField),
+            'title' => $readerConfigElement->syndicationIcsTitleField ? $item->getFormattedValue($readerConfigElement->syndicationIcsTitleField) : '',
+            'description' => $readerConfigElement->syndicationIcsDescriptionField ? $item->getFormattedValue($readerConfigElement->syndicationIcsDescriptionField) : '',
+            'street' => $readerConfigElement->syndicationIcsStreetField ? $item->getFormattedValue($readerConfigElement->syndicationIcsStreetField) : '',
+            'postal' => $readerConfigElement->syndicationIcsPostalField ? $item->getFormattedValue($readerConfigElement->syndicationIcsPostalField) : '',
+            'city' => $readerConfigElement->syndicationIcsCityField ? $item->getFormattedValue($readerConfigElement->syndicationIcsCityField) : '',
+            'country' => $readerConfigElement->syndicationIcsCountryField ? $item->getFormattedValue($readerConfigElement->syndicationIcsCountryField) : '',
+            'location' => $readerConfigElement->syndicationIcsLocationField ? $item->getFormattedValue($readerConfigElement->syndicationIcsLocationField) : '',
+            'url' => $readerConfigElement->syndicationIcsUrlField ? $item->getFormattedValue($readerConfigElement->syndicationIcsUrlField) : '',
+            'startDate' => $readerConfigElement->syndicationIcsStartDateField ? $item->getRawValue($readerConfigElement->syndicationIcsStartDateField) : '',
+            'endDate' => $readerConfigElement->syndicationIcsEndDateField ? $item->getRawValue($readerConfigElement->syndicationIcsEndDateField) : '',
+            'addTime' => $readerConfigElement->syndicationIcsAddTime ? $item->getRawValue($readerConfigElement->syndicationIcsAddTimeField) : '',
+            'startTime' => $readerConfigElement->syndicationIcsStartTimeField ? $item->getRawValue($readerConfigElement->syndicationIcsStartTimeField) : '',
+            'endTime' => $readerConfigElement->syndicationIcsEndTimeField ? $item->getRawValue($readerConfigElement->syndicationIcsEndTimeField) : '',
         ]);
 
         if (!$icsData) {
