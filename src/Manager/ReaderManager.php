@@ -27,6 +27,7 @@ use HeimrichHannot\FilterBundle\Manager\FilterManager;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfig;
 use HeimrichHannot\ReaderBundle\Event\ReaderModifyQueryBuilderEvent;
 use HeimrichHannot\ReaderBundle\Event\ReaderModifyRetrievedItemEvent;
+use HeimrichHannot\ReaderBundle\Exception\MissingItemClassException;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\ReaderBundle\QueryBuilder\ReaderQueryBuilder;
@@ -246,19 +247,23 @@ class ReaderManager implements ReaderManagerInterface
 
         $this->dc = DC_Table_Utils::createFromModelData($item, $this->readerConfig->dataContainer);
 
-        if (null !== ($itemClass = $this->getItemClassByName($this->readerConfig->item ?: 'default'))) {
-            $reflection = new \ReflectionClass($itemClass);
+        $itemClass = $this->getItemClassByName($this->readerConfig->item ?: 'default');
 
-            if (!$reflection->implementsInterface(ItemInterface::class)) {
-                throw new \Exception(sprintf('Item class %s must implement %s', $itemClass, ItemInterface::class));
-            }
-
-            if (!$reflection->implementsInterface(\JsonSerializable::class)) {
-                throw new \Exception(sprintf('Item class %s must implement %s', $itemClass, \JsonSerializable::class));
-            }
-
-            $this->item = new $itemClass($this, $item);
+        if (!$itemClass) {
+            throw new MissingItemClassException('No reader item class found for '.$this->readerConfig->item.', please check your configuration!');
         }
+
+        $reflection = new \ReflectionClass($itemClass);
+
+        if (!$reflection->implementsInterface(ItemInterface::class)) {
+            throw new \Exception(sprintf('Item class %s must implement %s', $itemClass, ItemInterface::class));
+        }
+
+        if (!$reflection->implementsInterface(\JsonSerializable::class)) {
+            throw new \Exception(sprintf('Item class %s must implement %s', $itemClass, \JsonSerializable::class));
+        }
+
+        $this->item = new $itemClass($this, $item);
 
         return $this->item;
     }

@@ -2,15 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.34.0] - 2022-04-20
+- Changed: throw exception if item class could not be found
+
 ## [1.33.2] - 2022-03-10
 - Fixed: ics syndication has not data
-- 
-## [1.33.1] - 2022-02-14
 
+## [1.33.1] - 2022-02-14
 - Fixed: array index issues in php 8+
 
 ## [1.33.0] - 2022-02-10
-
 - Added: support for contao 4.13
 - Changed: minimum contao version is now 4.9
 - Changed: supported symfony versions to `^4.4||^5.4`
