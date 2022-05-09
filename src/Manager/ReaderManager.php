@@ -34,12 +34,12 @@ use HeimrichHannot\ReaderBundle\QueryBuilder\ReaderQueryBuilder;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry;
 use HeimrichHannot\TwigSupportBundle\Filesystem\TwigTemplateLocator;
-use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
 use HeimrichHannot\UtilsBundle\Form\FormUtil;
 use HeimrichHannot\UtilsBundle\Image\ImageUtil;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 use HeimrichHannot\UtilsBundle\Url\UrlUtil;
+use HeimrichHannot\UtilsBundle\Util\Utils;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\Environment;
 
@@ -101,11 +101,6 @@ class ReaderManager implements ReaderManagerInterface
     protected $formUtil;
 
     /**
-     * @var ContainerUtil
-     */
-    protected $containerUtil;
-
-    /**
      * @var \Twig\Environment
      */
     protected $twig;
@@ -141,6 +136,7 @@ class ReaderManager implements ReaderManagerInterface
      * @var object|\Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher|\Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher|null
      */
     private $_dispatcher;
+    private Utils $utils;
 
     public function __construct(
         ContainerInterface $container,
@@ -151,11 +147,11 @@ class ReaderManager implements ReaderManagerInterface
         ReaderConfigElementRegistry $readerConfigElementRegistry,
         ModelUtil $modelUtil,
         UrlUtil $urlUtil,
-        ContainerUtil $containerUtil,
         ImageUtil $imageUtil,
         FormUtil $formUtil,
         Environment $twig,
-        TwigTemplateLocator $templateLocator
+        TwigTemplateLocator $templateLocator,
+        Utils $utils
     ) {
         $this->framework = $framework;
         $this->filterManager = $filterManager;
@@ -166,13 +162,13 @@ class ReaderManager implements ReaderManagerInterface
         $this->modelUtil = $modelUtil;
         $this->urlUtil = $urlUtil;
         $this->formUtil = $formUtil;
-        $this->containerUtil = $containerUtil;
         $this->imageUtil = $imageUtil;
         $this->twig = $twig;
         $this->database = $framework->createInstance(Database::class);
         $this->container = $container;
         $this->_dispatcher = System::getContainer()->get('event_dispatcher');
         $this->templateLocator = $templateLocator;
+        $this->utils = $utils;
     }
 
     /**
@@ -630,7 +626,7 @@ class ReaderManager implements ReaderManagerInterface
     {
         return $GLOBALS['TL_LANGUAGE'] !== $dca['config']['fallbackLang']
             && $readerConfig->addDcMultilingualSupport
-            && $this->containerUtil->isBundleActive('HeimrichHannot\DcMultilingualUtilsBundle\ContaoDcMultilingualUtilsBundle')
+            && $this->utils->container()->isBundleActive('HeimrichHannot\DcMultilingualUtilsBundle\ContaoDcMultilingualUtilsBundle')
             && System::getContainer()->get('huh.utils.dca')->isDcMultilingual($table);
     }
 
@@ -704,7 +700,17 @@ class ReaderManager implements ReaderManagerInterface
     protected function retrieveItemByAutoItem()
     {
         $readerConfig = $this->readerConfig;
-        $queryBuilder = $this->getQueryBuilder()->from($readerConfig->dataContainer)->setMaxResults(1);
+
+        if ($this->getFilterConfig() && $this->getFilterConfig()->getFilter()['dataContainer'] === $readerConfig->dataContainer) {
+            $queryBuilder = $this->getFilterConfig()
+                ->initQueryBuilder([], FilterConfig::QUERY_BUILDER_MODE_INITIAL_ONLY, true)
+                ->setMaxResults(1);
+        } else {
+            $queryBuilder = $this->getQueryBuilder()
+                ->from($readerConfig->dataContainer)
+                ->setMaxResults(1);
+        }
+
         $item = null;
 
         $dca = &$GLOBALS['TL_DCA'][$readerConfig->dataContainer];
@@ -727,10 +733,10 @@ class ReaderManager implements ReaderManagerInterface
                 return $item;
             }
 
-            if (is_numeric($autoItem) && !System::getContainer()->get('huh.utils.string')->startsWith($autoItem, '-')) {
-                $queryBuilder->where($queryBuilder->expr()->eq($readerConfig->dataContainer.'.'.$model->getPk(), ':autoItem'));
+            if (is_numeric($autoItem) && !$this->utils->string()->startsWith($autoItem, '-')) {
+                $queryBuilder->andWhere($queryBuilder->expr()->eq($readerConfig->dataContainer.'.'.$model->getPk(), ':autoItem'));
             } else {
-                $queryBuilder->where($queryBuilder->expr()->eq($readerConfig->dataContainer.'.'.$field, ':autoItem'));
+                $queryBuilder->andWhere($queryBuilder->expr()->eq($readerConfig->dataContainer.'.'.$field, ':autoItem'));
             }
 
             // get the parent record for dc_multilingual-based entities
@@ -871,7 +877,7 @@ class ReaderManager implements ReaderManagerInterface
 
         // add support for dc multilingual utils
         if ($this->isDcMultilingualUtilsActive($readerConfig, $dca, $readerConfig->dataContainer)) {
-            if (!System::getContainer()->get('huh.utils.container')->isPreviewMode() &&
+            if (!$this->utils->container()->isPreviewMode() &&
                 isset($dca['config']['langPublished']) && isset($dca['fields'][$dca['config']['langPublished']]) && \is_array($dca['fields'][$dca['config']['langPublished']])) {
                 $and = $queryBuilder->expr()->andX();
 

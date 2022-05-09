@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.35.0] - 2022-05-09
+- Changed: reader bundle now evaluates filter config for item retrivel
+- Fixed: some deprecation warnings
+
 ## [1.34.0] - 2022-04-20
 - Changed: throw exception if item class could not be found
 
