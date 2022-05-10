@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.35.1] - 2022-05-10
+- Fixed: symfony 5 compatiblity
+
 ## [1.35.0] - 2022-05-09
 - Changed: reader bundle now evaluates filter config for item retrivel
 - Fixed: some deprecation warnings

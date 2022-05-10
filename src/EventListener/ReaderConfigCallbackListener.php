@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -9,21 +9,19 @@
 namespace HeimrichHannot\ReaderBundle\EventListener;
 
 use Contao\Controller;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\DC_Table;
 use Contao\Input;
+use HeimrichHannot\TwigTemplatesBundle\FrontendFramework\ContaoFramework;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 use Symfony\Component\Translation\TranslatorBagInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ReaderConfigCallbackListener
 {
     const SELECTOR_FIELD = 'typeSelectorField';
     const TYPE_FIELD = 'typeField';
 
-    /**
-     * @var ContaoFrameworkInterface
-     */
+    /** @var ContaoFramework */
     private $framework;
     /**
      * @var TranslatorInterface
@@ -34,7 +32,7 @@ class ReaderConfigCallbackListener
      */
     private $modelUtil;
 
-    public function __construct(ContaoFrameworkInterface $framework, TranslatorInterface $translator, ModelUtil $modelUtil)
+    public function __construct(ContaoFramework $framework, TranslatorInterface $translator, ModelUtil $modelUtil)
     {
         $this->framework = $framework;
         $this->translator = $translator;
