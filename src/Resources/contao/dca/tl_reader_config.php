@@ -120,7 +120,9 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'customJumpToOverviewLabel',
         ],
         'default' => '{general_legend},title;'
-            .'{config_legend},dataContainer,filter,manager,item,limitFormattedFields,itemRetrievalMode,hideUnpublishedItems;'
+            .'{filter_legend},dataContainer,filter,evaluateFilter;'
+            .'{config_legend},manager,item,itemRetrievalMode,hideUnpublishedItems;'
+            .'{fields_legend},limitFormattedFields;'
             .'{security_legend},addShowConditions;'.'{jumpto_legend},addFieldDependentRedirect,addOverview,disable404;'
             .'{misc_legend},headTags,addDcMultilingualSupport,addMultilingualFieldsSupport;'.'{template_legend},itemTemplate;',
     ],
@@ -209,6 +211,13 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'relation' => ['type' => 'belongsTo', 'load' => 'eager'],
             'eval' => ['tl_class' => 'w50 clr', 'includeBlankOption' => true, 'chosen' => true],
             'sql' => "int(10) NOT NULL default '0'",
+        ],
+        'evaluateFilter' => [
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'default' => '1',
+            'eval' => ['tl_class' => 'w50 clr'],
+            'sql' => "char(1) NOT NULL default ''",
         ],
         'manager' => [
             'inputType' => 'select',

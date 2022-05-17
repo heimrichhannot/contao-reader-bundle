@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -16,6 +16,8 @@ use Contao\Model;
  * @property int    $dateAdded
  * @property string $title
  * @property string $dataContainer
+ * @property int    $filter
+ * @property string $evaluateFilter
  * @property string $manager
  * @property string $item
  * @property bool   $limitFormattedFields

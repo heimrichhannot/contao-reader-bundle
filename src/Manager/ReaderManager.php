@@ -701,7 +701,7 @@ class ReaderManager implements ReaderManagerInterface
     {
         $readerConfig = $this->readerConfig;
 
-        if ($this->getFilterConfig() && $this->getFilterConfig()->getFilter()['dataContainer'] === $readerConfig->dataContainer) {
+        if ($readerConfig->evaluateFilter && $this->getFilterConfig() && $this->getFilterConfig()->getFilter()['dataContainer'] === $readerConfig->dataContainer) {
             $queryBuilder = $this->getFilterConfig()
                 ->initQueryBuilder([], FilterConfig::QUERY_BUILDER_MODE_INITIAL_ONLY, true)
                 ->setMaxResults(1);
