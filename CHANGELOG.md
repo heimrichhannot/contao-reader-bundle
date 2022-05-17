@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.36.1] - 2022-05-17
+- Fix: missing translations
+
 ## [1.36.0] - 2022-05-17
 - Changed: added checkbox for filter evaluation to keep bc
 - Changed: small changes to the reader config backend layout
