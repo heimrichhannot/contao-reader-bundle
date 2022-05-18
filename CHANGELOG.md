@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.36.2] - 2022-05-18
+- Fixed: invalid argument exception
+
 ## [1.36.1] - 2022-05-17
 - Fix: missing translations
 

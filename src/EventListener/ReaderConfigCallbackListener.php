@@ -9,9 +9,9 @@
 namespace HeimrichHannot\ReaderBundle\EventListener;
 
 use Contao\Controller;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DC_Table;
 use Contao\Input;
-use HeimrichHannot\TwigTemplatesBundle\FrontendFramework\ContaoFramework;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
