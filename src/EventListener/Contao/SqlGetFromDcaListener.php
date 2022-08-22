@@ -1,15 +1,19 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ReaderBundle\EventListener\Contao;
 
+use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\Database;
 
+/**
+ * @Hook("sqlGetFromDca")
+ */
 class SqlGetFromDcaListener
 {
     public function __invoke($sqlDcaData)

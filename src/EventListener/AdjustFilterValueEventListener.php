@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -13,11 +13,29 @@ use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\FilterBundle\Event\AdjustFilterValueEvent;
 use HeimrichHannot\ReaderBundle\Backend\FilterConfigElement;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use HeimrichHannot\UtilsBundle\Util\Utils;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class AdjustFilterValueEventListener
+class AdjustFilterValueEventListener implements EventSubscriberInterface
 {
-    public function onAdjustFilterValue(AdjustFilterValueEvent $event, string $eventName, EventDispatcherInterface $dispatcher)
+    /**
+     * @var Utils
+     */
+    private $utils;
+
+    public function __construct(Utils $utils)
+    {
+        $this->utils = $utils;
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            AdjustFilterValueEvent::NAME => 'onAdjustFilterValue',
+        ];
+    }
+
+    public function onAdjustFilterValue(AdjustFilterValueEvent $event)
     {
         $element = $event->getElement();
         $dca = $event->getDca();
@@ -30,7 +48,7 @@ class AdjustFilterValueEventListener
             return;
         }
 
-        if (System::getContainer()->get('huh.utils.container')->isBackend() || System::getContainer()->get('huh.utils.container')->isFrontendCron()) {
+        if (!$this->utils->container()->isFrontend() || $this->utils->container()->isFrontendCron()) {
             return;
         }
 
@@ -42,7 +60,7 @@ class AdjustFilterValueEventListener
             return;
         }
 
-        if ($dca['eval']['isCategoryField']) {
+        if ($dca['eval']['isCategoryField'] ?? false) {
             $value = [];
 
             $associations = System::getContainer()->get('huh.categories.manager')->findAssociationsByParentTableAndEntityAndField(
@@ -52,7 +70,7 @@ class AdjustFilterValueEventListener
             if (null !== $associations) {
                 $value = $associations->fetchEach('category');
             }
-        } elseif ('cfgTags' === $dca['inputType']) {
+        } elseif ('cfgTags' === ($dca['inputType'] ?? '')) {
             $value = [];
             $relationTable = $dca['relation']['relationTable'];
             $idName = str_replace('tl_', '', $table).'_id';

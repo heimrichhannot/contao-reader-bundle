@@ -4,7 +4,7 @@
   "description": "This bundle offers a generic reader module to use with arbitrary contao entities containing standard reader specific functionality like field output, images and auto_item handling.",
   "license": "LGPL-3.0-or-later",
   "require": {
-    "php": "^7.1||^8.0",
+    "php": "^7.4 || ^8.0",
     "contao/core-bundle": "^4.9",
     "heimrichhannot/contao-be_explanation-bundle": "^2.2",
     "heimrichhannot/contao-config-element-type-bundle": "^0.2",
@@ -22,6 +22,7 @@
     "symfony/filesystem": "^4.4||^5.4",
     "symfony/http-foundation": "^4.4||^5.4",
     "symfony/http-kernel": "^4.4||^5.4",
+    "symfony/polyfill-php80": "^v1.26.0",
     "symfony/routing": "^4.4||^5.4",
     "symfony/translation": "^4.4||^5.4",
     "symfony/translation-contracts": "^1.1.6||^2||^3"
@@ -44,7 +45,6 @@
   "conflict": {
     "heimrichhannot/contao-list-bundle": "<1.1.0"
   },
-  "minimum-stability": "beta",
   "autoload": {
     "psr-4": {
       "HeimrichHannot\\ReaderBundle\\": "src/"
@@ -55,10 +55,6 @@
       "HeimrichHannot\\ReaderBundle\\Test\\": "tests/"
     }
   },
-  "config": {
-    "preferred-install": "dist"
-  },
-  "prefer-stable": true,
   "extra": {
     "contao-manager-plugin": "HeimrichHannot\\ReaderBundle\\ContaoManager\\Plugin"
   }

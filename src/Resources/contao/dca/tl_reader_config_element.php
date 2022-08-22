@@ -6,6 +6,8 @@
  * @license LGPL-3.0-or-later
  */
 
+use HeimrichHannot\FilterBundle\Model\FilterConfigElementModel;
+
 \Contao\Controller::loadDataContainer('tl_module');
 \Contao\Controller::loadLanguageFile('tl_list_config');
 \Contao\Controller::loadLanguageFile('tl_news_archive');
@@ -18,7 +20,6 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         'onload_callback' => [
             ['huh.reader.backend.reader-config-element', 'checkPermission'],
             ['huh.reader.backend.reader-config-element', 'modifyPalette'],
-            ['huh.reader.listener.callback.readerconfigelement', 'updateLabel'],
             [\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer::class, 'onLoadCallback'],
         ],
         'onsubmit_callback' => [
@@ -178,7 +179,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
         'typeField' => [
             'label' => &$GLOBALS['TL_LANG']['tl_reader_config_element']['typeField'],
             'inputType' => 'select',
-            'options_callback' => function (DataContainer $dc) {
+            'options_callback' => static function (DataContainer $dc) {
                 return $dc->activeRecord->pid > 0 ? System::getContainer()
                     ->get('huh.reader.util.reader-config-util')
                     ->getFields($dc->activeRecord->pid) : [];
@@ -633,8 +634,8 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'exclude' => true,
             'filter' => true,
             'inputType' => 'select',
-            'options_callback' => function (DataContainer $dc) {
-                return $dc->activeRecord->pid > 0 ? System::getContainer()
+            'options_callback' => static function (DataContainer $dc) {
+                return !empty($dc->activeRecord->pid) ? System::getContainer()
                     ->get('huh.reader.util.reader-config-util')
                     ->getFields($dc->activeRecord->pid) : [];
             },
@@ -654,7 +655,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'exclude' => true,
             'inputType' => 'select',
             'default' => 'readersyndication_default',
-            'options_callback' => function (Contao\DataContainer $dc) {
+            'options_callback' => static function (Contao\DataContainer $dc) {
                 return \Contao\System::getContainer()->get('huh.utils.choice.twig_template')->getCachedChoices(['readersyndication_']);
             },
             'eval' => ['tl_class' => 'w50', 'includeBlankOption' => true, 'mandatory' => true],
@@ -707,7 +708,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'exclude' => true,
             'inputType' => 'select',
             'default' => 'huh.reader.element.mail.subject.syndication.default',
-            'options_callback' => function (DataContainer $dc) {
+            'options_callback' => static function (DataContainer $dc) {
                 return \Contao\System::getContainer()->get('huh.utils.choice.message')->getCachedChoices('huh.reader.element.mail.subject');
             },
             'eval' => ['chosen' => true, 'mandatory' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
@@ -718,7 +719,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'exclude' => true,
             'inputType' => 'select',
             'default' => 'huh.reader.element.mail.body.syndication.default',
-            'options_callback' => function (DataContainer $dc) {
+            'options_callback' => static function (DataContainer $dc) {
                 return \Contao\System::getContainer()->get('huh.utils.choice.message')->getCachedChoices('huh.reader.element.mail.body');
             },
             'eval' => ['chosen' => true, 'mandatory' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
@@ -744,7 +745,7 @@ $GLOBALS['TL_DCA']['tl_reader_config_element'] = [
             'exclude' => true,
             'inputType' => 'select',
             'default' => 'huh.reader.element.feedback.subject.syndication.default',
-            'options_callback' => function (DataContainer $dc) {
+            'options_callback' => static function (DataContainer $dc) {
                 return \Contao\System::getContainer()->get('huh.utils.choice.message')->getCachedChoices('huh.reader.element.feedback.subject');
             },
             'eval' => ['chosen' => true, 'mandatory' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
@@ -1323,21 +1324,20 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
             'exclude' => true,
             'filter' => true,
             'inputType' => 'select',
-            'options_callback' => function (Contao\DataContainer $dc) {
-                if (!$dc->activeRecord->tagsFilter) {
+            'options_callback' => static function (Contao\DataContainer $dc) {
+                if (empty($dc->activeRecord->tagsFilter)) {
                     return [];
                 }
+                $elements = FilterConfigElementModel::findPublishedByPid($dc->activeRecord->tagsFilter);
+                $options = [];
 
-                return System::getContainer()->get('huh.utils.choice.model_instance')->getCachedChoices([
-                    'dataContainer' => 'tl_filter_config_element',
-                    'columns' => [
-                        'tl_filter_config_element.pid=?',
-                    ],
-                    'values' => [
-                        $dc->activeRecord->tagsFilter,
-                    ],
-                    'labelPattern' => '%title% (ID %id%)',
-                ]);
+                if ($elements) {
+                    while ($elements->next()) {
+                        $options[$elements->id] = sprintf('%title% (ID %id%)', $elements->title, $elements->id);
+                    }
+                }
+
+                return $options;
             },
             'eval' => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
             'sql' => "varchar(64) NOT NULL default ''",

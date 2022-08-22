@@ -213,7 +213,7 @@ class DefaultItem implements ItemInterface, \JsonSerializable
      */
     public function getFormattedValue(string $name)
     {
-        return $this->_formatted[$name];
+        return $this->_formatted[$name] ?? null;
     }
 
     /**

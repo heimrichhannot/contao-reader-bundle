@@ -1,10 +1,14 @@
 <?php
 
 /*
- * Copyright (c) 2020 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
+
+use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
+use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
+use HeimrichHannot\ReaderBundle\Module\ModuleReader;
 
 $GLOBALS['BE_MOD']['system']['reader_configs'] = [
     'tables' => ['tl_reader_config'],
@@ -17,14 +21,9 @@ array_insert(
     $GLOBALS['FE_MOD']['reader'],
     3,
     [
-        \HeimrichHannot\ReaderBundle\Module\ModuleReader::TYPE => \HeimrichHannot\ReaderBundle\Module\ModuleReader::class,
+        ModuleReader::TYPE => ModuleReader::class,
     ]
 );
-
-/**
- * Hooks
- */
-$GLOBALS['TL_HOOKS']['sqlGetFromDca']['huh_reader'] = [\HeimrichHannot\ReaderBundle\EventListener\Contao\SqlGetFromDcaListener::class, '__invoke'];
 
 /*
  * Permissions
@@ -35,5 +34,5 @@ $GLOBALS['TL_PERMISSIONS'][] = 'readerbundlep';
 /*
  * Models
  */
-$GLOBALS['TL_MODELS']['tl_reader_config'] = \HeimrichHannot\ReaderBundle\Model\ReaderConfigModel::class;
-$GLOBALS['TL_MODELS']['tl_reader_config_element'] = \HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel::class;
+$GLOBALS['TL_MODELS']['tl_reader_config'] = ReaderConfigModel::class;
+$GLOBALS['TL_MODELS']['tl_reader_config_element'] = ReaderConfigElementModel::class;

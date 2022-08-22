@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.37.0] - 2022-08-22
+- Changed: minimum php version is now 7.4
+- Changed: some small refactoring
+- Fixed: warnings with php 8
+
 ## [1.36.2] - 2022-05-18
 - Fixed: invalid argument exception
 

@@ -277,8 +277,8 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'exclude' => true,
             'filter' => true,
             'inputType' => 'select',
-            'options_callback' => function (DataContainer $dc) {
-                return $dc->activeRecord->id > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->id) : [];
+            'options_callback' => static function (DataContainer $dc) {
+                return !empty($dc->activeRecord->id) ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->id) : [];
             },
             'eval' => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true],
             'sql' => "varchar(64) NOT NULL default ''",
@@ -319,8 +319,8 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'exclude' => true,
             'filter' => true,
             'inputType' => 'select',
-            'options_callback' => function (Contao\DataContainer $dc) {
-                return $dc->activeRecord->id > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->id) : [];
+            'options_callback' => static function (Contao\DataContainer $dc) {
+                return !empty($dc->activeRecord->id) ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->id) : [];
             },
             'eval' => ['chosen' => true, 'includeBlankOption' => true, 'tl_class' => 'w50', 'mandatory' => true],
             'sql' => "varchar(64) NOT NULL default ''",
@@ -330,8 +330,8 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'exclude' => true,
             'filter' => true,
             'inputType' => 'select',
-            'options_callback' => function (Contao\DataContainer $dc) {
-                return $dc->activeRecord->id > 0 ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->id) : [];
+            'options_callback' => static function (Contao\DataContainer $dc) {
+                return !empty($dc->activeRecord->id) ? System::getContainer()->get('huh.reader.util.reader-config-util')->getFields($dc->activeRecord->id) : [];
             },
             'eval' => ['chosen' => true, 'includeBlankOption' => true, 'tl_class' => 'w50', 'mandatory' => true],
             'sql' => "varchar(64) NOT NULL default ''",

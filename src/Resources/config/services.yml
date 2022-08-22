@@ -10,9 +10,10 @@ services:
       public: false
       autowire: true
 
-  HeimrichHannot\ReaderBundle\DataContainer\:
-    resource: '../../DataContainer/*'
+  HeimrichHannot\ReaderBundle\:
+    resource: '../../{DataContainer,EventListener}/*'
     autowire: true
+    autoconfigure: true
     public: true
 
   huh.reader.backend.reader-config:
