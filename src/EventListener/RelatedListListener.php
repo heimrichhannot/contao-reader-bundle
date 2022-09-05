@@ -14,12 +14,12 @@ use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\ModuleModel;
 use Contao\StringUtil;
-use Contao\System;
 use HeimrichHannot\ListBundle\DataContainer\ListConfigElementContainer;
 use HeimrichHannot\ReaderBundle\ConfigElementType\RelatedConfigElementType;
 use HeimrichHannot\ReaderBundle\Controller\ContentElement\RelatedListContentElementController;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
+use HeimrichHannot\UtilsBundle\Dca\DcaUtil;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -31,11 +31,13 @@ class RelatedListListener implements ServiceSubscriberInterface
 
     private ContainerInterface $container;
     private RequestStack       $requestStack;
+    private DcaUtil            $dcaUtil;
 
-    public function __construct(ContainerInterface $container, RequestStack $requestStack)
+    public function __construct(ContainerInterface $container, RequestStack $requestStack, DcaUtil $dcaUtil)
     {
         $this->container = $container;
         $this->requestStack = $requestStack;
+        $this->dcaUtil = $dcaUtil;
     }
 
     /**
@@ -129,10 +131,21 @@ class RelatedListListener implements ServiceSubscriberInterface
             return [];
         }
 
-        return System::getContainer()->get('huh.utils.choice.field')->getCachedChoices([
-            'dataContainer' => $readerConfig->dataContainer,
-            'inputTypes' => ['cfgTags'],
-        ]);
+        return $this->dcaUtil->getFields($readerConfig->dataContainer, ['inputTypes' => ['cfgTags']]);
+    }
+
+    /**
+     * @Callback(table="tl_content", target="fields.categoriesField.options")
+     */
+    public function onCategoriesOptionsCallback(DataContainer $dc = null): array
+    {
+        $element = ContentModel::findByPk($dc->id);
+
+        if (!$element || !($readerConfig = ReaderConfigModel::findByPk($element->readerConfig))) {
+            return [];
+        }
+
+        return $this->dcaUtil->getFields($readerConfig->dataContainer, ['inputTypes' => ['categoryTree']]);
     }
 
     public static function getSubscribedServices()

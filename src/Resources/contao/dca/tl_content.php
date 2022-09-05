@@ -74,18 +74,6 @@ $dca['fields']['relatedCriteria'] = [
 
 $dca['fields']['tagsField'] = [
     'inputType' => 'select',
-    'options_callback' => function (DataContainer $dc) {
-        $element = \Contao\ContentModel::findByPk($dc->id);
-
-        if (!$element || !($readerConfig = System::getContainer()->get('huh.utils.model')->findModelInstanceByPk('tl_reader_config', $dc->activeRecord->readerConfig)) || !$readerConfig->dataContainer) {
-            return [];
-        }
-
-        return System::getContainer()->get('huh.utils.choice.field')->getCachedChoices([
-            'dataContainer' => $readerConfig->dataContainer,
-            'inputTypes' => ['cfgTags'],
-        ]);
-    },
     'exclude' => true,
     'eval' => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50 clr'],
     'sql' => "varchar(64) NOT NULL default ''",
@@ -93,20 +81,6 @@ $dca['fields']['tagsField'] = [
 
 $dca['fields']['categoriesField'] = [
     'inputType' => 'select',
-    'options_callback' => function (DataContainer $dc) {
-        if (!$dc->activeRecord->readerConfig) {
-            return [];
-        }
-
-        if (null === ($readerConfig = System::getContainer()->get('huh.utils.model')->findModelInstanceByPk('tl_reader_config', $dc->activeRecord->readerConfig)) || !$readerConfig->dataContainer) {
-            return [];
-        }
-
-        return System::getContainer()->get('huh.utils.choice.field')->getCachedChoices([
-            'dataContainer' => $readerConfig->dataContainer,
-            'inputTypes' => ['categoryTree'],
-        ]);
-    },
     'exclude' => true,
     'eval' => ['includeBlankOption' => true, 'mandatory' => true, 'chosen' => true, 'tl_class' => 'w50'],
     'sql' => "varchar(64) NOT NULL default ''",
