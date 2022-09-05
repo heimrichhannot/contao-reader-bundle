@@ -29,8 +29,18 @@ class RelatedListGenerator implements ServiceSubscriberInterface
         $this->container = $container;
     }
 
-    public function generate(RelatedListGeneratorConfig $config): string
+    /**
+     * Render a related list.
+     *
+     * Options:
+     * - column: the layout column. Default 'main'
+     */
+    public function generate(RelatedListGeneratorConfig $config, array $options = []): string
     {
+        $options = array_merge([
+            'column' => 'main',
+        ], $options);
+
         $GLOBALS['HUH_LIST_RELATED'] = [];
 
         if (class_exists(CodefogTagsBundle::class) && $config->getFilterCfTags()) {
@@ -41,8 +51,7 @@ class RelatedListGenerator implements ServiceSubscriberInterface
             $this->applyCategoriesFilter($config->getDataContainer(), $config->getCategoriesField(), $config->getEntityId());
         }
 
-        $result = Controller::getFrontendModule($config->getListConfigId());
-
+        $result = Controller::getFrontendModule($config->getListConfigId(), $options['column']);
         unset($GLOBALS['HUH_LIST_RELATED']);
 
         return $result;

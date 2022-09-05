@@ -16,9 +16,7 @@ use Contao\DataContainer;
 use Contao\Date;
 use Contao\Input;
 use Contao\Message;
-use Contao\StringUtil;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeInterface;
-use HeimrichHannot\ReaderBundle\ConfigElementType\RelatedConfigElementType;
 use HeimrichHannot\ReaderBundle\ConfigElementType\SyndicationConfigElementType;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
@@ -110,26 +108,6 @@ class ReaderConfigElementContainer
 
         if (\in_array($readerConfigElementModel->type, [SyndicationConfigElementType::getType()])) {
             Message::addInfo($GLOBALS['TL_LANG']['ERR']['readerBundleConfigElementTypeDeprecated']);
-        }
-
-        // related
-        if ($readerConfigElementModel->type === RelatedConfigElementType::getType()) {
-            $criteria = StringUtil::deserialize($readerConfigElementModel->relatedCriteria, true);
-
-            $fields = [];
-
-            if (\in_array(static::RELATED_CRITERIUM_TAGS, $criteria)) {
-                $fields[] = 'tagsField';
-            }
-
-            if (\in_array(static::RELATED_CRITERIUM_CATEGORIES, $criteria)) {
-                $fields[] = 'categoriesField';
-            }
-
-            $GLOBALS['TL_DCA']['tl_reader_config_element']['palettes'][RelatedConfigElementType::getType()] = str_replace(
-                'relatedCriteria;', 'relatedCriteria,'.implode(',', $fields).';',
-                $GLOBALS['TL_DCA']['tl_reader_config_element']['palettes'][RelatedConfigElementType::getType()]
-            );
         }
     }
 
