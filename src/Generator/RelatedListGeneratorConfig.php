@@ -14,6 +14,7 @@ class RelatedListGeneratorConfig
     private int $entityId;
 
     private string $tagsField;
+    private string $categoriesField;
 
     private bool $filterCfTags = false;
     private bool $filterCategories = false;
@@ -31,19 +32,9 @@ class RelatedListGeneratorConfig
         return $this->dataContainer;
     }
 
-    public function setDataContainer(string $dataContainer): void
-    {
-        $this->dataContainer = $dataContainer;
-    }
-
     public function getEntityId(): int
     {
         return $this->entityId;
-    }
-
-    public function setEntityId(int $entityId): void
-    {
-        $this->entityId = $entityId;
     }
 
     public function getFilterCfTags(): bool
@@ -61,14 +52,29 @@ class RelatedListGeneratorConfig
         return $this->tagsField;
     }
 
-    public function setTagsField(string $tagsField): void
+    public function setTagsField(string $tagsField): self
     {
         $this->filterCfTags = true;
         $this->tagsField = $tagsField;
+
+        return $this;
     }
 
     public function getListConfigId(): int
     {
         return $this->listConfigId;
+    }
+
+    public function getCategoriesField(): string
+    {
+        return $this->categoriesField;
+    }
+
+    public function setCategoriesField(string $categoriesField): self
+    {
+        $this->filterCategories = true;
+        $this->categoriesField = $categoriesField;
+
+        return $this;
     }
 }

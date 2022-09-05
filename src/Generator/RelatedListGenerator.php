@@ -8,29 +8,38 @@
 
 namespace HeimrichHannot\ReaderBundle\Generator;
 
+use Codefog\TagsBundle\CodefogTagsBundle;
 use Contao\Controller;
 use Contao\Database;
+use HeimrichHannot\CategoriesBundle\CategoriesBundle;
+use HeimrichHannot\CategoriesBundle\Manager\CategoryManager;
 use HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer;
 use HeimrichHannot\UtilsBundle\Util\Utils;
+use Psr\Container\ContainerInterface;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
-class RelatedListGenerator
+class RelatedListGenerator implements ServiceSubscriberInterface
 {
-    private Utils $utils;
+    private Utils              $utils;
+    private ContainerInterface $container;
 
-    public function __construct(Utils $utils)
+    public function __construct(ContainerInterface $container, Utils $utils)
     {
         $this->utils = $utils;
+        $this->container = $container;
     }
 
     public function generate(RelatedListGeneratorConfig $config): string
     {
         $GLOBALS['HUH_LIST_RELATED'] = [];
 
-        if ($config->getFilterCfTags()) {
+        if (class_exists(CodefogTagsBundle::class) && $config->getFilterCfTags()) {
             $this->applyTagsFilter($config->getDataContainer(), $config->getTagsField(), $config->getEntityId());
         }
 
-//        $this->applyCategoriesFilter($configElement, $item);
+        if (class_exists(CategoriesBundle::class) && $config->getFilterCategories()) {
+            $this->applyCategoriesFilter($config->getDataContainer(), $config->getCategoriesField(), $config->getEntityId());
+        }
 
         $result = Controller::getFrontendModule($config->getListConfigId());
 
@@ -39,7 +48,14 @@ class RelatedListGenerator
         return $result;
     }
 
-    protected function applyTagsFilter(string $table, string $tagsField, int $entityId)
+    public static function getSubscribedServices()
+    {
+        return [
+            '?'.'HeimrichHannot\CategoriesBundle\Manager\CategoryManager',
+        ];
+    }
+
+    protected function applyTagsFilter(string $table, string $tagsField, int $entityId): void
     {
         $dca = $GLOBALS['TL_DCA'][$table]['fields'][$tagsField];
 
@@ -71,6 +87,36 @@ class RelatedListGenerator
                     'itemIds' => $itemIds,
                 ];
             }
+        }
+    }
+
+    protected function applyCategoriesFilter(string $table, string $categoriesField, int $entityId): void
+    {
+        if (!class_exists(CategoryManager::class) && !$this->container->has(CategoryManager::class)) {
+            return;
+        }
+
+        $categories = $this->container->get(CategoryManager::class)->findByEntityAndCategoryFieldAndTable(
+            $entityId, $$categoriesField, $table
+        );
+
+        if (!$categories) {
+            return;
+        }
+
+        $relatedIds = Database::getInstance()->prepare(
+            'SELECT t.* FROM tl_category_association t WHERE t.category IN ('.implode(',', $categories->fetchEach('id')).')'
+        )->execute();
+
+        if ($relatedIds->numRows > 0) {
+            $itemIds = $relatedIds->fetchEach('entity');
+
+            // exclude the item itself
+            $itemIds = array_diff($itemIds, [$entityId]);
+
+            $GLOBALS['HUH_LIST_RELATED'][ReaderConfigElementContainer::RELATED_CRITERIUM_CATEGORIES] = [
+                'itemIds' => $itemIds,
+            ];
         }
     }
 }
