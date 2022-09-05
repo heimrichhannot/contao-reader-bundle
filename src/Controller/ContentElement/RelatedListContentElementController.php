@@ -70,9 +70,10 @@ class RelatedListContentElementController extends AbstractContentElementControll
             $listGeneratorConfig->setCategoriesField($model->categoriesField);
         }
 
-        $template->relatedList = $this->relatedListGenerator->generate($listGeneratorConfig);
-
-//        $this->relatedListGenerator->generate();
+        $template->relatedList = $this->relatedListGenerator->generate(
+            $listGeneratorConfig,
+            $request->attributes->get('section', 'main')
+        );
 
         return $template->getResponse();
     }
