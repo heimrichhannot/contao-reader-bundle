@@ -53,7 +53,7 @@ class RelatedConfigElementType implements ConfigElementTypeInterface
         $listGeneratorConfig = new RelatedListGeneratorConfig(
             $readerConfigModel->dataContainer,
             $configElementData->getItemData()['id'],
-            $configElementData->getConfiguration()->id
+            $configElementData->getConfiguration()->relatedListModule
         );
 
         if (\in_array(ReaderConfigElementContainer::RELATED_CRITERIUM_TAGS, $criteria)) {

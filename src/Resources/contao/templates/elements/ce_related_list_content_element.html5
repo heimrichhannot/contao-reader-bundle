@@ -1,1 +1,5 @@
-<?php
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('content') ?>
+<?= $this->relatedList ?>
+<?php $this->endblock(); ?>

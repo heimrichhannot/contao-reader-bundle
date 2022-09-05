@@ -106,7 +106,7 @@ class RelatedListGenerator implements ServiceSubscriberInterface
         }
 
         $categories = $this->container->get(CategoryManager::class)->findByEntityAndCategoryFieldAndTable(
-            $entityId, $$categoriesField, $table
+            $entityId, $categoriesField, $table
         );
 
         if (!$categories) {
