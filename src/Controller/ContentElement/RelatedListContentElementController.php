@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @ContentElement(category="list")
+ * @ContentElement(RelatedListContentElementController::TYPE, category="includes")
  */
 class RelatedListContentElementController extends AbstractContentElementController
 {

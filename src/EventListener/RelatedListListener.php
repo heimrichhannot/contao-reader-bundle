@@ -9,6 +9,7 @@
 namespace HeimrichHannot\ReaderBundle\EventListener;
 
 use Contao\ContentModel;
+use Contao\Controller;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
@@ -64,6 +65,8 @@ class RelatedListListener implements ServiceSubscriberInterface
             }
             $criteria = StringUtil::deserialize($element->relatedCriteria, true);
             $palette = RelatedListContentElementController::TYPE;
+
+            Controller::loadLanguageFile('tl_reader_config_element');
         } else {
             return;
         }

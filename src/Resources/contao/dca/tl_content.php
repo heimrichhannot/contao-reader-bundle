@@ -6,9 +6,11 @@
  * @license LGPL-3.0-or-later
  */
 
+use HeimrichHannot\ReaderBundle\Controller\ContentElement\RelatedListContentElementController;
+
 $dca = &$GLOBALS['TL_DCA']['tl_content'];
 
-$dca['palettes']['related_list_content_element'] = '{type_legend},type,headline;{config_legend},relatedExplanation,readerConfig,relatedListModule,relatedCriteriaExplanation,relatedCriteria;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop';
+$dca['palettes'][RelatedListContentElementController::TYPE] = '{type_legend},type,headline;{config_legend},relatedExplanation,readerConfig,relatedListModule,relatedCriteriaExplanation,relatedCriteria;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop';
 
 $dca['fields']['relatedExplanation'] = [
     'inputType' => 'explanation',
