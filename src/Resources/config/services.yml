@@ -11,7 +11,7 @@ services:
       autowire: true
 
   HeimrichHannot\ReaderBundle\:
-    resource: '../../{DataContainer,EventListener,Generator}/*'
+    resource: '../../{DataContainer,EventListener,Generator,Migration}/*'
     exclude: '../../*/{RelatedListGeneratorConfig.php}'
     autowire: true
     autoconfigure: true

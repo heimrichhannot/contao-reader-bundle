@@ -15,6 +15,7 @@ use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeIn
 use HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer;
 use HeimrichHannot\ReaderBundle\Generator\RelatedListGenerator;
 use HeimrichHannot\ReaderBundle\Generator\RelatedListGeneratorConfig;
+use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 
 class RelatedConfigElementType implements ConfigElementTypeInterface
 {
@@ -45,12 +46,12 @@ class RelatedConfigElementType implements ConfigElementTypeInterface
     {
         $criteria = StringUtil::deserialize($configElementData->getConfiguration()->relatedCriteria, true);
 
-        if (empty($criteria)) {
+        if (empty($criteria) || !($readerConfigModel = ReaderConfigModel::findByPk($configElementData->getConfiguration()->pid))) {
             return new ConfigElementResult(ConfigElementResult::TYPE_NONE, null);
         }
 
         $listGeneratorConfig = new RelatedListGeneratorConfig(
-            $configElementData->getItemData()['dataContainer'],
+            $readerConfigModel->dataContainer,
             $configElementData->getItemData()['id'],
             $configElementData->getConfiguration()->id
         );

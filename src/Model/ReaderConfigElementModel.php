@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -17,6 +17,7 @@ use Contao\Model;
  * @property int    $dateAdded
  * @property string $title
  * @property string $type
+ * @property string $templateVariable
  * @property string $imageSelectorField
  * @property string $imageField
  * @property string $imgSize
