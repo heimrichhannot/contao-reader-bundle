@@ -12,7 +12,7 @@ use Contao\StringUtil;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementData;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementResult;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeInterface;
-use HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer;
+use HeimrichHannot\ReaderBundle\EventListener\RelatedListListener;
 use HeimrichHannot\ReaderBundle\Generator\RelatedListGenerator;
 use HeimrichHannot\ReaderBundle\Generator\RelatedListGeneratorConfig;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
@@ -56,11 +56,11 @@ class RelatedConfigElementType implements ConfigElementTypeInterface
             $configElementData->getConfiguration()->relatedListModule
         );
 
-        if (\in_array(ReaderConfigElementContainer::RELATED_CRITERIUM_TAGS, $criteria)) {
+        if (\in_array(RelatedListListener::CRITERIUM_TAGS, $criteria)) {
             $listGeneratorConfig->setTagsField($configElementData->getConfiguration()->tagsField);
         }
 
-        if (\in_array(ReaderConfigElementContainer::RELATED_CRITERIUM_CATEGORIES, $criteria)) {
+        if (\in_array(RelatedListListener::CRITERIUM_CATEGORIES, $criteria)) {
             $listGeneratorConfig->setTagsField($configElementData->getConfiguration()->categoriesField);
         }
 

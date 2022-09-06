@@ -27,7 +27,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ReaderConfigElementContainer
 {
+    /** @deprecated Use RelatedListListener::CRITERIUM_TAGS */
     public const RELATED_CRITERIUM_TAGS = 'tags';
+    /** @deprecated Use RelatedListListener::CRITERIUM_CATEGORIES  */
     public const RELATED_CRITERIUM_CATEGORIES = 'categories';
 
     const SELECTOR_FIELD = 'typeSelectorField';
@@ -54,25 +56,8 @@ class ReaderConfigElementContainer
         $this->utils = $utils;
     }
 
-    public function getRelatedCriteriaAsOptions()
-    {
-        $options = [];
-
-        if (class_exists('\Codefog\TagsBundle\CodefogTagsBundle')) {
-            $options[] = static::RELATED_CRITERIUM_TAGS;
-        }
-
-        if (class_exists('\HeimrichHannot\CategoriesBundle\CategoriesBundle')) {
-            $options[] = static::RELATED_CRITERIUM_CATEGORIES;
-        }
-
-        return $options;
-    }
-
     /**
      * Update dca palettes with config element types palettes.
-     *
-     * @param $dc
      *
      * @Callback(table="tl_reader_config_element", target="config.onload")
      */

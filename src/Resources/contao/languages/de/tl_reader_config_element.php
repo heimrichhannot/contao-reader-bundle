@@ -6,6 +6,8 @@
  * @license LGPL-3.0-or-later
  */
 
+use HeimrichHannot\ReaderBundle\EventListener\RelatedListListener;
+
 $lang = &$GLOBALS['TL_LANG']['tl_reader_config_element'];
 
 /*
@@ -335,8 +337,8 @@ $lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLA
 $lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED] = 'geschlechtsspezifisch';
 $lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_RANDOM] = 'zufällig';
 $lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_FIELD] = 'feldabhängig';
-$lang['reference'][\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer::RELATED_CRITERIUM_TAGS] = 'Schlagworte';
-$lang['reference'][\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer::RELATED_CRITERIUM_CATEGORIES] = 'Kategorien';
+$lang['reference'][RelatedListListener::CRITERIUM_TAGS] = 'Schlagworte';
+$lang['reference'][RelatedListListener::CRITERIUM_CATEGORIES] = 'Kategorien';
 
 /*
  * Legends

@@ -13,7 +13,7 @@ use Contao\Controller;
 use Contao\Database;
 use HeimrichHannot\CategoriesBundle\CategoriesBundle;
 use HeimrichHannot\CategoriesBundle\Manager\CategoryManager;
-use HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer;
+use HeimrichHannot\ReaderBundle\EventListener\RelatedListListener;
 use HeimrichHannot\UtilsBundle\Util\Utils;
 use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -92,7 +92,7 @@ class RelatedListGenerator implements ServiceSubscriberInterface
                 // exclude the item itself
                 $itemIds = array_diff($itemIds, [$entityId]);
 
-                $GLOBALS['HUH_LIST_RELATED'][ReaderConfigElementContainer::RELATED_CRITERIUM_TAGS] = [
+                $GLOBALS['HUH_LIST_RELATED'][RelatedListListener::CRITERIUM_TAGS] = [
                     'itemIds' => $itemIds,
                 ];
             }
@@ -123,7 +123,7 @@ class RelatedListGenerator implements ServiceSubscriberInterface
             // exclude the item itself
             $itemIds = array_diff($itemIds, [$entityId]);
 
-            $GLOBALS['HUH_LIST_RELATED'][ReaderConfigElementContainer::RELATED_CRITERIUM_CATEGORIES] = [
+            $GLOBALS['HUH_LIST_RELATED'][RelatedListListener::CRITERIUM_CATEGORIES] = [
                 'itemIds' => $itemIds,
             ];
         }
