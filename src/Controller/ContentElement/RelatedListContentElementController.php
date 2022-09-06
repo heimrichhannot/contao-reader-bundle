@@ -72,7 +72,7 @@ class RelatedListContentElementController extends AbstractContentElementControll
 
         $template->relatedList = $this->relatedListGenerator->generate(
             $listGeneratorConfig,
-            $request->attributes->get('section', 'main')
+            ['column' => $request->attributes->get('section', 'main')]
         );
 
         return $template->getResponse();
