@@ -16,9 +16,7 @@ use Contao\DataContainer;
 use Contao\Date;
 use Contao\Input;
 use Contao\Message;
-use Contao\StringUtil;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeInterface;
-use HeimrichHannot\ReaderBundle\ConfigElementType\RelatedConfigElementType;
 use HeimrichHannot\ReaderBundle\ConfigElementType\SyndicationConfigElementType;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigElementRegistry;
@@ -29,7 +27,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ReaderConfigElementContainer
 {
+    /** @deprecated Use RelatedListListener::CRITERIUM_TAGS */
     public const RELATED_CRITERIUM_TAGS = 'tags';
+    /** @deprecated Use RelatedListListener::CRITERIUM_CATEGORIES  */
     public const RELATED_CRITERIUM_CATEGORIES = 'categories';
 
     const SELECTOR_FIELD = 'typeSelectorField';
@@ -56,25 +56,8 @@ class ReaderConfigElementContainer
         $this->utils = $utils;
     }
 
-    public function getRelatedCriteriaAsOptions()
-    {
-        $options = [];
-
-        if (class_exists('\Codefog\TagsBundle\CodefogTagsBundle')) {
-            $options[] = static::RELATED_CRITERIUM_TAGS;
-        }
-
-        if (class_exists('\HeimrichHannot\CategoriesBundle\CategoriesBundle')) {
-            $options[] = static::RELATED_CRITERIUM_CATEGORIES;
-        }
-
-        return $options;
-    }
-
     /**
      * Update dca palettes with config element types palettes.
-     *
-     * @param $dc
      *
      * @Callback(table="tl_reader_config_element", target="config.onload")
      */
@@ -110,26 +93,6 @@ class ReaderConfigElementContainer
 
         if (\in_array($readerConfigElementModel->type, [SyndicationConfigElementType::getType()])) {
             Message::addInfo($GLOBALS['TL_LANG']['ERR']['readerBundleConfigElementTypeDeprecated']);
-        }
-
-        // related
-        if ($readerConfigElementModel->type === RelatedConfigElementType::getType()) {
-            $criteria = StringUtil::deserialize($readerConfigElementModel->relatedCriteria, true);
-
-            $fields = [];
-
-            if (\in_array(static::RELATED_CRITERIUM_TAGS, $criteria)) {
-                $fields[] = 'tagsField';
-            }
-
-            if (\in_array(static::RELATED_CRITERIUM_CATEGORIES, $criteria)) {
-                $fields[] = 'categoriesField';
-            }
-
-            $GLOBALS['TL_DCA']['tl_reader_config_element']['palettes'][RelatedConfigElementType::getType()] = str_replace(
-                'relatedCriteria;', 'relatedCriteria,'.implode(',', $fields).';',
-                $GLOBALS['TL_DCA']['tl_reader_config_element']['palettes'][RelatedConfigElementType::getType()]
-            );
         }
     }
 

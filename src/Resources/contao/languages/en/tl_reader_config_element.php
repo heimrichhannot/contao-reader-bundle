@@ -1,10 +1,12 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
+
+use HeimrichHannot\ReaderBundle\EventListener\RelatedListListener;
 
 $lang = &$GLOBALS['TL_LANG']['tl_reader_config_element'];
 
@@ -46,8 +48,8 @@ $lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLA
 $lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_GENDERED] = 'gender-specific';
 $lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_RANDOM] = 'random';
 $lang['reference'][\HeimrichHannot\ReaderBundle\Backend\ReaderConfigElement::PLACEHOLDER_IMAGE_MODE_FIELD] = 'field dependent';
-$lang['reference'][\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer::RELATED_CRITERIUM_TAGS] = 'tags';
-$lang['reference'][\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigElementContainer::RELATED_CRITERIUM_CATEGORIES] = 'categories';
+$lang['reference'][RelatedListListener::CRITERIUM_TAGS] = 'tags';
+$lang['reference'][RelatedListListener::CRITERIUM_CATEGORIES] = 'categories';
 
 /*
  * Legends

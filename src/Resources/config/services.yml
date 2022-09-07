@@ -11,10 +11,18 @@ services:
       autowire: true
 
   HeimrichHannot\ReaderBundle\:
-    resource: '../../{DataContainer,EventListener}/*'
+    resource: '../../{Controller,DataContainer,EventListener,Generator,Migration}/*'
+    exclude: '../../*/{RelatedListGeneratorConfig.php}'
     autowire: true
     autoconfigure: true
     public: true
+
+  HeimrichHannot\ReaderBundle\ConfigElementType\:
+    resource: '../../ConfigElementType/{RelatedConfigElementType.php}'
+    autoconfigure: true
+    autowire: true
+    public: false
+    tags: ['huh.reader.config_element_type']
 
   huh.reader.backend.reader-config:
     class: HeimrichHannot\ReaderBundle\Backend\ReaderConfig
@@ -112,7 +120,6 @@ services:
   HeimrichHannot\ReaderBundle\ConfigElementType\RedirectionConfigElementType: ~
   HeimrichHannot\ReaderBundle\ConfigElementType\DeleteConfigElementType: ~
   HeimrichHannot\ReaderBundle\ConfigElementType\NavigationConfigElementType: ~
-  HeimrichHannot\ReaderBundle\ConfigElementType\RelatedConfigElementType: ~
   HeimrichHannot\ReaderBundle\ConfigElementType\TagsConfigElementType: ~
   HeimrichHannot\ReaderBundle\ConfigElementType\SubmissionFormConfigElementType:
     tags: [ 'huh.reader.config_element_type' ]
