@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.38.0] - 2022-09-07
+- Added: related list element ([#8])
+- Deprecated: ReaderConfigElementContainer::RELATED_CRITERIUM_TAGS ([#8])
+- Deprecated: ReaderConfigElementContainer::RELATED_CRITERIUM_CATEGORIES ([#8])
+
 ## [1.37.0] - 2022-08-22
 - Changed: minimum php version is now 7.4
 - Changed: some small refactoring
@@ -418,3 +423,6 @@ existing method from the inherit method and register the class as service.
 - enhanced ReaderManager service config
 - removed ReaderConfigElement constants TYPE_COMMENT
 - added english translations for config element types
+
+
+[#8]: https://github.com/heimrichhannot/contao-reader-bundle/pull/8
