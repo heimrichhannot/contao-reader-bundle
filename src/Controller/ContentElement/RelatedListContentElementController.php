@@ -70,8 +70,6 @@ class RelatedListContentElementController extends AbstractContentElementControll
         }
 
         $this->readerManager->setModuleData(['readerConfig' => $readerConfigModel->id]);
-        $this->readerManager->setReaderConfig($readerConfigModel);
-
         $item = $this->readerManager->retrieveItem();
 
         if (!$item || empty($criteria)) {

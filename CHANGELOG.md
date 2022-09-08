@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.38.1] - 2022-09-08
+- Fixed: issue when using related list content element and related list config element type on same page
+
 ## [1.38.0] - 2022-09-07
 - Added: related list element ([#8])
 - Deprecated: ReaderConfigElementContainer::RELATED_CRITERIUM_TAGS ([#8])
