@@ -27,9 +27,11 @@ class RelatedConfigElementMigration implements MigrationInterface
             [RelatedConfigElementType::getType()]
         );
 
-        while ($elements->next()) {
-            if (!$elements->templateVariable) {
-                return true;
+        if ($elements) {
+            while ($elements->next()) {
+                if (!$elements->templateVariable) {
+                    return true;
+                }
             }
         }
 
@@ -43,10 +45,12 @@ class RelatedConfigElementMigration implements MigrationInterface
             [RelatedConfigElementType::getType()]
         );
 
-        foreach ($elements as $element) {
-            if (!$element->templateVariable) {
-                $element->templateVariable = 'relatedItems';
-                $element->save();
+        if ($elements) {
+            foreach ($elements as $element) {
+                if (!$element->templateVariable) {
+                    $element->templateVariable = 'relatedItems';
+                    $element->save();
+                }
             }
         }
 

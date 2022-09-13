@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.38.2] - 2022-09-13
+- Fixed: warning in migration
+
 ## [1.38.1] - 2022-09-08
 - Fixed: issue when using related list content element and related list config element type on same page
 
