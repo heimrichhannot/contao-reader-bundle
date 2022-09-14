@@ -10,11 +10,22 @@ namespace HeimrichHannot\ReaderBundle\Migration;
 
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Migration\MigrationResult;
+use Doctrine\DBAL\Connection;
 use HeimrichHannot\ReaderBundle\ConfigElementType\RelatedConfigElementType;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 
 class RelatedConfigElementMigration implements MigrationInterface
 {
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
     public function getName(): string
     {
         return 'Related config element type migration';
@@ -22,17 +33,14 @@ class RelatedConfigElementMigration implements MigrationInterface
 
     public function shouldRun(): bool
     {
-        $elements = ReaderConfigElementModel::findBy(
-            [ReaderConfigElementModel::getTable().'.type=?'],
+        $result = $this->connection->executeQuery(
+            'SELECT COUNT(id) AS count FROM '.ReaderConfigElementModel::getTable().' '
+            ."WHERE type=? AND templateVariable=''",
             [RelatedConfigElementType::getType()]
         );
 
-        if ($elements) {
-            while ($elements->next()) {
-                if (!$elements->templateVariable) {
-                    return true;
-                }
-            }
+        if ($result->rowCount() > 0 && ($result->fetchAssociative()['count'] ?? 0) > 0) {
+            return true;
         }
 
         return false;

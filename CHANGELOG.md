@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.38.3] - 2022-09-14
+- Fixed: exception in migration when updating to contao 4.13
+
 ## [1.38.2] - 2022-09-13
 - Fixed: warning in migration
 
