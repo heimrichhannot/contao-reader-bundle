@@ -22,6 +22,14 @@ $lang['evaluateFilter'] = [
     'Choose this option to evaluation the filter for item retrival. This option is recommended to prevent accessing all items.',
 ];
 
+// misc
+$lang['headTags'][0] = 'Meta- /Head tags';
+$lang['headTags'][1] = 'Choose how the content should be used in head tags (title, meta).';
+$lang['headTags_service'][0] = 'Tag';
+$lang['headTags_service'][1] = 'Select a tag';
+$lang['headTags_pattern'][0] = 'Content pattern';
+$lang['headTags_pattern'][1] = 'Set the tag content. You can use field content by using setting field name in % (example: "%somefield1% %somefield2%").';
+
 /*
  * Legends
  */
