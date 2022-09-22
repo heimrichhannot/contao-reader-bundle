@@ -87,17 +87,12 @@ $lang['disable404'][0] = '404-Weiterleitung deaktivieren';
 $lang['disable404'][1] = 'Wählen Sie diese Option, wenn nicht zu einer 404-Seite weitergeleitet werden soll, wenn kein Item gefunden wurde.';
 
 // misc
-$lang['headTags'][0] = '&lt;head&gt; Tags';
-$lang['headTags'][1] = 'Legen Sie fest, welche Inhalte der Instanz in welchen &lt;head&gt; Tag (title, meta, og) überführt werden sollen.';
-$lang['headTags_service'][0] = 'Tag-Service';
+$lang['headTags'][0] = 'Meta- /Head-Tags';
+$lang['headTags'][1] = 'Legen Sie fest, welche Inhalte der Instanz in welchen Head-Tag (title, meta) überführt werden sollen.';
+$lang['headTags_service'][0] = 'Tag';
 $lang['headTags_service'][1] = 'Wählen Sie einen verfügbaren Tag aus.';
-$lang['headTags_pattern'][0] = 'Pattern';
-$lang['headTags_pattern'][1] = 'Geben Sie hier ein Text-Muster ein (Beispiel: "%somefield1% %somefield2%").';
-
-$lang['setMetaDescriptionByField'][0] = 'Instanzfeld als Meta-Description setzen';
-$lang['setMetaDescriptionByField'][1] = 'Wählen Sie diese Option, wenn die Meta-Description dynamisch mit einem Instanzfeld ersetzt werden soll.';
-$lang['metaDescriptionFieldPattern'][0] = 'Instanzfeld-Muster';
-$lang['metaDescriptionFieldPattern'][1] = 'Geben Sie hier ein Text-Muster Meta-Description ein (Beispiel: "%somefield1% %somefield2%").';
+$lang['headTags_pattern'][0] = 'Inhalt-Pattern';
+$lang['headTags_pattern'][1] = 'Geben Sie hier den Inhalt des Tags an. Sie können Feld-Werte nutzen, in dem sie den Feldnamen in % setzen. (Beispiel: "%somefield1% %somefield2%").';
 
 $lang['addDcMultilingualSupport'][0] = 'Support für DC_Multilingual hinzufügen';
 $lang['addDcMultilingualSupport'][1] = 'Wählen Sie diese Option, die verknüpfte Entität durch das Bundle "terminal42/contao-DC_Multilingual" übersetzbar ist.';

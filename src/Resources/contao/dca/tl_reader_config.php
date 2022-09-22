@@ -372,7 +372,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
                         'service' => [
                             'label' => &$GLOBALS['TL_LANG']['tl_reader_config']['headTags_service'],
                             'inputType' => 'select',
-                            'options' => array_values(\Contao\System::getContainer()->getParameter('huh.head.tags')),
+                            'options' => ['title', 'meta_description' => 'Meta description'],
                             'eval' => ['groupStyle' => 'width:50%', 'includeBlankOption' => true, 'decodeEntities' => true, 'chosen' => true],
                         ],
                         'pattern' => [

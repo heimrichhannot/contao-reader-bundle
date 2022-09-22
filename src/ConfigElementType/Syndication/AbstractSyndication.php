@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -9,8 +9,11 @@
 namespace HeimrichHannot\ReaderBundle\ConfigElementType\Syndication;
 
 use Contao\Controller;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
+use HeimrichHannot\HeadBundle\HeadTag\MetaTag;
+use HeimrichHannot\HeadBundle\Manager\HtmlHeadTagManager;
 use HeimrichHannot\ReaderBundle\ConfigElementType\Syndication\Link\LinkInterface;
 use HeimrichHannot\ReaderBundle\Item\ItemInterface;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
@@ -55,20 +58,29 @@ abstract class AbstractSyndication
     {
         $this->item = $item;
         $this->readerConfigElement = $readerConfigElement;
-        $this->url = System::getContainer()->get('request_stack')->getMasterRequest()->getSchemeAndHttpHost().System::getContainer()->get('request_stack')->getMasterRequest()->getPathInfo();
+        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+        $this->url = $request->getSchemeAndHttpHost().$request->getPathInfo();
 
-        /*
-         * @var PageModel $objPage
-         */
+        /* @var PageModel $objPage */
         global $objPage;
 
         $this->title = $objPage->pageTitle;
 
-        $description = StringUtil::decodeEntities(System::getContainer()->get('huh.head.tag.meta_description')->getContent());
+        /** @var MetaTag|null $tag */
+        if (class_exists(HtmlHeadTagManager::class)
+            && System::getContainer()->has(HtmlHeadTagManager::class)
+            && ($tag = System::getContainer()->get(HtmlHeadTagManager::class)->getTag('meta_description'))
+        ) {
+            $description = $tag->getContent();
+        } else {
+            $description = $objPage->description;
+        }
+
+        $description = StringUtil::decodeEntities($description);
         $description = Controller::replaceInsertTags($description, false);
         $description = strip_tags($description);
         $description = str_replace("\n", ' ', $description);
-        $description = \StringUtil::substr($description, 320);
+        $description = StringUtil::substr($description, 320);
 
         $this->description = $description;
     }

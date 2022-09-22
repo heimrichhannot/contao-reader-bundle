@@ -11,11 +11,13 @@ namespace HeimrichHannot\ReaderBundle\Manager;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
-use Contao\Environment as ContaoEnvironment;
 use Contao\Input;
 use Contao\Model;
 use Contao\StringUtil;
@@ -40,15 +42,14 @@ use HeimrichHannot\UtilsBundle\Image\ImageUtil;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 use HeimrichHannot\UtilsBundle\Url\UrlUtil;
 use HeimrichHannot\UtilsBundle\Util\Utils;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Twig\Environment;
 
-class ReaderManager implements ReaderManagerInterface
+class ReaderManager implements ReaderManagerInterface, ServiceSubscriberInterface
 {
-    /**
-     * @var ContaoFrameworkInterface
-     */
-    protected $framework;
+    protected ContaoFramework $framework;
 
     /**
      * @var FilterManager
@@ -140,7 +141,7 @@ class ReaderManager implements ReaderManagerInterface
 
     public function __construct(
         ContainerInterface $container,
-        ContaoFrameworkInterface $framework,
+        ContaoFramework $framework,
         FilterManager $filterManager,
         ReaderQueryBuilder $readerQueryBuilder,
         ReaderConfigRegistry $readerConfigRegistry,
@@ -382,30 +383,14 @@ class ReaderManager implements ReaderManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function setMetaDescription(): void
-    {
-        $readerConfig = $this->readerConfig;
-        $item = $this->item;
-
-        if ($readerConfig->setMetaDescriptionByField && $readerConfig->metaDescriptionFieldPattern) {
-            $description = preg_replace_callback('@%([^%]+)%@i', function (array $matches) use ($item) {
-                return $item->{$matches[1]};
-            }, $readerConfig->metaDescriptionFieldPattern);
-
-            $description = Controller::replaceInsertTags($description, false);
-            $description = strip_tags($description);
-            $description = str_replace("\n", ' ', $description);
-            $description = \StringUtil::substr($description, 320);
-
-            $this->container->get('huh.head.tag.meta_description')->setContent(trim($description));
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function setHeadTags(): void
     {
+        $pageModel = $this->utils->request()->getCurrentPageModel();
+
+        if (!$pageModel) {
+            return;
+        }
+
         $item = $this->item;
         $tags = StringUtil::deserialize($this->readerConfig->headTags, true);
 
@@ -417,23 +402,22 @@ class ReaderManager implements ReaderManagerInterface
             $service = $config['service'];
             $pattern = $config['pattern'] ?? '';
 
-            if (!$this->container->has($service)) {
-                continue;
-            }
-
             $value = preg_replace_callback('@%([^%]+)%@i', function (array $matches) use ($item) {
                 return $this->formUtil->prepareSpecialValueForOutput($matches[1], $item->{$matches[1]}, $this->getDataContainer());
             }, $pattern);
 
             switch ($service) {
+                case 'title':
                 case 'huh.head.tag.title':
-                    global $objPage;
-                    $objPage->pageTitle = $value;
+                    $pageModel->pageTitle = $value;
 
                     break;
 
-                default:
-                    $this->container->get($service)->setContent($value);
+                case 'meta_description':
+                case 'huh.head.tag.meta_description':
+                    $pageModel->description = $value;
+
+                    break;
             }
         }
     }
@@ -442,10 +426,31 @@ class ReaderManager implements ReaderManagerInterface
     {
         $detailsUrl = $this->getItem()->getDetailsUrl(true, true);
 
-        if ($detailsUrl) {
-            System::getContainer()->get('huh.head.tag.link_canonical')->setContent(
-                ContaoEnvironment::get('url').'/'.$this->getItem()->getDetailsUrl(true, true)
-            );
+        if (!$detailsUrl) {
+            return;
+        }
+
+        $pageModel = $this->utils->request()->getCurrentPageModel();
+
+        if (!$pageModel) {
+            return;
+        }
+
+        if (!class_exists(HtmlHeadBag::class) || !$this->container->has(ResponseContextAccessor::class)) {
+            return;
+        }
+        $contextAccessor = $this->container->get(ResponseContextAccessor::class);
+
+        if (!$contextAccessor->getResponseContext()->has(HtmlHeadBag::class)) {
+            return;
+        }
+
+        /* @var HtmlHeadBag $htmlHeadBag */
+        $htmlHeadBag = $contextAccessor->getResponseContext()->get(HtmlHeadBag::class);
+
+        if ($this->container->has('request_stack') && ($request = $this->container->get('request_stack')->getCurrentRequest())) {
+            $pageModel->enableCanonical = true;
+            $htmlHeadBag->setCanonicalUri($request->getSchemeAndHttpHost().'/'.ltrim($detailsUrl, '/'));
         }
     }
 
@@ -680,6 +685,19 @@ class ReaderManager implements ReaderManagerInterface
         }
 
         return $fields;
+    }
+
+    public static function getSubscribedServices()
+    {
+        $services = [
+            'request_stack' => RequestStack::class,
+        ];
+
+        if (class_exists(ResponseContextAccessor::class)) {
+            $services[] = '?'.ResponseContextAccessor::class;
+        }
+
+        return $services;
     }
 
     /**
