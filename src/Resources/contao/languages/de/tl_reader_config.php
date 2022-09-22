@@ -94,11 +94,6 @@ $lang['headTags_service'][1] = 'Wählen Sie einen verfügbaren Tag aus.';
 $lang['headTags_pattern'][0] = 'Pattern';
 $lang['headTags_pattern'][1] = 'Geben Sie hier ein Text-Muster ein (Beispiel: "%somefield1% %somefield2%").';
 
-$lang['setMetaDescriptionByField'][0] = 'Instanzfeld als Meta-Description setzen';
-$lang['setMetaDescriptionByField'][1] = 'Wählen Sie diese Option, wenn die Meta-Description dynamisch mit einem Instanzfeld ersetzt werden soll.';
-$lang['metaDescriptionFieldPattern'][0] = 'Instanzfeld-Muster';
-$lang['metaDescriptionFieldPattern'][1] = 'Geben Sie hier ein Text-Muster Meta-Description ein (Beispiel: "%somefield1% %somefield2%").';
-
 $lang['addDcMultilingualSupport'][0] = 'Support für DC_Multilingual hinzufügen';
 $lang['addDcMultilingualSupport'][1] = 'Wählen Sie diese Option, die verknüpfte Entität durch das Bundle "terminal42/contao-DC_Multilingual" übersetzbar ist.';
 

@@ -383,28 +383,6 @@ class ReaderManager implements ReaderManagerInterface, ServiceSubscriberInterfac
     /**
      * {@inheritdoc}
      */
-    public function setMetaDescription(): void
-    {
-        $readerConfig = $this->readerConfig;
-        $item = $this->item;
-
-        if ($readerConfig->setMetaDescriptionByField && $readerConfig->metaDescriptionFieldPattern) {
-            $description = preg_replace_callback('@%([^%]+)%@i', function (array $matches) use ($item) {
-                return $item->{$matches[1]};
-            }, $readerConfig->metaDescriptionFieldPattern);
-
-            $description = Controller::replaceInsertTags($description, false);
-            $description = strip_tags($description);
-            $description = str_replace("\n", ' ', $description);
-            $description = \StringUtil::substr($description, 320);
-
-            $this->container->get('huh.head.tag.meta_description')->setContent(trim($description));
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function setHeadTags(): void
     {
         $pageModel = $this->utils->request()->getCurrentPageModel();

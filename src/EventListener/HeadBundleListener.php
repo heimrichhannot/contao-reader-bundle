@@ -62,7 +62,7 @@ class HeadBundleListener implements ServiceSubscriberInterface, EventSubscriberI
         $dataContainer = $event->getItem()->getManager()->getDataContainer();
 
         foreach ($headTags as $row) {
-            if (empty($row['service'])) {
+            if (empty($row['service']) || \in_array($row['service'], ['title', 'huh.head.tag.title'])) {
                 continue;
             }
 
@@ -79,15 +79,17 @@ class HeadBundleListener implements ServiceSubscriberInterface, EventSubscriberI
                 return $item->{$matches[1]};
             }, $value);
 
-            $tag = $headTagManager->getHeadTagFactory()->createTagByName($name, $value);
+            if (!empty($value) && !\in_array($value, ['0', 0])) {
+                $tag = $headTagManager->getHeadTagFactory()->createTagByName($name, $value);
 
-            if ($tag) {
-                $headTagManager->addTag($tag);
-            } elseif ($tag = $headTagManager->getLegacyTagManager()->getTagInstance($name)) {
-                $tag->setContent($value);
-            } elseif ($tag = $headTagManager->getLegacyTagManager()->loadTagFromService($name)) {
-                $tag->setContent($value);
-                $headTagManager->getLegacyTagManager()->registerTag($tag);
+                if ($tag) {
+                    $headTagManager->addTag($tag);
+                } elseif ($tag = $headTagManager->getLegacyTagManager()->getTagInstance($name)) {
+                    $tag->setContent($value);
+                } elseif ($tag = $headTagManager->getLegacyTagManager()->loadTagFromService($name)) {
+                    $tag->setContent($value);
+                    $headTagManager->getLegacyTagManager()->registerTag($tag);
+                }
             }
         }
 
