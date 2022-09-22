@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.39.0] - 2022-09-22
+- Changed: head bundle is now a loose dependency ([#9])
+- Changed: updated head bundle integration (minimum supported version is now 1.10.0) ([#9])
+- Changed: fallback to contao pageTitle and description options if head bundle is not installed ([#9])
+
 ## [1.38.3] - 2022-09-14
 - Fixed: exception in migration when updating to contao 4.13
 
@@ -434,4 +439,5 @@ existing method from the inherit method and register the class as service.
 - added english translations for config element types
 
 
+[#9]: https://github.com/heimrichhannot/contao-reader-bundle/pull/9
 [#8]: https://github.com/heimrichhannot/contao-reader-bundle/pull/8

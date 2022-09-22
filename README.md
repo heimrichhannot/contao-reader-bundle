@@ -14,6 +14,7 @@ It makes it possible to generate readers not only for events, news or faq's but 
 - generic reader module: output entities of arbitrary DCA entities
 - dedicated and inheritable reader config entities that can be assigned to one or many modules
 - twig support for templates
+- [Head Bundle](https://github.com/heimrichhannot/contao-head-bundle) support
 
 *Hint: This module can greatly be used with [heimrichhannot/contao-list-bundle](https://github.com/heimrichhannot/contao-list-bundle) which can display lists of arbitrary DCA entities*
 
