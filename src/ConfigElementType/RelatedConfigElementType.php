@@ -61,7 +61,7 @@ class RelatedConfigElementType implements ConfigElementTypeInterface
         }
 
         if (\in_array(RelatedListListener::CRITERIUM_CATEGORIES, $criteria)) {
-            $listGeneratorConfig->setTagsField($configElementData->getConfiguration()->categoriesField);
+            $listGeneratorConfig->setCategoriesField($configElementData->getConfiguration()->categoriesField);
         }
 
         return new ConfigElementResult(

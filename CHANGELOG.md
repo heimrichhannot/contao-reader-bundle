@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.39.1] - 2022-10-06
+- Fixed: incorrect RelatedListConfigElementType configuration
+
 ## [1.39.0] - 2022-09-22
 - Changed: head bundle is now a loose dependency ([#9])
 - Changed: updated head bundle integration (minimum supported version is now 1.10.0) ([#9])
