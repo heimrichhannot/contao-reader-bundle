@@ -6,6 +6,7 @@
   "require": {
     "php": "^7.4 || ^8.0",
     "contao/core-bundle": "^4.9",
+    "doctrine/dbal": "^2.10 || ^3.0",
     "heimrichhannot/contao-be_explanation-bundle": "^2.2",
     "heimrichhannot/contao-config-element-type-bundle": "^0.2",
     "heimrichhannot/contao-entity-filter-bundle": "^1.0",

@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.39.2] - 2022-10-07
+- Fixed: RelatedConfigElementMigration lead to exception if Reader bundle is a fresh install
+
 ## [1.39.1] - 2022-10-06
 - Fixed: incorrect RelatedListConfigElementType configuration
 

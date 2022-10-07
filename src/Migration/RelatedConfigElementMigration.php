@@ -33,6 +33,10 @@ class RelatedConfigElementMigration implements MigrationInterface
 
     public function shouldRun(): bool
     {
+        if (!\in_array(ReaderConfigElementModel::getTable(), $this->connection->getSchemaManager()->listTableNames())) {
+            return false;
+        }
+
         $result = $this->connection->executeQuery(
             'SELECT COUNT(id) AS count FROM '.ReaderConfigElementModel::getTable().' '
             ."WHERE type=? AND templateVariable=''",
