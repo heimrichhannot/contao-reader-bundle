@@ -178,7 +178,7 @@ class ReaderManager implements ReaderManagerInterface, ServiceSubscriberInterfac
     public function retrieveItem(): ?ItemInterface
     {
         // necessary for getSearchablePages hook
-        if (\PHP_SAPI === 'cli') {
+        if (\PHP_SAPI === 'cli' || !isset($this->moduleData)) {
             return null;
         }
 
