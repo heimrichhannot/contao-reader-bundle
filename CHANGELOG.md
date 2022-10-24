@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.39.4] - 2022-10-24
+- Fixed: PHP 8 warnings
+
 ## [1.39.3] - 2022-10-21
 - Fixed: avoid throwing exception when calling sitemap.xml
 
