@@ -277,7 +277,7 @@ class ReaderManager implements ReaderManagerInterface, ServiceSubscriberInterfac
         $table = $this->readerConfig->dataContainer;
 
         // Only call onload_callbacks with *true* as third argument
-        if (\is_array($GLOBALS['TL_DCA'][$table]['config']['onload_callback'])) {
+        if (isset($GLOBALS['TL_DCA'][$table]['config']['onload_callback']) && \is_array($GLOBALS['TL_DCA'][$table]['config']['onload_callback'])) {
             foreach ($GLOBALS['TL_DCA'][$table]['config']['onload_callback'] as $callback) {
                 if (\is_array($callback) && isset($callback[2]) && $callback[2]) {
                     $instance = System::importStatic($callback[0]);
