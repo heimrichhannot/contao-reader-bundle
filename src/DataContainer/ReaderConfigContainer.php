@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -15,10 +15,10 @@ use Contao\DataContainer;
 use Contao\Image;
 use Contao\RequestToken;
 use Contao\Versions;
-use HeimrichHannot\RequestBundle\Component\HttpFoundation\Request;
 use HeimrichHannot\TwigSupportBundle\Filesystem\TwigTemplateLocator;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 use HeimrichHannot\UtilsBundle\Url\UrlUtil;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class ReaderConfigContainer
 {
@@ -39,23 +39,15 @@ class ReaderConfigContainer
      * @var UrlUtil
      */
     protected $urlUtil;
-    /**
-     * @var Request
-     */
-    protected $request;
+    private RequestStack $requestStack;
 
-    public function __construct(
-        array $bundleConfig,
-        TwigTemplateLocator $templateLocator,
-        ModelUtil $modelUtil,
-        UrlUtil $urlUtil,
-        Request $request
-    ) {
+    public function __construct(array $bundleConfig, TwigTemplateLocator $templateLocator, ModelUtil $modelUtil, UrlUtil $urlUtil, RequestStack $requestStack)
+    {
         $this->bundleConfig = $bundleConfig;
         $this->templateLocator = $templateLocator;
         $this->modelUtil = $modelUtil;
         $this->urlUtil = $urlUtil;
-        $this->request = $request;
+        $this->requestStack = $requestStack;
     }
 
     public function onItemTemplateOptionsCallback()
@@ -88,7 +80,7 @@ class ReaderConfigContainer
     public function sortAlphabetically()
     {
         // sort alphabetically
-        if ('sortAlphabetically' === $this->request->getGet('key')) {
+        if ('sortAlphabetically' === $this->requestStack->getCurrentRequest()->query->get('key')) {
             if (null !== ($readerConfigs = $this->modelUtil->findAllModelInstances('tl_reader_config', [
                     'order' => 'title ASC',
                 ]))) {

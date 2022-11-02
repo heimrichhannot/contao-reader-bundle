@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - 2022-11-02
 - Fixed: tags config element type redirect issues
-- 
+- Fixed: added missing request bundle dependency
 
 ## [1.39.4] - 2022-10-24
 - Fixed: PHP 8 warnings
