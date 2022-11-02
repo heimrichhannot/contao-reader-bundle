@@ -8,15 +8,15 @@
 
 namespace HeimrichHannot\ReaderBundle\ConfigElementType;
 
+use Contao\Controller;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\Database;
 use Contao\System;
-use HeimrichHannot\RequestBundle\Component\HttpFoundation\Request;
 use HeimrichHannot\TwigSupportBundle\Filesystem\TwigTemplateLocator;
-use HeimrichHannot\UtilsBundle\Dca\DcaUtil;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 use HeimrichHannot\UtilsBundle\String\StringUtil;
 use HeimrichHannot\UtilsBundle\Url\UrlUtil;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 
 class TagsConfigElementType implements ReaderConfigElementTypeInterface
@@ -34,31 +34,23 @@ class TagsConfigElementType implements ReaderConfigElementTypeInterface
      */
     private $stringUtil;
     /**
-     * @var DcaUtil
-     */
-    private $dcaUtil;
-    /**
      * @var UrlUtil
      */
     private $urlUtil;
     /**
-     * @var Request
-     */
-    private $request;
-    /**
      * @var ModelUtil
      */
     private $modelUtil;
+    private RequestStack $requestStack;
 
-    public function __construct(Environment $twig, StringUtil $stringUtil, DcaUtil $dcaUtil, UrlUtil $urlUtil, Request $request, ModelUtil $modelUtil, TwigTemplateLocator $templateLocator)
+    public function __construct(Environment $twig, StringUtil $stringUtil, UrlUtil $urlUtil, ModelUtil $modelUtil, TwigTemplateLocator $templateLocator, RequestStack $requestStack)
     {
         $this->twig = $twig;
         $this->stringUtil = $stringUtil;
-        $this->dcaUtil = $dcaUtil;
         $this->urlUtil = $urlUtil;
-        $this->request = $request;
         $this->modelUtil = $modelUtil;
         $this->templateLocator = $templateLocator;
+        $this->requestStack = $requestStack;
     }
 
     public function renderTags($configElement, $item): ?string
@@ -69,7 +61,7 @@ class TagsConfigElementType implements ReaderConfigElementTypeInterface
             return '';
         }
 
-        $this->dcaUtil->loadDc($table);
+        Controller::loadDataContainer($table);
 
         $source = $GLOBALS['TL_DCA'][$table]['fields'][$configElement->tagsField]['eval']['tagsManager'];
 
@@ -90,10 +82,14 @@ class TagsConfigElementType implements ReaderConfigElementTypeInterface
 
         if ($configElement->tagsAddLink) {
             $jumpTo = $this->urlUtil->getJumpToPageUrl($configElement->tagsJumpTo, false);
+            $tagId = $tagAlias = null;
 
-            $tagId = $this->request->getGet('huh_cfg_tag');
+            if ($this->requestStack->getCurrentRequest()) {
+                $tagId = $this->requestStack->getCurrentRequest()->get('huh_cfg_tag', null);
+                $tagAlias = $this->requestStack->getCurrentRequest()->get('huh_cfg_tag_alias', null);
+            }
 
-            if (($tagAlias = $this->request->getGet('huh_cfg_tag_alias')) && $jumpTo) {
+            if ($tagAlias && $jumpTo) {
                 $tag = System::getContainer()->get(ModelUtil::class)->findOneModelInstanceBy('tl_cfg_tag', ['tl_cfg_tag.alias=?'], [$tagAlias]);
 
                 if (null !== $tag) {
@@ -113,7 +109,7 @@ class TagsConfigElementType implements ReaderConfigElementTypeInterface
 
                     System::getContainer()->get('huh.filter.session')->setData($sessionKey, $sessionData);
 
-                    throw new RedirectResponseException('/'.ltrim($jumpTo, '/'), 301);
+                    throw new RedirectResponseException('/'.ltrim($jumpTo, '/'), 302);
                 }
             }
 

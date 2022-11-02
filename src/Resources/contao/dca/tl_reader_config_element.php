@@ -1333,7 +1333,7 @@ if (\Contao\System::getContainer()->get('huh.utils.container')->isBundleActive('
 
                 if ($elements) {
                     while ($elements->next()) {
-                        $options[$elements->id] = sprintf('%title% (ID %id%)', $elements->title, $elements->id);
+                        $options[$elements->id] = $elements->title.'(ID '.$elements->id.')';
                     }
                 }
 
