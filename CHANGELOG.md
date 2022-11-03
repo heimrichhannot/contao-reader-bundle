@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] - 2022-11-02
+## [1.39.5] - 2022-11-03
 - Fixed: tags config element type redirect issues
 - Fixed: added missing request bundle dependency
 
