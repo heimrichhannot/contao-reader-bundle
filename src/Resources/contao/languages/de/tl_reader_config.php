@@ -75,6 +75,12 @@ $lang['addOverview'][0] = 'Link zur Übersichtsseite hinzufügen';
 $lang['addOverview'][1] = 'Wählen Sie diese Option aus, um der Liste einen Link zur Übersichtsseite hinzuzufügen.';
 $lang['jumpToOverview'][0] = 'Übersichtsseite';
 $lang['jumpToOverview'][1] = '';
+
+$lang['jumpToOverviewMultilingual'][0] = 'Sprachenabhängige Übersichtsseit';
+$lang['jumpToOverviewMultilingual'][1] = 'Wählen Sie hier Übersichtsseiten aus.';
+$lang['jumpToOverviewMultilingual']['language'] = ['Sprache', ''];
+$lang['jumpToOverviewMultilingual']['jumpTo'] = ['Weiterleitungsseite', ''];
+
 $lang['customJumpToOverviewLabel'][0] = 'Label für "zur Übersicht" überschreiben';
 $lang['customJumpToOverviewLabel'][1] = '';
 $lang['jumpToOverviewLabel'][0] = 'Label für "zur Übersicht"';

@@ -7,6 +7,7 @@
  */
 
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfig;
+use HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigContainer;
 
 \Contao\Controller::loadDataContainer('tl_module');
 \Contao\System::loadLanguageFile('tl_module');
@@ -42,7 +43,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'fields' => ['title'],
             'headerFields' => ['title'],
             'panelLayout' => 'filter;sort,search,limit',
-            'paste_button_callback' => [\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigContainer::class, 'pasteReaderConfig'],
+            'paste_button_callback' => [ReaderConfigContainer::class, 'pasteReaderConfig'],
         ],
         'global_operations' => [
             'toggleNodes' => [
@@ -54,7 +55,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
                 'label' => &$GLOBALS['TL_LANG']['tl_reader_config']['sortAlphabetically'],
                 'href' => 'key=sort_alphabetically',
                 'class' => 'header_toggle',
-                'button_callback' => [\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigContainer::class, 'sortAlphabetically'],
+                'button_callback' => [ReaderConfigContainer::class, 'sortAlphabetically'],
             ],
             'all' => [
                 'label' => &$GLOBALS['TL_LANG']['MSC']['all'],
@@ -134,7 +135,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
         'addStartAndStop' => 'startField,stopField',
         'addShowConditions' => 'showFieldConditions',
         'addFieldDependentRedirect' => 'fieldDependentJumpTo,redirectFieldConditions',
-        'addOverview' => 'overviewMode,customJumpToOverviewLabel',
+        'addOverview' => 'overviewMode,jumpToOverviewMultilingual,customJumpToOverviewLabel',
         'overviewMode_jumpTo' => 'jumpToOverview',
         'customJumpToOverviewLabel' => 'jumpToOverviewLabel',
     ],
@@ -390,7 +391,7 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             'label' => &$GLOBALS['TL_LANG']['tl_reader_config']['itemTemplate'],
             'exclude' => true,
             'inputType' => 'select',
-            'options_callback' => [\HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigContainer::class, 'onItemTemplateOptionsCallback'],
+            'options_callback' => [ReaderConfigContainer::class, 'onItemTemplateOptionsCallback'],
             'eval' => ['tl_class' => 'long clr', 'includeBlankOption' => true, 'chosen' => true],
             'sql' => "varchar(128) NOT NULL default ''",
         ],
@@ -436,6 +437,31 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             },
             'eval' => ['chosen' => true, 'mandatory' => true, 'maxlength' => 128, 'includeBlankOption' => true, 'tl_class' => 'w50'],
             'sql' => "varchar(128) NOT NULL default ''",
+        ],
+        'jumpToOverviewMultilingual' => [
+            'inputType' => 'multiColumnEditor',
+            'eval' => [
+                'tl_class' => 'long clr',
+                'multiColumnEditor' => [
+                    'minRowCount' => 0,
+                    'fields' => [
+                        'language' => [
+                            'label' => &$GLOBALS['TL_LANG']['tl_reader_config']['jumpToOverviewMultilingual']['language'],
+                            'inputType' => 'select',
+                            'options_callback' => [ReaderConfigContainer::class, 'onJumpToOverviewMultilingualOptionsCallback'],
+                            'eval' => ['tl_class' => 'w50', 'mandatory' => true, 'includeBlankOption' => true, 'chosen' => true, 'groupStyle' => 'width: 400px;'],
+                        ],
+                        'jumpTo' => [
+                            'label' => &$GLOBALS['TL_LANG']['tl_reader_config']['jumpToOverviewMultilingual']['jumpTo'],
+                            'inputType' => 'pageTree',
+                            'foreignKey' => 'tl_page.title',
+                            'eval' => ['fieldType' => 'radio', 'tl_class' => 'w50', 'mandatory' => true],
+                            'relation' => ['type' => 'hasOne', 'load' => 'lazy'],
+                        ],
+                    ],
+                ],
+            ],
+            'sql' => 'blob NULL',
         ],
         'disable404' => [
             'label' => &$GLOBALS['TL_LANG']['tl_reader_config']['disable404'],

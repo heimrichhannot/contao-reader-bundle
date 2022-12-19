@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.40.0] - 2022-12-19
+- Added: language dependent jump to overview field to reader config
+
 ## [1.39.5] - 2022-11-03
 - Fixed: tags config element type redirect issues
 - Fixed: added missing request bundle dependency

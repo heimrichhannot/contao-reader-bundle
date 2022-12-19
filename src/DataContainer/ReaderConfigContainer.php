@@ -77,6 +77,21 @@ class ReaderConfigContainer
         return $choices;
     }
 
+    public function onJumpToOverviewMultilingualOptionsCallback(): array
+    {
+        $objPages = Database::getInstance()->execute("SELECT DISTINCT language FROM tl_page WHERE type='root' AND language!=''");
+        $languages = $objPages->fetchEach('language');
+
+        array_walk(
+            $languages,
+            function (&$value) {
+                $value = str_replace('-', '_', $value);
+            }
+        );
+
+        return $languages;
+    }
+
     public function sortAlphabetically()
     {
         // sort alphabetically

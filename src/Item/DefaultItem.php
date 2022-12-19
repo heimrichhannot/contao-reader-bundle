@@ -343,13 +343,30 @@ class DefaultItem implements ItemInterface, \JsonSerializable
     public function addJumpToOverview(ReaderConfigModel $readerConfig): void
     {
         $this->setAddOverview($readerConfig->addOverview);
+
         $this->setJumpToOverviewLabel($this->getTranslatedJumpToOverviewLabel($readerConfig));
 
         if ('history' == $readerConfig->overviewMode) {
             return;
         }
 
-        $pageJumpTo = System::getContainer()->get('huh.utils.url')->getJumpToPageObject($readerConfig->jumpToOverview);
+        $jumpTo = $readerConfig->jumpToOverview;
+
+        $jumpToOverviewMultilingual = StringUtil::deserialize($readerConfig->jumpToOverviewMultilingual, true);
+
+        if (!empty($jumpToOverviewMultilingual)) {
+            $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+            foreach ($jumpToOverviewMultilingual as $item) {
+                if (isset($item['language']) && $request->getLocale() === $item['language']) {
+                    $jumpTo = $item['jumpTo'];
+
+                    break;
+                }
+            }
+        }
+
+        $pageJumpTo = System::getContainer()->get('huh.utils.url')->getJumpToPageObject($jumpTo);
 
         if (null !== $pageJumpTo) {
             $this->setJumpToOverview($pageJumpTo->getAbsoluteUrl());
