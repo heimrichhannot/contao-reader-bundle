@@ -1,59 +1,74 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ReaderBundle\ConfigElementType;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Controller;
 use Contao\ModuleModel;
 use Contao\StringUtil;
-use HeimrichHannot\FilterBundle\Config\FilterConfig;
-use HeimrichHannot\ListBundle\Module\ModuleList;
-use HeimrichHannot\ReaderBundle\Item\ItemInterface;
-use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
+use HeimrichHannot\FilterBundle\Manager\FilterManager;
+use HeimrichHannot\ListBundle\Event\ListCompileEvent;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ListConfigElementType implements ReaderConfigElementTypeInterface
 {
-    /**
-     * @var ContaoFrameworkInterface
-     */
-    protected $framework;
+    private EventDispatcherInterface $eventDispatcher;
+    private FilterManager            $filterManager;
 
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(FilterManager $filterManager, EventDispatcherInterface $eventDispatcher)
     {
-        $this->framework = $framework;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->filterManager = $filterManager;
     }
 
     /**
-     * @return void|null
+     * Update the item data.
      */
-    public function addToItemData(ItemInterface $item, ReaderConfigElementModel $readerConfigElement)
+    public function addToReaderItemData(ReaderConfigElementData $configElementData): void
     {
-        $module = $this->framework->getAdapter(ModuleModel::class)->findById($readerConfigElement->listModule);
+        $moduleModel = ModuleModel::findById($configElementData->getReaderConfigElement()->listModule);
 
-        if (null === $module) {
+        if (!$moduleModel) {
             return;
         }
 
-        $listModule = $this->framework->createInstance(ModuleList::class, [$module]);
-        /** @var FilterConfig $filterConfig */
-        $filterConfig = $listModule->getFilterConfig();
-        $filter = StringUtil::deserialize($readerConfigElement->initialFilter, true);
+        $filter = StringUtil::deserialize($configElementData->getReaderConfigElement()->initialFilter, true);
 
         if (!isset($filter[0]['filterElement']) || !isset($filter[0]['selector'])) {
             return;
         }
 
-        $filterConfig->addContextualValue($filter[0]['filterElement'], $item->getRawValue($filter[0]['selector']));
-        $filterConfig->initQueryBuilder();
+        $item = $configElementData->getItem();
+        $filterManager = $this->filterManager;
 
-        $lists = $item->getFormattedValue('list');
+        $this->eventDispatcher->addListener(ListCompileEvent::NAME, function (ListCompileEvent $event) use ($filterManager, $filter, $item) {
+            $filterId = $event->getListConfig()->filter;
 
-        $item->setFormattedValue('list', array_merge(\is_array($lists) ? $lists : [], [$readerConfigElement->listName => $listModule->generate()]));
+            if (!$filterId) {
+                return;
+            }
+            $filterConfig = $filterManager->findById($filterId);
+
+            if (!$filterConfig) {
+                return;
+            }
+
+            $filterConfig->addContextualValue($filter[0]['filterElement'], $item->getRawValue($filter[0]['selector']));
+            $filterConfig->initQueryBuilder();
+        });
+
+        $lists = $item->getFormattedValue('list') ?? [];
+
+        $item->setFormattedValue(
+            'list',
+            array_merge($lists, [$configElementData->getReaderConfigElement()->listName => Controller::getFrontendModule($moduleModel->id)]
+            )
+        );
     }
 
     /**
@@ -70,13 +85,5 @@ class ListConfigElementType implements ReaderConfigElementTypeInterface
     public function getPalette(): string
     {
         return '{config_legend},listName,listModule,initialFilter;';
-    }
-
-    /**
-     * Update the item data.
-     */
-    public function addToReaderItemData(ReaderConfigElementData $configElementData): void
-    {
-        $this->addToItemData($configElementData->getItem(), $configElementData->getReaderConfigElement());
     }
 }
