@@ -42,10 +42,10 @@
     "symfony/phpunit-bridge": "^3.2"
   },
   "suggest": {
-    "heimrichhannot/contao-list-bundle": "^1.3.0"
+    "heimrichhannot/contao-list-bundle": "Offers a generic list module."
   },
   "conflict": {
-    "heimrichhannot/contao-list-bundle": "<1.1.0",
+    "heimrichhannot/contao-list-bundle": "<1.51.0",
     "heimrichhannot/contao-head-bundle": "<1.10.0"
   },
   "autoload": {

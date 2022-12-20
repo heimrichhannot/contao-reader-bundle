@@ -13,12 +13,17 @@ use Contao\ModuleModel;
 use Contao\StringUtil;
 use HeimrichHannot\FilterBundle\Manager\FilterManager;
 use HeimrichHannot\ListBundle\Event\ListCompileEvent;
+use HeimrichHannot\ReaderBundle\Item\ItemInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ListConfigElementType implements ReaderConfigElementTypeInterface
 {
-    private EventDispatcherInterface $eventDispatcher;
-    private FilterManager            $filterManager;
+    /** @var EventDispatcher */
+    private EventDispatcherInterface                        $eventDispatcher;
+    private FilterManager                                   $filterManager;
+    private ?ItemInterface $item = null;
+    private ?array $filter = null;
 
     public function __construct(FilterManager $filterManager, EventDispatcherInterface $eventDispatcher)
     {
@@ -44,23 +49,10 @@ class ListConfigElementType implements ReaderConfigElementTypeInterface
         }
 
         $item = $configElementData->getItem();
-        $filterManager = $this->filterManager;
 
-        $this->eventDispatcher->addListener(ListCompileEvent::NAME, function (ListCompileEvent $event) use ($filterManager, $filter, $item) {
-            $filterId = $event->getListConfig()->filter;
-
-            if (!$filterId) {
-                return;
-            }
-            $filterConfig = $filterManager->findById($filterId);
-
-            if (!$filterConfig) {
-                return;
-            }
-
-            $filterConfig->addContextualValue($filter[0]['filterElement'], $item->getRawValue($filter[0]['selector']));
-            $filterConfig->initQueryBuilder();
-        });
+        $this->item = $item;
+        $this->filter = $filter;
+        $this->eventDispatcher->addListener(ListCompileEvent::NAME, [$this, 'prepareFilter']);
 
         $lists = $item->getFormattedValue('list') ?? [];
 
@@ -69,6 +61,30 @@ class ListConfigElementType implements ReaderConfigElementTypeInterface
             array_merge($lists, [$configElementData->getReaderConfigElement()->listName => Controller::getFrontendModule($moduleModel->id)]
             )
         );
+
+        $this->eventDispatcher->removeListener(ListCompileEvent::NAME, [$this, 'prepareFilter']);
+        $this->item = null;
+        $this->filter = null;
+    }
+
+    public function prepareFilter(ListCompileEvent $event): void
+    {
+        if (!$this->item || !$this->filter) {
+            return;
+        }
+        $filterId = $event->getListConfig()->filter;
+
+        if (!$filterId) {
+            return;
+        }
+        $filterConfig = $this->filterManager->findById($filterId);
+
+        if (!$filterConfig) {
+            return;
+        }
+
+        $filterConfig->addContextualValue($this->filter[0]['filterElement'], $this->item->getRawValue($this->filter[0]['selector']));
+        $filterConfig->initQueryBuilder();
     }
 
     /**
