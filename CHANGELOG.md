@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.41.0] - 2023-01-04
+- Added: item template comments in dev mode
+- Added: wizard button to frontend module
+
 ## [1.40.1] - 2022-12-20
 - Fixed: ListConfigElementType not working with newer list bundle versions
 

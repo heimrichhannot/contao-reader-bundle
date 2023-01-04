@@ -1,13 +1,14 @@
 <?php
 
 /*
- * Copyright (c) 2022 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\ReaderBundle\Item;
 
+use Contao\Config;
 use Contao\DataContainer;
 use Contao\StringUtil;
 use Contao\System;
@@ -331,7 +332,13 @@ class DefaultItem implements ItemInterface, \JsonSerializable
             RenderTwigTemplateEvent::NAME
         );
 
-        $rendered = $twig->render($this->_manager->getItemTemplateByName($event->getTemplate()), $event->getContext());
+        $templateName = $this->_manager->getItemTemplateByName($event->getTemplate());
+
+        $rendered = $twig->render($templateName, $event->getContext());
+
+        if (Config::get('debugMode')) {
+            $rendered = "\n<!-- LIST TEMPLATE START: $templateName -->\n$rendered\n<!-- LIST TEMPLATE END: $templateName -->\n";
+        }
 
         $afterRenderEvent = System::getContainer()->get('event_dispatcher')->dispatch(new ReaderAfterRenderEvent(
             $rendered, $event->getContext(), $this, $readerConfig
