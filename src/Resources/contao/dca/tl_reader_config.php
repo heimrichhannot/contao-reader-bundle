@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2022 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -15,6 +15,7 @@ use HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigContainer;
 $GLOBALS['TL_DCA']['tl_reader_config'] = [
     'config' => [
         'dataContainer' => 'Table',
+        'ptable' => 'tl_reader_config',
         'ctable' => ['tl_reader_config_element'],
         'enableVersioning' => true,
         'onload_callback' => [

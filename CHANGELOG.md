@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.41.1] - 2023-01-18
+- Fixed: missing ptable config in tl_reader_config
+
 ## [1.41.0] - 2023-01-04
 - Added: item template comments in dev mode
 - Added: wizard button to frontend module
