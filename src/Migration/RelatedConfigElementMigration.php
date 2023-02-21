@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2022 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -11,6 +11,7 @@ namespace HeimrichHannot\ReaderBundle\Migration;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\InvalidFieldNameException;
 use HeimrichHannot\ReaderBundle\ConfigElementType\RelatedConfigElementType;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 
@@ -44,6 +45,15 @@ class RelatedConfigElementMigration implements MigrationInterface
         );
 
         if ($result->rowCount() > 0 && ($result->fetchAssociative()['count'] ?? 0) > 0) {
+            try {
+                $elements = ReaderConfigElementModel::findOneBy(
+                    [ReaderConfigElementModel::getTable().'.type=?'],
+                    [RelatedConfigElementType::getType()]
+                );
+            } catch (InvalidFieldNameException $exception) {
+                return false;
+            }
+
             return true;
         }
 

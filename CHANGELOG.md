@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.41.2] - 2023-02-21
+- Fixed: migration throw error if schema not updated
+
 ## [1.41.1] - 2023-01-18
 - Fixed: missing ptable config in tl_reader_config
 
