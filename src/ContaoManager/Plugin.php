@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2022 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -26,7 +26,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, ExtensionP
     /**
      * {@inheritdoc}
      */
-    public function getBundles(ParserInterface $parser)
+    public function getBundles(ParserInterface $parser): array
     {
         return [
             BundleConfig::create(HeimrichHannotContaoReaderBundle::class)
@@ -40,7 +40,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, ExtensionP
     /**
      * {@inheritdoc}
      */
-    public function getExtensionConfig($extensionName, array $extensionConfigs, ContainerBuilder $container)
+    public function getExtensionConfig($extensionName, array $extensionConfigs, ContainerBuilder $container): array
     {
         return $extensionConfigs = ContainerUtil::mergeConfigFile(
             'huh_reader',

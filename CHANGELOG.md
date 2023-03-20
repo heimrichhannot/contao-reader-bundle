@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.41.3] - 2023-03-20
+- Fixed: warnings
+
 ## [1.41.2] - 2023-02-21
 - Fixed: migration throw error if schema not updated
 

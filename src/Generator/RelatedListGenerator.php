@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2022 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -66,7 +66,11 @@ class RelatedListGenerator implements ServiceSubscriberInterface
 
     protected function applyTagsFilter(string $table, string $tagsField, int $entityId): void
     {
-        $dca = $GLOBALS['TL_DCA'][$table]['fields'][$tagsField];
+        $dca = $GLOBALS['TL_DCA'][$table]['fields'][$tagsField] ?? null;
+
+        if (!$dca || empty($dca['eval']['tagsManager'])) {
+            return;
+        }
 
         $source = $dca['eval']['tagsManager'];
 
