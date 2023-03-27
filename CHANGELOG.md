@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.41.4] - 2023-03-27
+- Fixed: head bundle tags not correctly applied
+
 ## [1.41.3] - 2023-03-20
 - Fixed: warnings
 

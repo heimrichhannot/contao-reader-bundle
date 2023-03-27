@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2022 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -79,7 +79,7 @@ class HeadBundleListener implements ServiceSubscriberInterface, EventSubscriberI
                 return $item->{$matches[1]};
             }, $value);
 
-            if (!empty($value) && !\in_array($value, ['0', 0])) {
+            if (!empty($value) && !\in_array($value, ['0', 0], true)) {
                 $tag = $headTagManager->getHeadTagFactory()->createTagByName($name, $value);
 
                 if ($tag) {
