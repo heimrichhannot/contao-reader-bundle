@@ -62,9 +62,10 @@ class ReaderFrontendModuleController extends AbstractFrontendModuleController
             $pageModel = $this->getPageModel();
 
             // behavior when reader module is rendered without item
-            if (
-                ((ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM === $readerConfigModel->itemRetrievalMode && !Input::get('auto_item')) || (ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM !== $readerConfigModel->itemRetrievalMode))
-                && $model->readerNoItemBehavior
+            if (((ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM === $readerConfigModel->itemRetrievalMode
+                        && !Input::get('auto_item'))
+                    || (ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM !== $readerConfigModel->itemRetrievalMode)
+                ) && $model->readerNoItemBehavior
             ) {
                 switch ($model->readerNoItemBehavior) {
                     case '404':
