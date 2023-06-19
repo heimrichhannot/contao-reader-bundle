@@ -17,13 +17,13 @@ $GLOBALS['BE_MOD']['system']['reader_configs'] = [
 /*
  * Frontend modules
  */
-array_insert(
-    $GLOBALS['FE_MOD']['reader'],
-    3,
-    [
-        ModuleReader::TYPE => ModuleReader::class,
-    ]
-);
+//array_insert(
+//    $GLOBALS['FE_MOD']['reader'],
+//    3,
+//    [
+//        ModuleReader::TYPE => ModuleReader::class,
+//    ]
+//);
 
 /*
  * Permissions
