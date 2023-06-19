@@ -15,8 +15,8 @@ use Contao\Model;
 use Contao\ModuleModel;
 use HeimrichHannot\FilterBundle\Model\FilterConfigElementModel;
 use HeimrichHannot\FilterBundle\Model\FilterConfigModel;
+use HeimrichHannot\ReaderBundle\Controller\FrontendModule\ReaderFrontendModuleController;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
-use HeimrichHannot\ReaderBundle\Module\ModuleReader;
 use HeimrichHannot\UtilsBundle\Dca\DcaUtil;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
 use Symfony\Component\Console\Input\InputInterface;
@@ -341,7 +341,7 @@ class MakeCommand extends AbstractLockedCommand
         $module->mergeRow([
             'name' => $moduleName,
             'pid' => $modulePid,
-            'type' => ModuleReader::TYPE,
+            'type' => ReaderFrontendModuleController::TYPE,
             'readerConfig' => $readerConfig->id,
         ]);
 

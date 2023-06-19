@@ -8,22 +8,10 @@
 
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
-use HeimrichHannot\ReaderBundle\Module\ModuleReader;
 
 $GLOBALS['BE_MOD']['system']['reader_configs'] = [
     'tables' => ['tl_reader_config'],
 ];
-
-/*
- * Frontend modules
- */
-array_insert(
-    $GLOBALS['FE_MOD']['reader'],
-    3,
-    [
-        ModuleReader::TYPE => ModuleReader::class,
-    ]
-);
 
 /*
  * Permissions

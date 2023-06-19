@@ -23,6 +23,9 @@ use HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry;
 use HeimrichHannot\StatusMessages\StatusMessage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @deprecated Do not inherit from this class anymore. It will be removed in a future version.
+ */
 class ModuleReader extends Module
 {
     const TYPE = 'huhreader';
