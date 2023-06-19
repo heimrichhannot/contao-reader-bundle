@@ -8,7 +8,6 @@
 
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
-use HeimrichHannot\ReaderBundle\Module\ModuleReader;
 
 $GLOBALS['BE_MOD']['system']['reader_configs'] = [
     'tables' => ['tl_reader_config'],
