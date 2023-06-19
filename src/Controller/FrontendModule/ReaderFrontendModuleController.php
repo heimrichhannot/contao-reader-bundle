@@ -56,20 +56,28 @@ class ReaderFrontendModuleController extends AbstractFrontendModuleController
         }
 
         if (null === $item) {
-            if ($readerConfigModel->disable404) {
-                $pageModel = $this->getPageModel();
-                $readerConfigModel->noItemJumpTo = 71;
-                if ($readerConfigModel->noItemJumpTo) {
-                    $jumpToPageModel = PageModel::findByPk($readerConfigModel->noItemJumpTo);
-                    if ($jumpToPageModel && (!$pageModel || ($pageModel->id !== $jumpToPageModel->id))) {
-                        throw new RedirectResponseException($jumpToPageModel->getAbsoluteUrl());
-                    }
-                }
+            $pageModel = $this->getPageModel();
 
+            if ($model->readerNoItemBehavior) {
+                switch ($model->readerNoItemBehavior) {
+                    case '404':
+                        throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+                    case 'forward':
+                        $jumpToPageModel = PageModel::findByPk($model->jumpTo);
+                        if ($jumpToPageModel && (!$pageModel || ($pageModel->id !== $jumpToPageModel->id))) {
+                            throw new RedirectResponseException($jumpToPageModel->getAbsoluteUrl());
+                        }
+                        break;
+                    case 'empty':
+                        return $template->getResponse();
+                }
+            }
+
+            if ($readerConfigModel->disable404) {
                 return $template->getResponse();
             }
 
-            throw new PageNotFoundException('Page not found: '.Environment::get('uri'));
+            throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
         }
 
         Controller::loadDataContainer($readerConfigModel->dataContainer);
