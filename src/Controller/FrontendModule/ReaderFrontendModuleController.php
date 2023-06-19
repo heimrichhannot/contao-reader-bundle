@@ -8,9 +8,12 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\ServiceAnnotation\FrontendModule;
 use Contao\Environment;
+use Contao\Input;
 use Contao\ModuleModel;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\Template;
+use HeimrichHannot\ReaderBundle\Backend\ReaderConfig;
 use HeimrichHannot\ReaderBundle\Registry\ReaderConfigRegistry;
 use HeimrichHannot\StatusMessages\StatusMessage;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,7 +61,11 @@ class ReaderFrontendModuleController extends AbstractFrontendModuleController
         if (null === $item) {
             $pageModel = $this->getPageModel();
 
-            if ($model->readerNoItemBehavior) {
+            // behavior when reader module is rendered without item
+            if (
+                ((ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM === $readerConfigModel->itemRetrievalMode && !Input::get('auto_item')) || (ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM !== $readerConfigModel->itemRetrievalMode))
+                && $model->readerNoItemBehavior
+            ) {
                 switch ($model->readerNoItemBehavior) {
                     case '404':
                         throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
@@ -83,16 +90,14 @@ class ReaderFrontendModuleController extends AbstractFrontendModuleController
         Controller::loadDataContainer($readerConfigModel->dataContainer);
         Controller::loadLanguageFile($readerConfigModel->dataContainer);
 
-        // apply module fields to template
-        $template->headline = $model->headline;
-        $template->hl = $model->hl;
+        // add default css id and class to templates
+        $cssID = StringUtil::deserialize($model->cssID);
+        if (!$template->cssID) {
+            $cssID[0] = 'huh-reader-'.$model->id;
+        }
+        $cssID[1] = $template->class;
+        $this->addCssAttributesToTemplate($template, '', $cssID, ['huh-reader', $readerConfigModel->dataContainer]);
 
-        // add class to every reader template
-        $cssID = $model->cssID;
-        $cssID[0] = $cssID[0] ?: 'huh-reader-'.$model->id;
-        $cssID[1] = $cssID[1].($cssID[1] ? ' ' : '').'huh-reader '.$readerConfigModel->dataContainer;
-
-        $template->cssID = $cssID;
 
         if (!$readerManager->checkPermission()) {
             StatusMessage::addError($this->translator->trans('huh.reader.messages.permissionDenied'), $model->id);

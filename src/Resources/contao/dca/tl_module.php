@@ -40,6 +40,7 @@ $fields = [
             '404' => '404',
             'empty' => 'empty',
         ],
+        'reference' => &$GLOBALS['TL_LANG']['tl_module']['readerNoItemBehavior'],
         'eval' => [
             'tl_class' => 'w50',
             'includeBlankOption' => true,
