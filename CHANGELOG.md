@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] - 2023-06-19
+- Added: behavior option to frontend module when called without item ([#12])
+- Changed: refactored frontend module ([#12])
+
 ## [1.41.4] - 2023-03-27
 - Fixed: head bundle tags not correctly applied
 
@@ -477,5 +481,6 @@ existing method from the inherit method and register the class as service.
 - added english translations for config element types
 
 
-[#9]: https://github.com/heimrichhannot/contao-reader-bundle/pull/9
 [#8]: https://github.com/heimrichhannot/contao-reader-bundle/pull/8
+[#9]: https://github.com/heimrichhannot/contao-reader-bundle/pull/9
+[#12]: http://github.com/heimrichhannot/contao-reader-bundle/pull/12
