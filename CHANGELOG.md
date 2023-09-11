@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.42.1] - 2023-09-11
+- Fixed: getting reader config on module controller
+
 ## [1.42.0] - 2023-06-19
 - Added: behavior option to frontend module when called without item ([#12])
 - Changed: refactored frontend module ([#12])

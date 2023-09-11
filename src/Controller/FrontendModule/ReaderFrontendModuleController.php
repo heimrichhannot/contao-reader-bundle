@@ -28,11 +28,11 @@ class ReaderFrontendModuleController extends AbstractFrontendModuleController
     public const TYPE = 'huhreader';
 
     private ReaderConfigRegistry $readerConfigRegistry;
-    private TranslatorInterface  $translator;
+    private TranslatorInterface $translator;
 
     public function __construct(
         ReaderConfigRegistry $readerConfigRegistry,
-        TranslatorInterface $translator
+        TranslatorInterface  $translator
     )
     {
         $this->readerConfigRegistry = $readerConfigRegistry;
@@ -51,6 +51,7 @@ class ReaderFrontendModuleController extends AbstractFrontendModuleController
         Controller::loadDataContainer('tl_reader_config');
 
         $readerManager->setModuleData($model->row());
+        $readerConfig = $readerManager->getReaderConfig();
 
         $item = $readerManager->retrieveItem();
 
@@ -62,9 +63,9 @@ class ReaderFrontendModuleController extends AbstractFrontendModuleController
             $pageModel = $this->getPageModel();
 
             // behavior when reader module is rendered without item
-            if (((ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM === $readerConfigModel->itemRetrievalMode
+            if (((ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM === $readerConfig->itemRetrievalMode
                         && !Input::get('auto_item'))
-                    || (ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM !== $readerConfigModel->itemRetrievalMode)
+                    || (ReaderConfig::ITEM_RETRIEVAL_MODE_AUTO_ITEM !== $readerConfig->itemRetrievalMode)
                 ) && $model->readerNoItemBehavior
             ) {
                 switch ($model->readerNoItemBehavior) {
@@ -81,23 +82,23 @@ class ReaderFrontendModuleController extends AbstractFrontendModuleController
                 }
             }
 
-            if ($readerConfigModel->disable404) {
+            if ($readerConfig->disable404) {
                 return $template->getResponse();
             }
 
             throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
         }
 
-        Controller::loadDataContainer($readerConfigModel->dataContainer);
-        Controller::loadLanguageFile($readerConfigModel->dataContainer);
+        Controller::loadDataContainer($readerConfig->dataContainer);
+        Controller::loadLanguageFile($readerConfig->dataContainer);
 
         // add default css id and class to templates
         $cssID = StringUtil::deserialize($model->cssID);
         if (!$template->cssID) {
-            $cssID[0] = 'huh-reader-'.$model->id;
+            $cssID[0] = 'huh-reader-' . $model->id;
         }
         $cssID[1] = $template->class;
-        $this->addCssAttributesToTemplate($template, '', $cssID, ['huh-reader', $readerConfigModel->dataContainer]);
+        $this->addCssAttributesToTemplate($template, '', $cssID, ['huh-reader', $readerConfig->dataContainer]);
 
 
         if (!$readerManager->checkPermission()) {
