@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.42.2] - 2024-01-30
+- Fixed: fixed related list element if list has offset
+
 ## [1.42.1] - 2023-09-11
 - Fixed: getting reader config on module controller
 

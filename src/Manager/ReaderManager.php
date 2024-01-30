@@ -187,6 +187,8 @@ class ReaderManager implements ReaderManagerInterface, ServiceSubscriberInterfac
 
         // reset since this method might be run more than once
         $this->getQueryBuilder()->resetQueryParts(['where', 'join', 'from']);
+        // reset offset since this method since list in former run may have an offset
+        $this->getQueryBuilder()->setFirstResult(0);
 
         $item = null;
 
