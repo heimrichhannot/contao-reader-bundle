@@ -886,7 +886,7 @@ class ReaderManager implements ReaderManagerInterface, ServiceSubscriberInterfac
                 continue;
             }
 
-            if ('*' === $data['eval']['translatableFor'] || $data['eval']['translatableFor'] === $GLOBALS['TL_LANGUAGE']) {
+            if (isset($data['eval']['translatableFor']) && ('*' === $data['eval']['translatableFor'] || $data['eval']['translatableFor'] === $GLOBALS['TL_LANGUAGE'])) {
                 $fieldNames[] = $suffixedTable.'.'.$field;
             } else {
                 $fieldNames[] = $readerConfig->dataContainer.'.'.$field;

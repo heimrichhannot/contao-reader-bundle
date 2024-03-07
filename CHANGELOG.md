@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.42.3] - 2024-03-07
+- Fixed: offset array key
+
 ## [1.42.2] - 2024-01-30
 - Fixed: fixed related list element if list has offset
 
