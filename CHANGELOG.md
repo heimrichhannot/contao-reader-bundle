@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.42.4] - 2024-12-18
+- Changed: small adjustments to reader config palette
+
 ## [1.42.3] - 2024-03-07
 - Fixed: offset array key
 

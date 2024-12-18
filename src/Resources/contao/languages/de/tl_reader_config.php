@@ -134,6 +134,7 @@ $lang['fields_legend'] = 'Feldeinstellungen';
 $lang['security_legend'] = 'Sicherheit';
 $lang['jumpto_legend'] = 'Weiterleitung';
 $lang['misc_legend'] = 'Verschiedenes';
+$lang['extensions_legend'] = 'Erweiterungen';
 $lang['template_legend'] = 'Template';
 
 /*

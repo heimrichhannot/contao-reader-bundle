@@ -6,6 +6,7 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\DC_Table;
 use HeimrichHannot\ReaderBundle\Backend\ReaderConfig;
 use HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigContainer;
 
@@ -14,7 +15,7 @@ use HeimrichHannot\ReaderBundle\DataContainer\ReaderConfigContainer;
 
 $GLOBALS['TL_DCA']['tl_reader_config'] = [
     'config' => [
-        'dataContainer' => 'Table',
+        'dataContainer' => DC_Table::class,
         'ptable' => 'tl_reader_config',
         'ctable' => ['tl_reader_config_element'],
         'enableVersioning' => true,
@@ -125,8 +126,11 @@ $GLOBALS['TL_DCA']['tl_reader_config'] = [
             .'{filter_legend},dataContainer,filter,evaluateFilter;'
             .'{config_legend},manager,item,itemRetrievalMode,hideUnpublishedItems;'
             .'{fields_legend},limitFormattedFields;'
-            .'{security_legend},addShowConditions;'.'{jumpto_legend},addFieldDependentRedirect,addOverview,disable404;'
-            .'{misc_legend},headTags,addDcMultilingualSupport,addMultilingualFieldsSupport;'.'{template_legend},itemTemplate;',
+            .'{security_legend},addShowConditions;'
+            .'{jumpto_legend},addFieldDependentRedirect,addOverview,disable404;'
+            .'{misc_legend},headTags;'
+            .'{extensions_legend},addDcMultilingualSupport,addMultilingualFieldsSupport;'
+            .'{template_legend},itemTemplate;',
     ],
     'subpalettes' => [
         'limitFormattedFields' => 'formattedFields',
