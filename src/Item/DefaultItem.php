@@ -9,6 +9,7 @@
 namespace HeimrichHannot\ReaderBundle\Item;
 
 use Contao\Config;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\DataContainer;
 use Contao\StringUtil;
 use Contao\System;
@@ -24,6 +25,7 @@ use HeimrichHannot\ReaderBundle\Model\ReaderConfigElementModel;
 use HeimrichHannot\ReaderBundle\Model\ReaderConfigModel;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
 use HeimrichHannot\UtilsBundle\Event\RenderTwigTemplateEvent;
+use Twig\Error\RuntimeError;
 
 class DefaultItem implements ItemInterface, \JsonSerializable
 {
@@ -334,7 +336,15 @@ class DefaultItem implements ItemInterface, \JsonSerializable
 
         $templateName = $this->_manager->getItemTemplateByName($event->getTemplate());
 
-        $rendered = $twig->render($templateName, $event->getContext());
+        try {
+            $rendered = $twig->render($templateName, $event->getContext());
+        } catch (RuntimeError $e) {
+            $origin = $e->getPrevious();
+            if ($origin instanceof ResponseException) {
+                throw $origin;
+            }
+            throw $e;
+        }
 
         if (Config::get('debugMode')) {
             $rendered = "\n<!-- LIST TEMPLATE START: $templateName -->\n$rendered\n<!-- LIST TEMPLATE END: $templateName -->\n";

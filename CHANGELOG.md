@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.42.5] - 2025-01-16
+- Fixed: redirects through response exceptions not possible
+
 ## [1.42.4] - 2024-12-18
 - Changed: small adjustments to reader config palette
 
